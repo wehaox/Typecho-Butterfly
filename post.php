@@ -188,9 +188,8 @@
     $(document).ready(function(){
     $(".toolbar").append("<i class='fas fa-angle-down' id='bexpand'></i>");
     $("#bexpand").click(function(){
-		$("code").toggle();
+		$("pre").toggle();
 		$("#bexpand").toggleClass("bclose");
-		
 	});
 });
 </script>
