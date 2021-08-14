@@ -6,6 +6,7 @@
  *
  */$this->need('page_header.php');
 ?>
+<script src="<?php $this->options->themeUrl('js/comjs.js'); ?>"></script>
 <main class="layout" id="content-inner">
     <div id="page"> 
     <div class="flink" id="article-container">

@@ -1,12 +1,12 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php $this->need('page_header.php'); ?>
+<script src="<?php $this->options->themeUrl('js/comjs.js'); ?>"></script>
 <main class="layout" id="content-inner">
 <div id="page"> 
     <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
         <div class="post-content" itemprop="articleBody">
             <?php $this->content(); ?>
         </div>
-        
     </article>
     <?php $this->need('comments.php'); ?>
 </div><!-- end #main-->

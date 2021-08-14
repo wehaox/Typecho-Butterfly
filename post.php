@@ -1,5 +1,6 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php $this->need('post_header.php'); ?>
+<script src="<?php $this->options->themeUrl('js/comjs.js'); ?>"></script>
 <main class="layout" id="content-inner">
 <div id="post" >
 <?php if (is_array($this->options->beautifyBlock) && in_array('PostShowTopimg',$this->options->beautifyBlock)): ?>  
@@ -184,13 +185,4 @@
 	})();
 </script>
 <?php endif; ?>
-<script>
-    $(document).ready(function(){
-    $(".toolbar").append("<i class='fas fa-angle-down' id='bexpand'></i>");
-    $("#bexpand").click(function(){
-		$("pre").toggle();
-		$("#bexpand").toggleClass("bclose");
-	});
-});
-</script>
 <?php $this->need('footer.php'); ?>
