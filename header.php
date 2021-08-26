@@ -1,5 +1,5 @@
 <?php  $this->need('header_com.php'); ?>
-    <div id="web_bg"></div>
+<div id="web_bg"></div>
 <script>function subtitleType(){
 fetch("https://api.btstu.cn/yan/api.php?charset=utf-8&encode=json").then(t=>t.json()).then(t=>{
 var e="出自 "+t.from,o=0=="".length?new Array:" ".split(",");
@@ -11,7 +11,6 @@ typeSpeed:150,
 loop:!0,
 backSpeed:50
 })
-    
 }
 )}
 "function"==typeof Typed?subtitleType():getScript("https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js").then(subtitleType

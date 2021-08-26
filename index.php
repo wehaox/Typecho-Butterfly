@@ -8,7 +8,7 @@
  * <a href="https://blog.wehaox.com/archives/blogtheme.html#cl-4">主题更新日志</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.0.0
+ * @version 1.0.3
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -92,7 +92,7 @@ $uid = $this->user->uid; //登录时，显示用户各自的私密文章
 					<span class="article-meta__separator">|</span>
 				<i class="fas fa-comments"></i>
 			     <span class="post-meta-date" itemprop="interactionCount">
-				    <a itemprop="discussionUrl" href="<?php $this->permalink() ?>#comments">
+				    <a itemprop="discussionUrl" href="<?php $this->permalink() ?>#post-comment">
 				        <?php $this->commentsNum('0条评论', '1 条评论', '%d 条评论'); ?>
 				    </a>
 				</span>
@@ -158,7 +158,7 @@ console.log(`
     #    # #    #   #     #   #      #   #  #      #        #    
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                           1.0.0
+                            1.0.3
 ===================================================================
 `);
 </script>

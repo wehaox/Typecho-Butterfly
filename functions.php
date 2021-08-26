@@ -2,11 +2,9 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 
 function themeConfig($form) {
-    echo "<style>
-.typecho-option-submit{position:fixed;top:668px;left:10%;}.mtoc a{display:block;float: left;padding: 10px;}.set_toc{position:sticky;top:3px;background-color:white;border:1px solid darkseagreen;padding:8px 0;overflow: auto;}
-</style>";
-    echo 
-    "<div class='set_toc'>
+    echo "<style>html {scroll-behavior: smooth;}.typecho-option-submit{position:fixed;top:668px;left:10%;}.mtoc a{display:block;float: left;padding: 10px;}.set_toc{position:sticky;top:3px;background-color:white;border:1px solid darkseagreen;padding:8px 0;overflow: auto;}.typecho-label{padding-top: 24px;}.typecho-option {margin: 0!important;}</style>";
+    ?>
+    <div class='set_toc' >
     <div class='mtoc'>
     <a href='#cids'>文章置顶及公共部分</a>
     <a href='#friends'>友情链接设置</a>
@@ -15,13 +13,26 @@ function themeConfig($form) {
     <a href='#beautifyBlock'>美化选项</a>
     <a href='#ShowLive2D'>Live2D设置</a>
     <a href='#CustomSet'>自定义内容</a>
-    </div></div>";
-    echo "<script src='https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js'></script>";
-    echo "<script src='https://cdn.jsdelivr.net/gh/wehaox/CDN@main/postdomai.js'></script>";
+    </div></div>
+    <script src='https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js'></script>
+    <script>$('.set_toc').click(function(){ $('.mtoc').toggle();})</script>
+    <script src='https://cdn.jsdelivr.net/gh/wehaox/CDN@main/postdomai.js'></script>
+    <?php
     $sticky_cids = new Typecho_Widget_Helper_Form_Element_Text('sticky_cids', NULL, NULL,'置顶文章的 cid', '<div style="font-family:arial; background:#E8EFD1; padding:8px">按照排序输入, 请以半角逗号或空格分隔 cid</div>');
     $sticky_cids->setAttribute('id', 'cids');
     $form->addInput($sticky_cids);
-
+    
+    $NewTabLink = new Typecho_Widget_Helper_Form_Element_Select('NewTabLink',
+        array(
+            'on' => '开启（默认）',
+            'off' => '关闭',
+        ),
+        'on',
+        '是否开启新标签打开外部链接',
+        '介绍：非站内链接在新标签打开'
+    );
+    $form->addInput($NewTabLink->multiMode());
+    
     $Sitefavicon = new Typecho_Widget_Helper_Form_Element_Text('Sitefavicon', NULL, NULL, _t('网站图标'), _t('网站图标，使用png格式，大小建议不超过64x64'));
     $form->addInput($Sitefavicon);
     
@@ -92,10 +103,16 @@ function themeConfig($form) {
     );
     $ShowGlobalReward->setAttribute('id', 'reward');
     $form->addInput($ShowGlobalReward->multiMode());
-    $wechat = new Typecho_Widget_Helper_Form_Element_Text('wechat', NULL,_t('https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/wechat.jpg'), _t('微信收款码'),NULL);
-    $form->addInput($wechat);   
-    $alipay = new Typecho_Widget_Helper_Form_Element_Text('alipay', NULL,_t('https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/alipay.jpg'), _t('支付宝收款码'),NULL);
-    $form->addInput($alipay);    
+    
+    /* 打赏设置 */
+    $RewardInfo = new Typecho_Widget_Helper_Form_Element_Textarea('RewardInfo',NULL,_t('微信 || https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/wechat.jpg
+支付宝 || https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/alipay.jpg'),
+        '打赏信息（非必填）',
+        '注意：需在开启打赏功能，该项才会显示 <br />
+         格式：打赏名称 || 图片地址 <br />一行一个'
+    );
+    $form->addInput($RewardInfo);    
+
 
     $sidebarBlock = new Typecho_Widget_Helper_Form_Element_Checkbox('sidebarBlock', 
     array(
@@ -110,8 +127,17 @@ function themeConfig($form) {
     array('ShowAnnounce','ShowRecentPosts', 'ShowRecentComments', 'ShowCategory','ShowTag', 'ShowArchive', 'ShowWebinfo', 'ShowOther'), _t('侧边栏显示'));
     $sidebarBlock->setAttribute('id', 'aside');
     $form->addInput($sidebarBlock->multiMode());
+    $ShowOnlinePeople = new Typecho_Widget_Helper_Form_Element_Select('ShowOnlinePeople',
+        array(
+            'on' => '开启（默认）',
+            'off' => '关闭',
+        ),
+        'on',
+        '是否显示在线人数',
+        '介绍：侧栏网站咨询模块在线人数统计,防止某些虚拟主机无法开启导致500错误'
+    );
+    $form->addInput($ShowOnlinePeople->multiMode());
     
-
 // 美化选项
     $beautifyBlock = new Typecho_Widget_Helper_Form_Element_Checkbox('beautifyBlock', 
     array(
@@ -362,33 +388,25 @@ function allOfCharacters() {
         $chars = 0;
         $db = Typecho_Db::get();
         if($showPrivate == 0){
-            $select = $db ->select('text')
-                        ->from('table.contents')
-                        ->where('table.contents.status = ?','publish');
-        } else {
-            $select = $db ->select('text')
-                        ->from('table.contents');
+            $select = $db ->select('text')->from('table.contents')->where('table.contents.status = ?','publish');
+        }else {
+            $select = $db ->select('text')->from('table.contents');
         }
-
         $rows = $db->fetchAll($select);
         foreach ($rows as $row){
-            $chars += mb_strlen($row['text'], 'UTF-8');
+        $chars += mb_strlen($row['text'], 'UTF-8');
         }
-
         $unit = '';
         if($chars >= 10000) {
             $chars /= 10000;
             $unit = 'W';
-        } else if($chars >= 1000) {
+        }else if($chars >= 1000) {
             $chars /= 1000;
             $unit = 'K';
         }
-
         $out = sprintf('%.2lf %s',$chars, $unit);
-
         echo $out;
-    }
-
+}
 
 function thumb($cid) {
 if (empty($imgurl)) {
@@ -502,7 +520,7 @@ function getCatalog() {    //输出文章目录容器
             }
             $index .= '<li class="toc-item toc-level-1">
             
-            <a class="toc-link" 
+            <a onclick="b(this);return false;" class="toc-link" 
             href="#cl-'.$catalog_item['count'].'">'
             
             .$catalog_item['text']
@@ -528,6 +546,106 @@ function GetLazyLoad()
     }
 }
 
+/* 格式化标签 */
+function ParseCode($text)
+{
+    /* 初始化图片为懒加载 */
+    $text = Short_Lazyload($text);
+    $text = Short_Tabs($text);
+    $text = Note_Fsm($text);
+    $text = Note_Ico($text);
+    $text = Hide_Lnline($text);
+    $text = Hide_Block($text);
+    $text = Hide_Toggle($text);
+    $text = Button($text);
+    return $text;
+}
+// 标签外挂-Tabs
+function Short_Tabs($text)
+{
+    $text = preg_replace_callback('/<p>\[tabs\](.*?)\[\/tabs\]<\/p>/ism', function ($text) {
+        return '[tabs]' . $text[1] . '[/tabs]';
+    }, $text);
+    $text = preg_replace_callback('/\[tabs\](.*?)\[\/tabs\]/ism', function ($text) {
+        return preg_replace('~<br.*?>~', '', $text[0]);
+    }, $text);
+    $text = preg_replace_callback('/\[tabs\](.*?)\[\/tabs\]/ism', function ($text) {
+        $tabname = '';
+        preg_match_all('/label=\"(.*?)\"\]/i', $text[1], $tabnamearr);
+        for ($i = 0; $i < count($tabnamearr[1]); $i++) {
+            if ($i === 0) {
+                $tabname .= '<li class="tab active"><button type="button" data-href="' . $i . '">' . $tabnamearr[1][$i] . '</button></li>';
+            } else {
+                $tabname .= '<li class="tab"  data-href="' . $i . '"><button type="button" data-href="' . $i . '">' . $tabnamearr[1][$i] . '</button></li>';
+            }
+        }
+        $tabcon = '';
+        preg_match_all('/"\](.*?)\[\//i', $text[1], $tabconarr);
+        for ($i = 0; $i < count($tabconarr[1]); $i++) {
+            if ($i === 0) {
+                $tabcon .= '<div class="tab-item-content active" id="' . $i . '">' . $tabconarr[1][$i] . ' <button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div>';
+            } else {
+                $tabcon .= '<div class="tab-item-content" id="' . $i . '">' . $tabconarr[1][$i] . '<button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div>';
+            }
+        }
+        return '
+        <div class="tabs" id="tags"><ul class="nav-tabs">' . $tabname . '</ul><div class="tab-contents">' . $tabcon . '</div></div>';
+    }, $text);
+    return $text;
+}
+// 标签外挂-btn
+function Button($text)
+{
+    $text = preg_replace_callback('/\[btn href=\"(.*?)\" type=\"(.*?)\".*?\ ico=\"(.*?)\"](.*?)\[\/btn\]/ism', function ($text) {
+        return '<a href="' . $text[1] . '" class="btn-beautify button--animated ' . $text[2] . '">
+        ' . $text[3] . '<span>' . $text[4] . '</span></a>';
+    }, $text);
+    return $text;
+}
+
+// 标签外挂-note
+function Note_Fsm($text)
+{
+    $text = preg_replace_callback('/\[note type=\"(.*?)\".*?\](.*?)\[\/note\]/ism', function ($text) {
+        return '<div class="note ' . $text[1] . '"> <p>' . $text[2] . '</p></div>';
+    }, $text);
+    return $text;
+}
+// 标签外挂-note_ico
+function Note_Ico($text)
+{
+    $text = preg_replace_callback('/\[note-ico type=\"(.*?)\".*?\ ico=\"(.*?)\"](.*?)\[\/note-ico\]/ism', function ($text) {
+        return '<div class="note ' . $text[1] . '">' . $text[2] . ' <p>' . $text[3] . '</p></div>';
+    }, $text);
+    return $text;
+}
+// hide-inline
+function Hide_Lnline($text)
+{
+    $text = preg_replace_callback('/\[hide-inline name=\"(.*?)\".*?\](.*?)\[\/hide-inline\]/ism', function ($text) {
+        return '<span class="hide-inline"><button type="button" class="hide-button button--animated">' . $text[1] . '</button><span class="hide-content">' . $text[2] . '</span></span>';
+    }, $text);
+    return $text;
+}
+// hide-block
+function Hide_Block($text)
+{
+    $text = preg_replace_callback('/\[hide-block name=\"(.*?)\".*?\](.*?)\[\/hide-block\]/ism', function ($text) {
+        return '<div class="hide-block"><button type="button" class="hide-button button--animated">' . $text[1] . '</button><div class="hide-content">' . $text[2] . '</div></div>';
+    }, $text);
+    return $text;
+}
+
+// hide-toggle
+function Hide_Toggle($text)
+{
+    $text = preg_replace_callback('/\[hide-toggle name=\"(.*?)\".*?\](.*?)\[\/hide-toggle\]/ism', function ($text) {
+        return '<div class="hide-toggle"><div class="hide-button toggle-title"><i class="fas fa-caret-right fa-fw"></i>
+               <span>' . $text[1] . ' </span></div><div class="hide-content">' . $text[2] . '</div></div>';
+    }, $text);
+    return $text;
+}
+// 懒加载
 function Short_Lazyload($text)
 {
     $text = preg_replace_callback('/<img src=\"(.*?)\".*?>/ism', function ($text) {
@@ -535,23 +653,12 @@ function Short_Lazyload($text)
     }, $text);
     return $text;
 }
-/* 格式化标签 */
-function ParseCode($text)
-{
-
-    /* 初始化图片为懒加载 */
-    $text = Short_Lazyload($text);
-    return $text;
-}
-
-
 function themeInit($archive) {
     if ($archive->is('single')) {
         $archive->content = createCatalog($archive->content);
         $archive->content = ParseCode($archive->content);
     }
 }
-
 
 /**
  * 判断时间区间
@@ -600,7 +707,7 @@ if (empty($vai['1']['0'])) {
         $url .= ' />';
     }
 }else{
-    $url = 'https://q2.qlogo.cn/headimg_dl?dst_uin='.$vai['1']['0'].'&spec=100';
+    $url = 'https://q1.qlogo.cn/headimg_dl?dst_uin='.$vai['1']['0'].'&spec=100';
 }
 return  $url;
 } 
@@ -765,7 +872,7 @@ function get_comment_at($coid)
             if (@$prow['status'] == "waiting"){
                 echo '<p class="commentReview">（评论审核中）)</p>';
             }
-            echo '<a href="#comment-' . $parent . '">@' . $author . '</a>';
+            echo '<a onclick="b(this);return false;" href="#comment-' . $parent . '">@' . $author . '</a>';
         }else{//父评论作者不存在或者父评论没有审核通过
             if (@$prow['status'] == "waiting"){
                 echo '<p class="commentReview">（评论审核中）)</p>';
@@ -853,59 +960,61 @@ function printTag($that) { ?>
 
 
 //当前人数
-    function onlinePeople()
-        {
-          $online_log = "usr/themes/butterfly/online.dat"; //保存人数的文件到根目录,
-              $timeout = 30;//30秒内没动作者,认为掉线
-         $entries = file($online_log);
-             $temp = array();
-          for ($i=0;$i<count($entries);$i++){
-         $entry = explode(",",trim($entries[$i]));
-         if(($entry[0] != getenv('REMOTE_ADDR')) && ($entry[1] > time())) {
-            array_push($temp,$entry[0].",".$entry[1]."\n"); //取出其他浏览者的信息,并去掉超时者,保存进$temp
-        }
-    }
-              array_push($temp,getenv('REMOTE_ADDR').",".(time() + ($timeout))."\n"); //更新浏览者的时间
-          $slzxrs = count($temp); //计算在线人数
-            $entries = implode("",$temp);
+function onlinePeople(){
+   $online_log = "usr/themes/butterfly/online.dat"; //保存人数的文件到根目录,
+   $timeout = 30;//30秒内没动作者,认为掉线
+   $entries = file($online_log);
+   $temp = array();
+   for ($i=0;$i<count($entries);$i++){
+       $entry = explode(",",trim($entries[$i]));
+       if(($entry[0] != getenv('REMOTE_ADDR')) && ($entry[1] > time())) {
+           array_push($temp,$entry[0].",".$entry[1]."\n"); //取出其他浏览者的信息,并去掉超时者,保存进$temp
+           }
+   }
+   array_push($temp,getenv('REMOTE_ADDR').",".(time() + ($timeout))."\n"); //更新浏览者的时间
+   $slzxrs = count($temp); //计算在线人数
+   $entries = implode("",$temp);
     //写入文件
-           $fp = fopen($online_log,"w");
-         flock($fp,LOCK_EX); //flock() 不能在NFS以及其他的一些网络文件系统中正常工作
-          fputs($fp,$entries);
-          flock($fp,LOCK_UN);
-           fclose($fp);
-           echo $slzxrs;
-        }
+    $fp = fopen($online_log,"w");
+    flock($fp,LOCK_EX); //flock() 不能在NFS以及其他的一些网络文件系统中正常工作
+    fputs($fp,$entries);
+    flock($fp,LOCK_UN);
+    fclose($fp);
+    echo $slzxrs;
+}
 
 /*
 * 无插件阅读数
 */
 function get_post_view($archive)
 {
-$cid = $archive->cid;
-$db = Typecho_Db::get();
-$prefix = $db->getPrefix();
-if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')))) {
-$db->query('ALTER TABLE `' . $prefix . 'contents` ADD `views` INT(10) DEFAULT 0;');
-echo 0;
-return;
-}
-$row = $db->fetchRow($db->select('views')->from('table.contents')->where('cid = ?', $cid));
-if ($archive->is('single')) {
-$db->query($db->update('table.contents')->rows(array('views' => (int) $row['views'] + 1))->where('cid = ?', $cid));
-}
-echo $row['views'];
-}
-
-
-//总访问量
-    function theAllViews()
-        {
-            $db = Typecho_Db::get();
-            $row = $db->fetchAll('SELECT SUM(VIEWS) FROM `typecho_contents`');
-                echo number_format($row[0]['SUM(VIEWS)']);
+    $db = Typecho_Db::get();
+    $cid = $archive->cid;
+    if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')))) {
+        $db->query('ALTER TABLE `'.$db->getPrefix().'contents` ADD `views` INT(10) DEFAULT 0;');
+    }
+    $exist = $db->fetchRow($db->select('views')->from('table.contents')->where('cid = ?', $cid))['views'];
+    if ($archive->is('single')) {
+        $cookie = Typecho_Cookie::get('contents_views');
+        $cookie = $cookie ? explode(',', $cookie) : array();
+        if (!in_array($cid, $cookie)) {
+            $db->query($db->update('table.contents')
+                ->rows(array('views' => (int)$exist+1))
+                ->where('cid = ?', $cid));
+            $exist = (int)$exist+1;
+            array_push($cookie, $cid);
+            $cookie = implode(',', $cookie);
+            Typecho_Cookie::set('contents_views', $cookie);
         }
-        
+    }
+    echo $exist == 0 ? '0':' '.$exist;
+}
+//总访问量
+function theAllViews(){
+    $db = Typecho_Db::get();
+    $row = $db->fetchAll('SELECT SUM(VIEWS) FROM `typecho_contents`');
+    echo number_format($row[0]['SUM(VIEWS)']);
+}
 //  回复可见       
 Typecho_Plugin::factory('Widget_Abstract_Contents')->excerptEx = array('myyodux','one');
 Typecho_Plugin::factory('Widget_Abstract_Contents')->contentEx = array('myyodux','one');
@@ -1025,8 +1134,7 @@ class editor
 {
   public static function reset()
     {
-        Typecho_Widget::widget('Widget_Options')->to($options);
-        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js' . "'></script>";
+        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.0.3' . "'></script>";
         echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css' . "'>";
     }
 

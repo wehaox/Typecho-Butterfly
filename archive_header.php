@@ -1,5 +1,5 @@
 <?php  $this->need('header_com.php'); ?>
-    <div id="web_bg"></div>
+<div id="web_bg"></div>
 <div id="rightside">
 	<div id="rightside-config-hide" class="">
 		<button id="font-plus" type="button" title="放大字体">
@@ -33,8 +33,6 @@
 		</button>
 	</div>
 </div>
-
-
 <div class="page" id="body-wrap">
      <header class="not-home-page" id="page-header"  style="background-image: url()">
          

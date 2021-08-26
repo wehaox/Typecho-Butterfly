@@ -3,13 +3,37 @@
     <div id="footer-wrap"><div class="copyright">   
     <div class="copyright">©<?php echo date('Y'); ?> By <?php $this->author(); ?></div>
     <div class="framework-info">
-        <?php _e('由 <a target="_blank" href="http://www.typecho.org">Typecho</a> 强力驱动'); ?>
+        <span>由</span>
+        <a target="_blank" href="http://www.typecho.org">Typecho</a><span> 强力驱动</span>
         <span class="footer-separator">|</span>
-        <span><?php _e('主题 <a target="_blank" href="https://blog.wehaox.com/archives/blogtheme.html">Butterfly</a>'); ?></span>
-       </div>
-     <div class="footer_custom_text"><?php $this->options->Customfooter() ?></div>
+        <span>主题</span>
+        <a id="btheme" target="_blank" href="https://github.com/wehaox/Typecho-Butterfly">Butterfly</a>
     </div>
-</footer><!-- end #footer -->
+        <div class="footer_custom_text"><?php $this->options->Customfooter() ?></div>
+    </div>
+</footer>
+<!--搜索  -->
+<div id="local-search">
+    <div class="search-dialog">
+      <div class="search-dialog__title" id="local-search-title">本地搜索</div>
+      <div id="local-input-panel">
+        <div id="local-search-input">
+          <div class="local-search-box">
+              <form  id="search" method="post" action="<?php $this->options->siteUrl(); ?>" role="search">
+                    <label for="s" class="sr-only"><?php _e('搜索关键字'); ?></label>
+                    <input type="text" id="s" name="s" class="text" placeholder="<?php _e('输入关键字搜索'); ?>" />
+                    <!--<button type="submit" class="submit"><?php _e('搜索'); ?></button>-->
+                </form>
+              </div>
+        </div>
+      </div>
+      <hr>
+      <div id="local-search-results"></div>
+      <span class="search-close-button"><i class="fas fa-times"></i></span>
+    </div>
+    <div id="search-mask"></div>
+  </div>
+<!--搜索  -->
 </div>
 <?php $this->footer(); ?>
 <style type="text/css" data-typed-js-css="true">
@@ -30,7 +54,11 @@
           100% { opacity: 1; }
         }
  </style>
- <!-- 鼠标点击特效 -->
+ <?php if ($this->options->NewTabLink == 'on'): ?>
+ <script>
+ $(document).ready(function(){var a=document.getElementsByTagName("a");for(let i=0;i<a.length;i++){let domain=document.domain;let url=a[i].href;if(typeof(url)!="undefined"&&url.length!=0&&url.match(domain)==null){a[i].setAttribute("target","_BLANK")}}})
+ </script>
+ <?php endif; ?>
 <?php if ($this->options->CursorEffects !== 'off' &&$this->options->CursorEffects == 'heart') : ?>
 <script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="false"></script>
 <?php elseif ($this->options->CursorEffects !== 'off' &&$this->options->CursorEffects == 'fireworks') : ?>
@@ -40,6 +68,7 @@
 <?php if ($this->options->ShowLive2D !== 'off' && !isMobile()) : ?>
     <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
 <?php endif; ?>
+<script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.main.js'); ?>"></script>
 <script><?php $this->options->CustomScript() ?></script>
  <?php $this->options->CustomBodyEnd() ?>
 </body>

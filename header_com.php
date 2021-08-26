@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.0.0'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.0.3.0'); ?>">
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.0'); ?>">
     <?php endif; ?>
@@ -40,7 +40,7 @@
     var GLOBAL_CONFIG = {
       root: '/',
       algolia: undefined,
-    //   localSearch: { "path": "", "languages": { "hits_empty": "找不到您查询的内容：${query}" } },
+      localSearch: { "path": "https://blog.wehao.xyz/search.xml", "languages": { "hits_empty": "找不到您查询的内容：${query}" } },
       translate: { "defaultEncoding": 2, "translateDelay": 0, "msgToTraditionalChinese": "繁", "msgToSimplifiedChinese": "簡" },
       noticeOutdate: undefined,
       highlight: { "plugin": "highlighjs", "highlightCopy": true, "highlightLang": true },
@@ -314,25 +314,3 @@
     </div>
   </div>
 <!--移动导航栏-->
-<div id="local-search">
-    <div class="search-dialog">
-      <div class="search-dialog__title" id="local-search-title">本地搜索</div>
-      <div id="local-input-panel">
-        <div id="local-search-input">
-          <div class="local-search-box">
-              
-              <form  id="search" method="post" action="<?php $this->options->siteUrl(); ?>" role="search">
-                    <label for="s" class="sr-only"><?php _e('搜索关键字'); ?></label>
-                    <input type="text" id="s" name="s" class="text" placeholder="<?php _e('输入关键字搜索'); ?>" />
-                    <!--<button type="submit" class="submit"><?php _e('搜索'); ?></button>-->
-                </form>
-              </div>
-        </div>
-      </div>
-      <hr>
-      <div id="local-search-results"></div>
-      <span class="search-close-button"><i class="fas fa-times"></i></span>
-    </div>
-    <div id="search-mask"></div>
-  </div>
-<!--搜索  -->

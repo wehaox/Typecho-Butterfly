@@ -132,11 +132,13 @@ show_date_time();
       <div class="item-count">
          <?php allOfCharacters(); ?>
           </div></div>
+<?php if ($this->options->ShowOnlinePeople == 'on'): ?>                 
     <div class="webinfo-item">
       <div class="item-name">当前在线人数 :</div>
       <div class="item-count" >
       <?php onlinePeople();?>
       </div></div>
+<?php endif; ?>      
     <div class="webinfo-item">
       <div class="item-name">本站总访问量 :</div>
       <div class="item-count" >

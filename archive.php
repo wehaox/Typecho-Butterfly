@@ -1,9 +1,7 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php $this->need('archive_header.php'); ?>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.js'); ?>"></script>
-
 <main class="layout" id="content-inner">
-    
     <div class="recent-posts category_ui" id="recent-posts">
         <?php if ($this->have()): ?>
     	<?php while($this->next()): ?>
@@ -20,7 +18,6 @@
 			        <i class="far fa-calendar-alt"></i>
 				    <?php _e('发表于  '); ?> <?php $this->date(); ?>
 				    <time class="post-meta-date-created" datetime="<?php $this->date('c'); ?>">
-				       
 				    </time>
 				</span>
 				<i class="fas fa-history"></i>
@@ -75,4 +72,4 @@
 	</div>
 	</div>
 	</div>
-	<?php $this->need('footer.php'); ?>
+<?php $this->need('footer.php'); ?>
