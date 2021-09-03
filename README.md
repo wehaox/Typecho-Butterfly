@@ -1,12 +1,15 @@
 # Typecho-Butterfly
 这是 Typecho 版本的 butterfly 主题
 
-主题好看，但是由于经常换设备并且hexo操作还是不方便
+主题好看，但是由于经常换设备并且hexo操作还是不方便，某些功能受限于第三方
 所以就移植了  
 
 原主题：[hexo-butterfly](https://github.com/jerryc127/hexo-theme-butterfly)
 
-Demo：[WeHao‘s Blog](https://blog.wehaox.com/)
+Demo：[WeHao‘s Blog](https://blog.wehaox.com/)  
+
+# 下载
+你最好从[Release](https://github.com/wehaox/Typecho-Butterfly/releases)  页面下载，code页下载代码可能更新遗漏导致页面出错
 
 # 移植特色
  1. 方便原hexo的博文转移，因为都是md文档
@@ -27,7 +30,7 @@ Demo：[WeHao‘s Blog](https://blog.wehaox.com/)
   3. 文章加密（博客程序自带）
   4. 后台设置需要置顶文章
   5. 后台设置友链并可以使html自定义友链
- 6. 文章内可设置回复可见
+  6. 文章内可设置回复可见
 
 详情看：
 
@@ -37,6 +40,6 @@ Demo：[WeHao‘s Blog](https://blog.wehaox.com/)
 
 # 求打赏
 
-  ![微信](https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/wechat.jpg)
+![微信](https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/wechat.jpg)
 
 ![支付宝](https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/alipay.jpg)
