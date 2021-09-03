@@ -178,7 +178,7 @@
       </div>    
 <?php endif; ?>
 </nav>
-         <hr></hr>
+<hr></hr>
     <?php $this->need('comments.php'); ?>
 </div>
 <!-- end #main-->
@@ -200,6 +200,10 @@
 </script>
 <?php endif; ?>
 <script>
-
+  $("#to_comment").click(function() {
+        var hre = $(this).attr("href");
+        $('html, body').animate({
+                scrollTop: $(hre).offset().top}, 300);
+    });
 </script>
 <?php $this->need('footer.php'); ?>

@@ -241,8 +241,8 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script>
 <script src="<?php $this->options->themeUrl('/js/local-search.js'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/tw_cn.js'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/main.js'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/utils.js'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/js/main.js?v1.1'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/js/utils.js?v1.1'); ?>"> </script>
 <script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"> </script>
 <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"> </script>
 <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script>

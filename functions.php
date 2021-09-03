@@ -1,9 +1,9 @@
 <?php
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-
 function themeConfig($form) {
-    echo "<style>html {scroll-behavior: smooth;}.typecho-option-submit{position:fixed;top:668px;left:10%;}.mtoc a{display:block;float: left;padding: 10px;}.set_toc{position:sticky;top:3px;background-color:white;border:1px solid darkseagreen;padding:8px 0;overflow: auto;}.typecho-label{padding-top: 24px;}.typecho-option {margin: 0!important;}</style>";
     ?>
+    <style>.typecho-option-submit{position:fixed;top: 75%;right: 7%;}.mtoc a{display:block;float: left;padding: 10px;}.set_toc{position:sticky;top:3px;background-color:white;border:1px solid darkseagreen;padding:8px 0;overflow: auto;}
+    </style>
     <div class='set_toc' >
     <div class='mtoc'>
     <a href='#cids'>文章置顶及公共部分</a>
@@ -15,7 +15,7 @@ function themeConfig($form) {
     <a href='#CustomSet'>自定义内容</a>
     </div></div>
     <script src='https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js'></script>
-    <script>$('.set_toc').click(function(){ $('.mtoc').toggle();})</script>
+    <script src="<?php Helper::options()->themeUrl('js/themecustom.js'); ?>"></script>
     <script src='https://cdn.jsdelivr.net/gh/wehaox/CDN@main/postdomai.js'></script>
     <?php
     $sticky_cids = new Typecho_Widget_Helper_Form_Element_Text('sticky_cids', NULL, NULL,'置顶文章的 cid', '<div style="font-family:arial; background:#E8EFD1; padding:8px">按照排序输入, 请以半角逗号或空格分隔 cid</div>');
@@ -486,7 +486,7 @@ function createCatalog($obj) {    //为文章标题添加锚点
         global $catalog_count;
         $catalog_count ++;
         $catalog[] = array('text' => trim(strip_tags($obj[3])), 'depth' => $obj[1], 'count' => $catalog_count);
-        return '<h'.$obj[1].$obj[2].'><a name="cl-'.$catalog_count.'"></a>'.$obj[3].'</h'.$obj[1].'>';
+        return '<h'.$obj[1].$obj[2].' id="cl-'.$catalog_count.'"><a class="markdownIt-Anchor" href="#cl-'.$catalog_count.'" data-pjax-state></a>'.$obj[3].'</h'.$obj[1].'>';
     }, $obj);
     return $obj;
 }
@@ -518,14 +518,11 @@ function getCatalog() {    //输出文章目录容器
                     $index .= '</li>';
                 }
             }
-            $index .= '<li class="toc-item toc-level-1">
-            
-            <a onclick="b(this);return false;" class="toc-link" 
-            href="#cl-'.$catalog_item['count'].'">'
-            
-            .$catalog_item['text']
-            
-            .'</a>';
+            $index .= '<li class="toc-item">
+            <a class="toc-link" href="#cl-'.$catalog_item['count'].'" data-pjax-state="anchor">
+            <span class="toc-number"></span>
+            <span class="toc-text">'.$catalog_item['text'].'</span>
+            </a>';
             $prev_depth = $catalog_item['depth'];
         }
         for ($i=0; $i<=$to_depth; $i++) {
@@ -549,7 +546,6 @@ function GetLazyLoad()
 /* 格式化标签 */
 function ParseCode($text)
 {
-    /* 初始化图片为懒加载 */
     $text = Short_Lazyload($text);
     $text = Short_Tabs($text);
     $text = Note_Fsm($text);
@@ -558,6 +554,9 @@ function ParseCode($text)
     $text = Hide_Block($text);
     $text = Hide_Toggle($text);
     $text = Button($text);
+    $text = Cheak_Box($text);
+    $text = inline_Tag($text);
+    $text = Bf_Radio($text);
     return $text;
 }
 // 标签外挂-Tabs
@@ -598,7 +597,7 @@ function Button($text)
 {
     $text = preg_replace_callback('/\[btn href=\"(.*?)\" type=\"(.*?)\".*?\ ico=\"(.*?)\"](.*?)\[\/btn\]/ism', function ($text) {
         return '<a href="' . $text[1] . '" class="btn-beautify button--animated ' . $text[2] . '">
-        ' . $text[3] . '<span>' . $text[4] . '</span></a>';
+        <i class=" ' . $text[3] . '"></i><span>' . $text[4] . '</span></a>';
     }, $text);
     return $text;
 }
@@ -615,7 +614,7 @@ function Note_Fsm($text)
 function Note_Ico($text)
 {
     $text = preg_replace_callback('/\[note-ico type=\"(.*?)\".*?\ ico=\"(.*?)\"](.*?)\[\/note-ico\]/ism', function ($text) {
-        return '<div class="note ' . $text[1] . '">' . $text[2] . ' <p>' . $text[3] . '</p></div>';
+        return '<div class="note ' . $text[1] . '"><i class="' . $text[2] . '"></i><p>' . $text[3] . '</p></div>';
     }, $text);
     return $text;
 }
@@ -642,6 +641,30 @@ function Hide_Toggle($text)
     $text = preg_replace_callback('/\[hide-toggle name=\"(.*?)\".*?\](.*?)\[\/hide-toggle\]/ism', function ($text) {
         return '<div class="hide-toggle"><div class="hide-button toggle-title"><i class="fas fa-caret-right fa-fw"></i>
                <span>' . $text[1] . ' </span></div><div class="hide-content">' . $text[2] . '</div></div>';
+    }, $text);
+    return $text;
+}
+// 复选框
+function Cheak_Box($text)
+{
+    $text = preg_replace_callback('/\[cb color=\"(.*?)\".*?\ checked=\"(.*?)"\](.*?)\[\/cb\]/ism', function ($text) {
+        return '<div class="checkbox '. $text[1] .' checked"><input type="checkbox" '. $text[2] .'><p>'. $text[3] .'</p></div>';
+    }, $text);
+    return $text;
+}
+// 行内标签
+function inline_Tag($text)
+{
+    $text = preg_replace_callback('/\[in-tag color=\"(.*?)\"](.*?)\[\/in-tag\]/ism', function ($text) {
+        return '<span class="inline-tag '. $text[1] .'">'. $text[2] .'</span>';
+    }, $text);
+    return $text;
+}
+// 单选框-radio
+function Bf_Radio($text)
+{
+    $text = preg_replace_callback('/\[radio color=\"(.*?)\".*?\](.*?)\[\/radio\]/ism', function ($text) {
+       return '<div class="checkbox '. $text[1] .' checked"><input type="radio" checked><p>'. $text[2] .'</p></div>';
     }, $text);
     return $text;
 }
@@ -1100,12 +1123,14 @@ function theNextCid($widget, $default = NULL) {
 
 //调用博主最近文章更新时间
 function get_last_update(){
-    $num   = '1';
+    $num = '1';
+    $type = 'post';
+    $status = 'publish';
     $now = time();
-    $db     = Typecho_Db::get();
+    $db = Typecho_Db::get();
     $prefix = $db->getPrefix();
-    $create = $db->fetchRow($db->select('created')->from('table.contents')->limit($num)->order('created',Typecho_Db::SORT_DESC));
-    $update = $db->fetchRow($db->select('modified')->from('table.contents')->limit($num)->order('modified',Typecho_Db::SORT_DESC));
+    $create = $db->fetchRow($db->select('created')->from('table.contents')->where('table.contents.type=? and status=?',$type,$status)->order('created',Typecho_Db::SORT_DESC)->limit($num));
+    $update = $db->fetchRow($db->select('modified')->from('table.contents')->where('table.contents.type=? and status=?',$type,$status)->order('modified',Typecho_Db::SORT_DESC)->limit($num));
     if($create>=$update){
       echo Typecho_I18n::dateWord($create['created'], $now);
     }else{
@@ -1134,7 +1159,7 @@ class editor
 {
   public static function reset()
     {
-        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.0.3' . "'></script>";
+        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.1' . "'></script>";
         echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css' . "'>";
     }
 
