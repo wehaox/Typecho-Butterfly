@@ -297,6 +297,16 @@ function themeFields($layout)
         '介绍：开启此功能需要在主题设置中添加二维码图片'
     );
     $layout->addItem($ShowReward);
+    $ShowToc = new Typecho_Widget_Helper_Form_Element_Select('ShowToc',
+        array(
+            'show' => '开启（默认）',
+            'off' => '关闭',
+        ),
+        'show',
+        '是否显示文章目录',
+        '介绍：或许有的文章不需要目录功能,默认是开启的,一般不需要设置'
+    );
+    $layout->addItem($ShowToc);
 }
 // 新文章缩略图
 function get_ArticleThumbnail($widget){
@@ -557,6 +567,7 @@ function ParseCode($text)
     $text = Cheak_Box($text);
     $text = inline_Tag($text);
     $text = Bf_Radio($text);
+    $text = Bf_Mark($text);
     return $text;
 }
 // 标签外挂-Tabs
@@ -647,7 +658,7 @@ function Hide_Toggle($text)
 // 复选框
 function Cheak_Box($text)
 {
-    $text = preg_replace_callback('/\[cb color=\"(.*?)\".*?\ checked=\"(.*?)"\](.*?)\[\/cb\]/ism', function ($text) {
+    $text = preg_replace_callback('/\[cb type=\"(.*?)\".*?\ checked=\"(.*?)"\](.*?)\[\/cb\]/ism', function ($text) {
         return '<div class="checkbox '. $text[1] .' checked"><input type="checkbox" '. $text[2] .'><p>'. $text[3] .'</p></div>';
     }, $text);
     return $text;
@@ -663,8 +674,15 @@ function inline_Tag($text)
 // 单选框-radio
 function Bf_Radio($text)
 {
-    $text = preg_replace_callback('/\[radio color=\"(.*?)\".*?\](.*?)\[\/radio\]/ism', function ($text) {
-       return '<div class="checkbox '. $text[1] .' checked"><input type="radio" checked><p>'. $text[2] .'</p></div>';
+    $text = preg_replace_callback('/\[radio color=\"(.*?)\".*?\ checked=\"(.*?)"\](.*?)\[\/radio\]/ism', function ($text) {
+       return '<div class="checkbox '. $text[1] .' checked"><input type="radio" '. $text[2] .'><p>'. $text[3] .'</p></div>';
+    }, $text);
+    return $text;
+}
+function Bf_Mark($text)
+{
+    $text = preg_replace_callback('/\[label color=\"(.*?)\".*?\](.*?)\[\/label\]/ism', function ($text) {
+       return '<mark class="hl-label '. $text[1] .'">'. $text[2] .'</mark>';
     }, $text);
     return $text;
 }
@@ -704,7 +722,7 @@ return $now->timeStamp - $from < 24*60*60 ? true : false;
 */
 function tagsNum($display = true)
 {
-        $db = Typecho_Db::get();
+    $db = Typecho_Db::get();
         $total_tags = $db->fetchObject($db->select(array('COUNT(mid)' => 'num'))
               ->from('table.metas')
               ->where('table.metas.type = ?', 'tag'))->num;
@@ -712,7 +730,7 @@ function tagsNum($display = true)
             echo $total_tags;
         } else {
             return $total_tags;
-        }
+    }
 }
 
 //获取Gravatar头像 QQ邮箱取用qq头像
@@ -938,8 +956,7 @@ echo $commentClass;
 ?>">
     <div id="<?php $comments->theId(); ?>">
         <div class="comment-author">
-            <?php $email=$comments->mail; $imgUrl = getGravatar($email);echo '<img class="vimg" data-lazy-src="'.$imgUrl.'" width="45px" height="45px" style="border-radius: 50%;" 
-            src="'.GetLazyLoad().'">'; ?>
+            <?php $email=$comments->mail; $imgUrl = getGravatar($email);echo '<img class="vimg" data-lazy-src="'.$imgUrl.'" width="45px" height="45px" style="border-radius: 50%;" src="'.GetLazyLoad().'">'; ?>
             <cite class="vnick"><?php $comments->author(); ?></cite>
             <?php dengji($comments->mail);?>
             <span class="comment-ua"><?php getOs($comments->agent); ?><?php getBrowser($comments->agent); ?></span>
@@ -1159,8 +1176,8 @@ class editor
 {
   public static function reset()
     {
-        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.1' . "'></script>";
-        echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css' . "'>";
+        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.1.3' . "'></script>";
+        echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css?v1.1.3' . "'>";
     }
 
 }

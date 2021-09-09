@@ -30,10 +30,12 @@
 			<i class="fas fa-list-ul">
 			</i>
 		</button>
+		<?php if($this->allow('comment')): ?>
 		<a id="to_comment" href="#post-comment" title="直达评论">
 			<i class="fas fa-comments">
 			</i>
 		</a>
+		<?php endif ?>
 		<button id="go-up" type="button" title="回到顶部">
 			<i class="fas fa-arrow-up">
 			</i>
@@ -42,8 +44,9 @@
 </div>
 <div id="post-comment">
     <?php $this->comments()->to($comments); ?>
-     	<h3 id="response"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div></h3>
     <?php if($this->allow('comment')): ?>
+    <hr></hr>
+    <h3 id="response"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div></h3>
     <div id="<?php $this->respondId(); ?>" class="respond">
         <div class="cancel-comment-reply">
         <?php $comments->cancelReply(); ?>
@@ -79,12 +82,15 @@
             </p>
     	</form>
     </div>
-    <?php else: ?>
+    <script>$("#to_comment").click(function() {var hre = $(this).attr("href");$('html, body').animate({scrollTop: $(hre).offset().top}, 300);});</script>
+    <?php elseif(!$this->allow('comment')&&$this->is('post')): ?>
+    <hr></hr>
     <h3><?php _e('评论已关闭'); ?></h3>
+     <?php else: ?>
     <?php endif; ?>
    <?php if ($comments->have()): ?>
 	<h3><?php $this->commentsNum(_t('暂无评论'), _t('仅有一条评论'), _t('已有 %d 条评论')); ?></h3>
     <?php  $comments->listComments(); ?>
-    <?php $comments->pageNav('&laquo; 前一页', '后一页 &raquo;'); ?>
+    <?php $comments->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>'); ?>
     <?php endif; ?>
 </div>

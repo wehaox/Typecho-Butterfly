@@ -4,8 +4,9 @@
  *
  * @package custom
  *
- */$this->need('page_header.php');
+ */
 ?>
+<?php  $this->need('page_header.php'); ?>
 <script src="<?php $this->options->themeUrl('js/comjs.js'); ?>"></script>
 <main class="layout" id="content-inner">
     <div id="page"> 
@@ -13,7 +14,7 @@
         <div class="flink-list">
             <div class="flink" id="article-container">
                 <div class="flink-list">
-       <?php if ($this->options->Friends) : ?>
+    <?php if ($this->options->Friends) : ?>
         <?php
         if (strpos($this->options->Friends, '||') !== false) {
             $errorimg="'https://cdn.jsdelivr.net/npm/hexo-butterfly@1.0.0/themes/butterfly/source/img/friend_404.gif'";
@@ -43,7 +44,6 @@
 <div class="flink" id="article-container">
     <div class="flink-list"><?php $this->content(); ?></div>
 </div>
-<hr>
 <?php $this->need('comments.php'); ?>
 </div>
 <?php $this->need('sidebar.php'); ?>

@@ -21,8 +21,7 @@
     </ul>
   </div>
 </div>
-     <hr>
-         <?php $this->need('comments.php'); ?>
+    <?php $this->need('comments.php'); ?>
     </div>
      <?php $this->need('sidebar.php'); ?>
     </main>

@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.0.3.0'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.1.3'); ?>">
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.0'); ?>">
     <?php endif; ?>
@@ -250,7 +250,7 @@
     <div class="browsehappy" role="dialog"><?php _e('当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>'); ?>.</div>
 <![endif]-->
 <!--移动导航栏-->
-  <div id="sidebar">
+<div id="sidebar">
     <div id="menu-mask" style="display: none;"></div>
     <div id="sidebar-menus" class="">
       <div class="author-avatar"><img class="avatar-img"
@@ -288,7 +288,7 @@
                             echo"<i class='fa-fw fas fa-link'></i>";
                         }
                         elseif($this->is($pages->title == "关于")){
-                             echo"<li class='fa-fw fas fa-heart' style='width: 25%;text-align: left;'></li>";
+                             echo"<li class='fa-fw fas fa-user' style='width: 25%;text-align: left;'></li>";
                         }
                         elseif($this->is($pages->title=="留言")){
                              echo"<i class='fa-fw fas fa-comment-dots'></i>";

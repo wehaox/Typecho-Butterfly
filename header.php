@@ -36,29 +36,20 @@ backSpeed:50
                   <span> 搜索</span></a>
                   </div>
              <div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div>
-                        
           <div class="menus_items">
-                     <div class="menus_item">
-                    <a class="site-page"
-                    <?php if($this->is('index')): ?> 
-                    <?php endif; ?> 
-                    href="<?php $this->options->siteUrl(); ?>">
-                <li class="fa-fw fas fa-home"></li><?php _e('首页'); ?></a>
-                      </div>
-                      
+                <div class="menus_item">
+                    <a class="site-page" href="<?php $this->options->siteUrl(); ?>">
+                        <li class="fa-fw fas fa-home"></li><?php _e('首页'); ?></a>
+                </div>
                     <?php $this->widget('Widget_Contents_Page_List')->to($pages); ?>
                     
                     <?php while($pages->next()): ?>
-                    
-                    <div class="menus_item">
-                        
-                    <a<?php if($this->is('page', $pages->slug)): ?>  <?php endif; ?> 
-                    class="site-page" href="<?php $pages->permalink(); ?>" title="<?php $pages->title(); ?>">
+                    <div class="menus_item"><a class="site-page" href="<?php $pages->permalink(); ?>" title="<?php $pages->title(); ?>">
                         <?php if($this->is($pages->title == "友链")){
                             echo"<i class='fa-fw fas fa-link'></i>";
                         }
                         elseif($this->is($pages->title == "关于")){
-                             echo"<li class='fa-fw fas fa-heart'></li>";
+                             echo"<li class='fa-fw fas fa-user'></li>";
                         }
                         elseif($this->is($pages->title=="留言")){
                              echo"<i class='fa-fw fas fa-comment-dots'></i>";
@@ -78,12 +69,11 @@ backSpeed:50
                         }
                         ?>  
                         <?php $pages->title(); ?>
-                        
                         </a>
-                    <?php endwhile; ?>
-                    </div>  
+                   </div>
+                <?php endwhile; ?>
             </div>
-            </div>
+        </div>
     </nav>
 </header>
 <?php else: ?>
@@ -99,7 +89,6 @@ backSpeed:50
                   <span> 搜索</span></a>
                   </div>
              <div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div>
-                        
           <div class="menus_items">
                      <div class="menus_item">
                     <a class="site-page"
@@ -108,20 +97,15 @@ backSpeed:50
                     href="<?php $this->options->siteUrl(); ?>">
                 <li class="fa-fw fas fa-home"></li><?php _e('首页'); ?></a>
                       </div>
-                      
                     <?php $this->widget('Widget_Contents_Page_List')->to($pages); ?>
-                    
                     <?php while($pages->next()): ?>
-                    
                     <div class="menus_item">
-                        
-                    <a<?php if($this->is('page', $pages->slug)): ?>  <?php endif; ?> 
-                    class="site-page" href="<?php $pages->permalink(); ?>" title="<?php $pages->title(); ?>">
+                    <a class="site-page" href="<?php $pages->permalink(); ?>" title="<?php $pages->title(); ?>">
                         <?php if($this->is($pages->title == "友链")){
                             echo"<i class='fa-fw fas fa-link'></i>";
                         }
                         elseif($this->is($pages->title == "关于")){
-                             echo"<li class='fa-fw fas fa-heart'></li>";
+                             echo"<li class='fa-fw fas fa-user'></li>";
                         }
                         elseif($this->is($pages->title=="留言")){
                              echo"<i class='fa-fw fas fa-comment-dots'></i>";
@@ -144,9 +128,9 @@ backSpeed:50
                         
                         </a>
                     <?php endwhile; ?>
-                    </div>  
+                </div>  
             </div>
-            </div>
+        </div>
     </nav>
 </header>
 <?php endif; ?>

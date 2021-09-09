@@ -97,8 +97,6 @@
 </div>
    </div>
    </div>
-   
-   
 <?php if($this->fields->ShowReward === 'show' || $this->options->ShowGlobalReward === 'show') : ?>
    <div class="post-reward">
   <div class="reward-button button--animated">
@@ -178,7 +176,6 @@
       </div>    
 <?php endif; ?>
 </nav>
-<hr></hr>
     <?php $this->need('comments.php'); ?>
 </div>
 <!-- end #main-->
@@ -199,11 +196,7 @@
 	})();
 </script>
 <?php endif; ?>
-<script>
-  $("#to_comment").click(function() {
-        var hre = $(this).attr("href");
-        $('html, body').animate({
-                scrollTop: $(hre).offset().top}, 300);
-    });
-</script>
+<?php if($this->fields->ShowToc === 'off') : ?>
+<style>#card-toc,#mobile-toc-button{display: none!important;}</style>
+<?php endif?>
 <?php $this->need('footer.php'); ?>
