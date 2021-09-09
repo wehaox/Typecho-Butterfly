@@ -1,5 +1,5 @@
-html {
-    scroll-behavior: smooth;
+.search-dialog {
+    border-radius: 8px;
 }
 /*评论区显示*/
 .vmaster{
@@ -175,22 +175,35 @@ html {
     border-radius: 5px;
 }
 /*end*/
-#post-comment>ol>li{
+.comment-list>li{
     border-bottom: 1px solid #f0f0f0;
 }
-
+.page-navigator{
+    text-align: center;
+    padding-left: 0px;
+}
+.page-navigator > li{
+    list-style-type: none;
+    display: inline-block;
+    min-width: 1.2rem;
+    height: 1.2rem;
+    line-height: 1.2rem;
+    cursor: pointer;
+}
+.page-navigator > .current a{
+    color: var(--white);
+}
+.page-navigator > .current{
+    background: #00c4b6;
+}
 .post-content p img {
     display: none;
 }
-
-
 .post-meta{
     list-style:none;
     margin:0;
 }
-
 .post-meta li{
-      
     display:inline;
 }
 
@@ -210,12 +223,10 @@ html {
     line-height: normal;
 }
 /*视频挂载*/
-
 .iframe_video {
     position: relative;
     width: 100%;
 }
-
 @media only screen and (max-width: 400px) {
     .textarea:focus{
        background-position-x:400px!important;
@@ -228,6 +239,13 @@ html {
     }
     .textarea:focus{
        background-position-x:760px!important;
+    }
+    #nav .menus_items .menus_item,#search-button a li span{
+        display: none;
+    }
+    .search-dialog {
+    border-radius: 0;
+        
     }
 }
 
@@ -441,6 +459,3 @@ code[class*="language-"], pre[class*="language-"] {
 
 /*懒加载结束*/
 .ua-icon{display:inline-block;width:1pc;height:1pc;background-size:cover;background-repeat:no-repeat;vertical-align:text-top}.icon-360{background-image:url(https://z3.ax1x.com/2021/07/31/WvtC36.png)}.icon-uc{background-image:url(https://z3.ax1x.com/2021/07/31/Wvw9XV.png)}.icon-win1{background-image:url(https://z3.ax1x.com/2021/07/31/WvdfFH.png)}.icon-maxthon{background-image:url(https://z3.ax1x.com/2021/07/31/Wvw3Ae.png)}.icon-qqb{background-image:url(https://z3.ax1x.com/2021/07/31/Wvwo4J.png)}.icon-quark{background-image:url(https://z3.ax1x.com/2021/07/31/Wv0uCj.png)}.icon-mi{background-image:url(https://z3.ax1x.com/2021/07/31/WvB2wT.png)}.icon-arch{background-image:url(https://z3.ax1x.com/2021/07/31/WvywBq.png)}.icon-manjaro{width: 11px;height: 11px;margin-top: 4px;background-image:url(https://z3.ax1x.com/2021/08/08/flHSwd.png)}.icon-debian{background-image:url(https://z3.ax1x.com/2021/08/08/flOcxP.png)}
-
-
-
