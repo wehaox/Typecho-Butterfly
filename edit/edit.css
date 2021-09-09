@@ -22,3 +22,11 @@ body.fullscreen {
 #custom-field .typecho-list-table tbody input[type="text"] {
 	width:100%;
 }
+select {
+    margin-bottom: 5px;
+    width: 145px;
+}
+textarea {
+    margin-bottom: 10px;
+    width: 25.7em;
+}
