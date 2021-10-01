@@ -1,6 +1,3 @@
-.search-dialog {
-    border-radius: 8px;
-}
 /*评论区显示*/
 .vmaster{
     background: #ffa51e;
@@ -60,15 +57,22 @@
 .cancel-comment-reply{
     text-align: right;
 }
-#post-comment .comment-list{
+#post-comment {
     padding-left: 5px;
+}
+.comment-list{
+    padding-left: 0px;
 }
 .comment-children{
     padding-left: 30px;
 }
-
+.comment-content{
+    margin-left: 56px;
+}
+.comment-parent{border-bottom: 1px solid #f0f0f0;}
 .comment-list li {
     list-style: none;
+    margin-bottom: 20px;
 }
 .comment-body >div> p{
     color: var(--font-color);;
@@ -100,6 +104,8 @@
     height: 150px;
     padding: 0px 6px 8px 13px;
     background: url(../img/comment.png) 100% 100% no-repeat!important;
+    color: var(--text-highlight-color);
+    font-size: inherit;
 }
 
 .textarea:focus{
@@ -170,14 +176,15 @@
 .commments-info{
     padding: 10px;
 }
+.commments-info>input{
+    color: var(--text-highlight-color);
+}
+
 .commments-area{
     border: 1px solid #f0f0f0;
     border-radius: 5px;
 }
 /*end*/
-.comment-list>li{
-    border-bottom: 1px solid #f0f0f0;
-}
 .page-navigator{
     text-align: center;
     padding-left: 0px;
@@ -240,12 +247,8 @@
     .textarea:focus{
        background-position-x:760px!important;
     }
-    #nav .menus_items .menus_item,#search-button a li span{
+    #nav .menus_items .menus_item,#search-button>a>i>span{
         display: none;
-    }
-    .search-dialog {
-    border-radius: 0;
-        
     }
 }
 

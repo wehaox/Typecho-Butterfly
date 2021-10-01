@@ -1756,7 +1756,7 @@ div.snote.danger:before,div.snote.error:before {
 }
 
 #footer #footer-wrap,#footer #footer-wrap a {
-	color: #333
+	color: var(--font-color);
 }
 
 @font-face {
@@ -1943,4 +1943,7 @@ pre[class*=language-] {
 }
 [data-theme=dark] .nav-visible>#nav,[data-theme=dark] .nav-fixed>#nav {
     background: rgba(18,18,18,.8)!important;
+}
+#footer-wrap{
+    color: var(--font-color)!important;
 }
