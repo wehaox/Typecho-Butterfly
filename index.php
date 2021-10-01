@@ -8,7 +8,7 @@
  * <a href="https://blog.wehaox.com/archives/blogtheme.html#cl-4">主题更新日志</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.1.3
+ * @version 1.2.0
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -49,7 +49,6 @@ $uid = $this->user->uid; //登录时，显示用户各自的私密文章
 }
 ?>
 <?php  $this->need('header.php'); ?>
-     <script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.js'); ?>"></script>
 <main class="layout" id="content-inner">
 <div class="recent-posts" id="recent-posts">
 	<?php while($this->next()): ?>
@@ -92,7 +91,7 @@ $uid = $this->user->uid; //登录时，显示用户各自的私密文章
 					<span class="article-meta__separator">|</span>
 				<i class="fas fa-comments"></i>
 			     <span class="post-meta-date" itemprop="interactionCount">
-				    <a itemprop="discussionUrl" href="<?php $this->permalink() ?>#post-comment">
+				    <a itemprop="discussionUrl" href="<?php $this->permalink() ?>#comments">
 				        <?php $this->commentsNum('0条评论', '1 条评论', '%d 条评论'); ?>
 				    </a>
 				</span>
@@ -147,8 +146,9 @@ $uid = $this->user->uid; //登录时，显示用户各自的私密文章
 		</button>
 	</div>
 </div>
+<script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.js'); ?>"></script>
 <script>
-console.log(`
+function ver() {console.log(`
 ===================================================================
                                                                              
     #####  #    # ##### ##### ###### #####  ###### #      #   #    
@@ -158,8 +158,8 @@ console.log(`
     #    # #    #   #     #   #      #   #  #      #        #    
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                           1.1.3
+                           1.2.0
 ===================================================================
-`);
+`);}
 </script>
 <?php $this->need('footer.php'); ?>

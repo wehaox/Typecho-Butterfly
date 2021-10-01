@@ -1,6 +1,5 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php $this->need('archive_header.php'); ?>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.js'); ?>"></script>
 <main class="layout" id="content-inner">
     <div class="recent-posts category_ui" id="recent-posts">
         <?php if ($this->have()): ?>
@@ -70,6 +69,7 @@
 	<?php $this->need('sidebar.php'); ?>
 	</main>
 	</div>
-	</div>
-	</div>
+  </div>
+</div>
+<script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.js'); ?>"></script>
 <?php $this->need('footer.php'); ?>

@@ -54,11 +54,14 @@
           100% { opacity: 1; }
         }
  </style>
- <?php if ($this->options->NewTabLink == 'on'): ?>
- <script>
+<?php if ($this->options->NewTabLink == 'on'): ?>
+<script>
  $(document).ready(function(){var a=document.getElementsByTagName("a");for(let i=0;i<a.length;i++){let domain=document.domain;let url=a[i].href;if(typeof(url)!="undefined"&&url.length!=0&&url.match(domain)==null){a[i].setAttribute("target","_BLANK")}}})
- </script>
- <?php endif; ?>
+</script>
+<?php endif; ?>
+<?php if ($this->options->showFramework == 'off'): ?>
+<style>.framework-info{display:none}</style>
+<?php endif; ?>
 <?php if ($this->options->CursorEffects !== 'off' &&$this->options->CursorEffects == 'heart') : ?>
 <script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="false"></script>
 <?php elseif ($this->options->CursorEffects !== 'off' &&$this->options->CursorEffects == 'fireworks') : ?>

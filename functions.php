@@ -2,10 +2,11 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 function themeConfig($form) {
     ?>
-    <style>.typecho-option-submit{position:fixed;top: 75%;right: 7%;}.mtoc a{display:block;float: left;padding: 10px;}.set_toc{position:sticky;top:3px;background-color:white;border:1px solid darkseagreen;padding:8px 0;overflow: auto;}
+    <style>.typecho-option-submit{position:fixed;top: 75%;right: 7%;}.mtoc a{display:block;float: left;padding: 10px;}.set_toc{position:sticky;top:3px;background-color:white;border:1px solid darkseagreen;padding:8px 0;overflow: auto;}.protected{margin-top:10px;}
     </style>
     <div class='set_toc' >
     <div class='mtoc'>
+    <a href='#themeBackup'>主题备份与还原</a>
     <a href='#cids'>文章置顶及公共部分</a>
     <a href='#friends'>友情链接设置</a>
     <a href='#reward'>打赏功能</a>
@@ -14,8 +15,11 @@ function themeConfig($form) {
     <a href='#ShowLive2D'>Live2D设置</a>
     <a href='#CustomSet'>自定义内容</a>
     </div></div>
+    <form class="protected" action="?butterflybf" method="post" id="themeBackup">
+        <input type="submit" name="type" class="btn btn-s" value="备份主题数据" />&nbsp;&nbsp;<input type="submit" name="type" class="btn btn-s" value="还原主题数据" />&nbsp;&nbsp;<input type="submit" name="type" class="btn btn-s" value="删除备份数据" /></form>
+    
     <script src='https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js'></script>
-    <script src="<?php Helper::options()->themeUrl('js/themecustom.js'); ?>"></script>
+    <script src="<?php Helper::options()->themeUrl('js/themecustom.js?v1.1.9'); ?>"></script>
     <script src='https://cdn.jsdelivr.net/gh/wehaox/CDN@main/postdomai.js'></script>
     <?php
     $sticky_cids = new Typecho_Widget_Helper_Form_Element_Text('sticky_cids', NULL, NULL,'置顶文章的 cid', '<div style="font-family:arial; background:#E8EFD1; padding:8px">按照排序输入, 请以半角逗号或空格分隔 cid</div>');
@@ -32,6 +36,17 @@ function themeConfig($form) {
         '介绍：非站内链接在新标签打开'
     );
     $form->addInput($NewTabLink->multiMode());
+    
+    $showFramework = new Typecho_Widget_Helper_Form_Element_Select('showFramework',
+        array(
+            'on' => '开启（默认）',
+            'off' => '关闭',
+        ),
+        'on',
+        '是否显示底部博客框架和主题',
+        '介绍：如果你是小白自行修改主题名会导致侵权提示，你可以在这里关闭同时希望你可以<b>尊重本主题</b>'
+    );
+    $form->addInput($showFramework->multiMode());
     
     $Sitefavicon = new Typecho_Widget_Helper_Form_Element_Text('Sitefavicon', NULL, NULL, _t('网站图标'), _t('网站图标，使用png格式，大小建议不超过64x64'));
     $form->addInput($Sitefavicon);
@@ -123,10 +138,13 @@ function themeConfig($form) {
     'ShowTag' => _t('显示标签'),
     'ShowArchive' => _t('显示归档'),
     'ShowWebinfo' => _t('显示网站咨询'),
-    'ShowOther' => _t('显示其它杂项')),
-    array('ShowAnnounce','ShowRecentPosts', 'ShowRecentComments', 'ShowCategory','ShowTag', 'ShowArchive', 'ShowWebinfo', 'ShowOther'), _t('侧边栏显示'));
+    'ShowOther' => _t('显示其它杂项'),
+    'ShowMobileSide' => _t('手机端显示侧栏')
+    ),
+    array('ShowAnnounce','ShowRecentPosts', 'ShowRecentComments', 'ShowCategory','ShowTag', 'ShowArchive', 'ShowWebinfo', 'ShowOther','ShowMobileSide'), _t('侧边栏显示'));
     $sidebarBlock->setAttribute('id', 'aside');
     $form->addInput($sidebarBlock->multiMode());
+    // 在线人数显示
     $ShowOnlinePeople = new Typecho_Widget_Helper_Form_Element_Select('ShowOnlinePeople',
         array(
             'on' => '开启（默认）',
@@ -137,6 +155,19 @@ function themeConfig($form) {
         '介绍：侧栏网站咨询模块在线人数统计,防止某些虚拟主机无法开启导致500错误'
     );
     $form->addInput($ShowOnlinePeople->multiMode());
+    // 文章侧边栏设置
+    $PostSidebarBlock = new Typecho_Widget_Helper_Form_Element_Checkbox('PostSidebarBlock', 
+    array(
+    // 'ShowAuthorInfo' => _t('显示作者信息'),
+    // 'ShowAnnounce' => _t('显示公告'),
+    'ShowRecentPosts' => _t('显示最新文章'),
+    'ShowWebinfo' => _t('显示网站咨询'),
+    'ShowOther' => _t('显示其它杂项')),
+    array('ShowRecentPosts', 'ShowWebinfo', 'ShowOther'), _t('文章侧边栏显示'),_t('说明:单独设置文章内侧栏'));
+    $form->addInput($PostSidebarBlock->multiMode());
+    
+    
+    
     
 // 美化选项
     $beautifyBlock = new Typecho_Widget_Helper_Form_Element_Checkbox('beautifyBlock', 
@@ -242,7 +273,66 @@ function themeConfig($form) {
         '介绍：网页底部的信息，如备案号等等(可使用html)'
     );
     $form->addInput($Customfooter);
+
+
+
     
+$db = Typecho_Db::get();
+$sjdq=$db->fetchRow($db->select()->from ('table.options')->where ('name = ?', 'theme:butterfly'));
+$ysj = $sjdq['value'];
+if(isset($_POST['type']))
+{ 
+if($_POST["type"]=="备份主题数据"){
+if($db->fetchRow($db->select()->from ('table.options')->where ('name = ?', 'theme:butterflybf'))){
+$update = $db->update('table.options')->rows(array('value'=>$ysj))->where('name = ?', 'theme:butterflybf');
+$updateRows= $db->query($update);
+echo '<div class="tongzhi">备份已更新，请等待自动刷新！如果等不到请点击';
+?>    
+<a href="<?php Helper::options()->adminUrl('options-theme.php'); ?>">这里</a></div>
+<script language="JavaScript">window.setTimeout("location=\'<?php Helper::options()->adminUrl('options-theme.php'); ?>\'", 2500);</script>
+<?php
+}else{
+if($ysj){
+     $insert = $db->insert('table.options')->rows(array('name' => 'theme:butterflybf','user' => '0','value' => $ysj));
+     $insertId = $db->query($insert);
+echo '<div class="tongzhi">备份完成，请等待自动刷新！如果等不到请点击';
+?>    
+<a href="<?php Helper::options()->adminUrl('options-theme.php'); ?>">这里</a></div>
+<script language="JavaScript">window.setTimeout("location=\'<?php Helper::options()->adminUrl('options-theme.php'); ?>\'", 2500);</script>
+<?php
+}
+}
+        }
+if($_POST["type"]=="还原主题数据"){
+if($db->fetchRow($db->select()->from ('table.options')->where ('name = ?', 'theme:butterflybf'))){
+$sjdub=$db->fetchRow($db->select()->from ('table.options')->where ('name = ?', 'theme:butterflybf'));
+$bsj = $sjdub['value'];
+$update = $db->update('table.options')->rows(array('value'=>$bsj))->where('name = ?', 'theme:butterfly');
+$updateRows= $db->query($update);
+echo '<div class="tongzhi">检测到主题备份数据，恢复完成，请等待自动刷新！如果等不到请点击';
+?>    
+<a href="<?php Helper::options()->adminUrl('options-theme.php'); ?>">这里</a></div>
+<script language="JavaScript">window.setTimeout("location=\'<?php Helper::options()->adminUrl('options-theme.php'); ?>\'", 2000);</script>
+<?php
+}else{
+echo '<div class="tongzhi">没有主题备份数据，恢复不了哦！</div>';
+}
+}
+if($_POST["type"]=="删除备份数据"){
+if($db->fetchRow($db->select()->from ('table.options')->where ('name = ?', 'theme:butterflybf'))){
+$delete = $db->delete('table.options')->where ('name = ?', 'theme:butterflybf');
+$deletedRows = $db->query($delete);
+echo '<div class="tongzhi">删除成功，请等待自动刷新，如果等不到请点击';
+?>    
+<a href="<?php Helper::options()->adminUrl('options-theme.php'); ?>">这里</a></div>
+<script language="JavaScript">window.setTimeout("location=\'<?php Helper::options()->adminUrl('options-theme.php'); ?>\'", 2500);</script>
+<?php
+}else{
+echo '<div class="tongzhi">不用删了！备份不存在！！！</div>';
+}
+}
+    }
+// 结束
 }
 
 function themeFields($layout)
@@ -307,6 +397,9 @@ function themeFields($layout)
         '介绍：或许有的文章不需要目录功能,默认是开启的,一般不需要设置'
     );
     $layout->addItem($ShowToc);
+    
+    
+    
 }
 // 新文章缩略图
 function get_ArticleThumbnail($widget){
@@ -966,7 +1059,7 @@ echo $commentClass;
             <a class="vtime" href="<?php $comments->permalink(); ?>"><?php $comments->date('Y-m-d H:i'); ?></a>
             <span class="comment-reply"><?php $comments->reply(); ?></span>
         </div>
-        <?php $comments->content(); ?>
+        <div class="comment-content"><?php $comments->content(); ?></div>
     </div>
 <?php if ($comments->children) { ?>
     <div class="comment-children">
@@ -1052,8 +1145,8 @@ function get_post_view($archive)
 //总访问量
 function theAllViews(){
     $db = Typecho_Db::get();
-    $row = $db->fetchAll('SELECT SUM(VIEWS) FROM `typecho_contents`');
-    echo number_format($row[0]['SUM(VIEWS)']);
+    $row = $db->fetchAll($db->select('SUM(views)')->from('table.contents'));
+    echo $row[0]["SUM(`views`)"];
 }
 //  回复可见       
 Typecho_Plugin::factory('Widget_Abstract_Contents')->excerptEx = array('myyodux','one');
@@ -1064,14 +1157,12 @@ class myyodux {
       $text = empty($text)?$con:$text;
       if(!$obj->is('single')){
       $text = preg_replace("/\[hide\](.*?)\[\/hide\]/sm",'',$text);
+    //   $text = preg_replace("/\n\s*){3,}/sm",' ',$text);
       }
       return $text;
     }
-}        
- 
- 
- function ParseAvatar($mail, $re = 0, $id = 0)
-{
+}
+function ParseAvatar($mail, $re = 0, $id = 0){
     $a = Typecho_Widget::widget('Widget_Options')->JGravatars;
     $b = 'https://gravatar.helingqi.com/wavatar/';
     $c = strtolower($mail);
@@ -1176,7 +1267,7 @@ class editor
 {
   public static function reset()
     {
-        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.1.3' . "'></script>";
+        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.1.4' . "'></script>";
         echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css?v1.1.3' . "'>";
     }
 

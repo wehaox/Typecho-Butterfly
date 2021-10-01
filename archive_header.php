@@ -1,4 +1,5 @@
 <?php  $this->need('header_com.php'); ?>
+<style>#body-wrap {min-height: 0;}</style>
 <div id="web_bg"></div>
 <div id="rightside">
 	<div id="rightside-config-hide" class="">
@@ -34,18 +35,17 @@
 	</div>
 </div>
 <div class="page" id="body-wrap">
-     <header class="not-home-page" id="page-header"  style="background-image: url()">
+<header class="not-home-page" id="page-header"  style="background-image: url(<?php if ($this->is('page')){GetRandomThumbnailPost($this);}?>)">
          <div id="page-site-info"><h1 id="site-title"><?php $this->archiveTitle(array(
             'category'  =>  _t(' %s '),
             'search'    =>  _t('包含关键字 %s 的文章'),
             'tag'       =>  _t('标签 %s 下的文章'),
             'author'    =>  _t('%s 发布的文章')
         ), '', ''); ?></h1></div>
-        
-        <nav id="nav" class="show" >
-                 <span id="blog_name">
-            <a id="site-name" href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a>
-       </span>
+<nav id="nav" class="show" >
+    <span id="blog_name">
+        <a id="site-name" href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a>
+    </span>
         <div id="menus">
               <div id="search-button">
                   <a class="site-page social-icon search">

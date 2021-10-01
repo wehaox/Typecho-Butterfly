@@ -15,7 +15,7 @@
          if ($this->user->hasLogin() || $result) {
          $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<div class="reply-content">$1</div>', $this->content);
          } else {
-         $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<p class="need-reply">此处内容 <a href="#post-comment">回复</a> 可见</p>', $this->content);
+         $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<p class="need-reply">此处内容 <a href="#comments">回复</a> 可见</p>', $this->content);
          }
         echo $content
        ?>

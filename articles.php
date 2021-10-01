@@ -6,9 +6,7 @@
     * @package custom  
     */  
 $this->need('archive_header.php'); ?>
-<style>
-.card-recent-post{display: none;}
-</style>
+<style>.card-recent-post{display: none;}</style>
   <main class="layout" id="content-inner">
     <div id="archive">
         <section class="page-title">

@@ -1,6 +1,6 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <!DOCTYPE HTML>
-<html class="no-js">
+<html data-theme="light" class="">
 <head>
     <link rel="icon" type="image/png" href="<?php $this->options->Sitefavicon() ?>">
     <meta charset="<?php $this->options->charset(); ?>">
@@ -17,10 +17,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.1.3'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.2.0'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.2.0'); ?>">
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.0'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.2.0'); ?>">
     <?php endif; ?>
     <link rel="preconnect" href="//cdn.jsdelivr.net" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css" />
@@ -35,12 +35,19 @@
         <?php $this->options->CustomCSS() ?>
     </style>
     <?php endif; ?>
+    <?php if (!empty($this->options->sidebarBlock) && !in_array('ShowMobileSide',$this->options->sidebarBlock)): ?>
+    <style>
+        @media screen and (max-width:900px){
+            #aside-content .card-info,#aside-content .card-announcement,#aside-content .card-recent-post,#aside-content #card-newest-comments,#aside-content .card-categories,#aside-content .card-tags,#aside-content .card-archives,#aside-content .card-webinfo,#aside-content .card-ty-user{display:none;}
+        }
+    </style>
+    <?php endif; ?>
 <!--额外的-->
 <script>
     var GLOBAL_CONFIG = {
       root: '/',
       algolia: undefined,
-      localSearch: { "path": "https://blog.wehao.xyz/search.xml", "languages": { "hits_empty": "找不到您查询的内容：${query}" } },
+      localSearch: { "path": "", "languages": { "hits_empty": "回车查询：${query}" } },
       translate: { "defaultEncoding": 2, "translateDelay": 0, "msgToTraditionalChinese": "繁", "msgToSimplifiedChinese": "簡" },
       noticeOutdate: undefined,
       highlight: { "plugin": "highlighjs", "highlightCopy": true, "highlightLang": true },
@@ -241,8 +248,8 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script>
 <script src="<?php $this->options->themeUrl('/js/local-search.js'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/tw_cn.js'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/main.js?v1.1'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/utils.js?v1.1'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/js/main.js?v1.2'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/js/utils.js?v1.2'); ?>"> </script>
 <script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"> </script>
 <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"> </script>
 <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script>
@@ -253,8 +260,8 @@
 <div id="sidebar">
     <div id="menu-mask" style="display: none;"></div>
     <div id="sidebar-menus" class="">
-      <div class="author-avatar"><img class="avatar-img"
-          src="<?php $this->options->logoUrl() ?>"
+      <div class="avatar-img is-center">
+          <img src="<?php $this->options->logoUrl() ?>"
           onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/hexo-butterfly@1.0.0/themes/butterfly/source/img/friend_404.gif'" alt="avatar"></div>
       <div class="site-data">
         <div class="data-item is-center">
@@ -288,7 +295,7 @@
                             echo"<i class='fa-fw fas fa-link'></i>";
                         }
                         elseif($this->is($pages->title == "关于")){
-                             echo"<li class='fa-fw fas fa-user' style='width: 25%;text-align: left;'></li>";
+                             echo"<li class='fa-fw fas fa-user' style='width: 15%;text-align: left;'></li>";
                         }
                         elseif($this->is($pages->title=="留言")){
                              echo"<i class='fa-fw fas fa-comment-dots'></i>";

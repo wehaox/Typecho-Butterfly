@@ -1,12 +1,11 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-
 <div class="aside-content" id="aside-content" role="complementary">
-    
    <div class="card-widget card-info">
-       
 	<div class="card-info-avatar is-center">
+	    <div class="avatar-img">
      <img  class="avatar-img" data-lazy-src="<?php $this->options->logoUrl() ?>" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/hexo-butterfly@1.0.0/themes/butterfly/source/img/friend_404.gif'" 
            src="<?php echo GetLazyLoad() ?>" alt="avatar">
+           </div>
 		<div class="author-info__name">
 			<?php $this->author(); ?>
 		</div>
@@ -61,19 +60,18 @@
     <div class="card-widget card-announcement"><div class="item-headline">
         <i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div>
     <div class="announcement_content"><?php $this->options->announcement() ?></div></div>
-         <div class="sticky_layout">
+<div class="sticky_layout">
     <div class="card-widget" id="card-toc">
   <div class="item-headline">
     <i class="fas fa-stream"></i>
     <span>目录</span></div>
-    
   <div class="toc-content" progress-percentage="">
     <ol class="toc">
          <?php getCatalog(); ?>
     </ol>
   </div>
 </div>
-    <?php if (!empty($this->options->sidebarBlock) && in_array('ShowRecentPosts', $this->options->sidebarBlock)): ?>
+<?php if (!empty($this->options->PostSidebarBlock) && in_array('ShowRecentPosts', $this->options->PostSidebarBlock)): ?>
     <div class="card-widget card-recent-post">
        <div class="item-headline">
             <i class="fas fa-history"></i><span><?php _e('最新文章'); ?></span>
@@ -97,7 +95,7 @@
        </div>
     </div>
     <?php endif; ?>
-<?php if (!empty($this->options->sidebarBlock) && in_array('ShowWebinfo', $this->options->sidebarBlock)): ?>
+<?php if (!empty($this->options->PostSidebarBlock) && in_array('ShowWebinfo', $this->options->PostSidebarBlock)): ?>
   <div class="card-widget card-webinfo">
      <div class="item-headline">
    <i class="fas fa-chart-line"></i>
@@ -142,7 +140,7 @@ show_date_time();
     <div class="webinfo-item">
       <div class="item-name">本站总访问量 :</div>
       <div class="item-count" >
-      <?php echo theAllViews();?>
+      <?php theAllViews();?>
       </div></div>
     <div class="webinfo-item">
       <div class="item-name">最后更新时间 :</div>
@@ -152,7 +150,7 @@ show_date_time();
   </div>
   </div>
  <?php endif; ?>
-    <?php if (!empty($this->options->sidebarBlock) && in_array('ShowOther', $this->options->sidebarBlock)): ?>
+    <?php if (!empty($this->options->PostSidebarBlock) && in_array('ShowOther', $this->options->PostSidebarBlock)): ?>
 	<div class="card-widget">
 	    <div class="item-headline">
             <i class="fas fa-user"></i><span><?php _e('用户'); ?></span></div>

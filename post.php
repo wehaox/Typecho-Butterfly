@@ -1,6 +1,5 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php $this->need('post_header.php'); ?>
-<script src="<?php $this->options->themeUrl('js/comjs.js'); ?>"></script>
 <main class="layout" id="content-inner">
 <div id="post" >
 <?php if (is_array($this->options->beautifyBlock) && in_array('PostShowTopimg',$this->options->beautifyBlock)): ?>  
@@ -60,7 +59,7 @@
          if ($this->user->hasLogin() || $result) {
          $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<div class="reply-content">$1</div>', $this->content);
          } else {
-         $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<p class="need-reply">此处内容 <a href="#post-comment">回复</a> 可见</p>', $this->content);
+         $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<p class="need-reply">此处内容 <a href="#comments">回复</a> 可见</p>', $this->content);
          }
         echo $content
        ?>
@@ -182,8 +181,13 @@
 <?php $this->need('post_sidebar.php'); ?>
 </main>
 </div>
+<script src="<?php $this->options->themeUrl('js/comjs.js'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.0'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/clipboard.min.js'); ?>"></script>
+<script>
+$(document).ready(function(){var tocState = $(".toc").html();if(tocState.length == "1") {
+$("#card-toc,#mobile-toc-button").remove();}});
+</script>
 <?php if (!empty($this->options->beautifyBlock) && in_array('showLineNumber',
     $this->options->beautifyBlock)): ?> 
 <script type="text/javascript">

@@ -27,9 +27,11 @@
                 ' <div class="flink-list-item"">
                 <a target="_blank" title="' . explode("||", $string_arr[$i])[0] . '" 
                 href="' . explode("||", $string_arr[$i])[1] . '">
-                <img onerror="this.onerror=null;this.src=' .$errorimg. '" src="'.GetLazyLoad().'" data-lazy-src="' . explode("||", $string_arr[$i])[2] . '" />
-                <span class="flink-item-name"> '. explode("||", $string_arr[$i])[0] . ' </span>
-                <span class="flink-item-desc" title="' . explode("||", $string_arr[$i])[3] . '">' . explode("||", $string_arr[$i])[3] . '</span>
+                <div class="flink-item-icon">
+                 <img onerror="this.onerror=null;this.src=' .$errorimg. '" src="'.GetLazyLoad().'" data-lazy-src="' . explode("||", $string_arr[$i])[2] . '" alt=" '. explode("||", $string_arr[$i])[0] . '" class="entered"/>
+                </div>
+                <div class="flink-item-name"> '. explode("||", $string_arr[$i])[0] . ' </div>
+                <div class="flink-item-desc" title="' . explode("||", $string_arr[$i])[3] . '">' . explode("||", $string_arr[$i])[3] . '</div>
                 </a>
                 </div>';
             }

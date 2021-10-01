@@ -1,11 +1,11 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 
 <div class="aside-content" id="aside-content">
-   
    <div class="card-widget card-info">
-       
-	<div class="card-info-avatar is-center">
-     <img  class="avatar-img" data-lazy-src="<?php $this->options->logoUrl() ?>" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/hexo-butterfly@1.0.0/themes/butterfly/source/img/friend_404.gif'" src="<?php echo GetLazyLoad() ?>" alt="avatar">
+	 <div class="card-info-avatar is-center">
+	     <div class="avatar-img">
+	         <img data-lazy-src="<?php $this->options->logoUrl() ?>" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/hexo-butterfly@1.0.0/themes/butterfly/source/img/friend_404.gif'" src="<?php echo GetLazyLoad() ?>" alt="avatar">
+	      </div>
 		<div class="author-info__name">
 			<?php $this->author(); ?>
 		</div>
@@ -207,7 +207,7 @@ show_date_time();
     <div class="webinfo-item">
       <div class="item-name">本站总访问量 :</div>
       <div class="item-count" >
-      <?php echo theAllViews();?>
+      <?php theAllViews();?>
       </div></div>
     <div class="webinfo-item">
       <div class="item-name">最后更新时间 :</div>
@@ -218,7 +218,7 @@ show_date_time();
   </div>
  <?php endif; ?>
     <?php if (!empty($this->options->sidebarBlock) && in_array('ShowOther', $this->options->sidebarBlock)): ?>
-	<div class="card-widget">
+	<div class="card-widget card-ty-user">
 	    <div class="item-headline">
             <i class="fas fa-user"></i><span><?php _e('用户'); ?></span></div>
         <div class="widget-list">

@@ -31,7 +31,7 @@
 			</i>
 		</button>
 		<?php if($this->allow('comment')): ?>
-		<a id="to_comment" href="#post-comment" title="直达评论">
+		<a id="to_comment" href="#comments" title="直达评论">
 			<i class="fas fa-comments">
 			</i>
 		</a>
@@ -42,7 +42,7 @@
 		</button>
 	</div>
 </div>
-<div id="post-comment">
+<div id="comments">
     <?php $this->comments()->to($comments); ?>
     <?php if($this->allow('comment')): ?>
     <hr></hr>
