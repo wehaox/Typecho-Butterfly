@@ -34,6 +34,9 @@
 }
 )
 $("#wmd-button-row #wmd-fullscreen-button").before(`
+<li class="wmd-button custom" id="b-wmd-title" title="插入标题">
+  <svg t="1632494349172" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2457" width="64" height="64"><path d="M256 213.333333h104.874667v267.093334h324.48V213.333333h104.874666v640h-104.874666v-283.264H360.874667V853.333333H256z" p-id="2458" fill="#707070"></path></svg>
+</li>
 <li class="wmd-button custom" id="b-wmd-linecode" title="行内代码">
   <svg t="1630835908894" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5268" width="60" height="60"><path d="M539.584 217.92c8.192-20.48 28.8-28.8 49.28-20.48 20.544 8.192 32.896 28.736 28.8 49.28v4.096l-164.352 493.12v4.096c-8.256 20.48-28.8 28.8-49.28 20.48-20.608-8.192-32.896-28.736-28.8-49.28v-4.096L539.52 222.08v-4.16z m163.52-12.288c16.384-16.448 36.928-16.448 53.376-4.16l4.096 4.16 246.592 246.528 4.096 4.096c12.352 16.448 12.352 36.992 0 49.28l-4.096 4.16-246.592 246.528-4.096 4.096c-16.448 12.352-36.992 12.352-49.28 0l-4.096-4.096-4.16-4.096c-12.288-16.448-12.288-36.992 0-49.28l4.16-4.16 217.728-217.792-217.728-217.728-4.16-4.16c-12.288-16.384-12.288-36.928 4.16-53.376zM260.16 205.632a39.68 39.68 0 0 1 57.536 0c16.448 16.448 16.448 36.992 4.096 53.376l-4.096 4.16L99.84 480.896l217.792 217.792c16.448 16.448 16.448 36.992 4.096 53.44l-4.096 4.096c-16.448 16.448-36.992 16.448-53.44 4.096l-4.096-4.096L13.632 509.696c-16.448-16.448-16.448-36.992-4.16-53.44l4.16-4.096 246.528-246.528z" fill="#909399" p-id="5269"></path></svg>
 </li>
@@ -135,10 +138,10 @@ $("#wmd-button-row #wmd-fullscreen-button").before(`
 $("#b-wmd-md-link").on("click",function() {
     $("#ui-datepicker-div").after(`
     <div class="wmd-prompt-dialog" style="top: 45%;" role="dialog">
-    <div><p><b>插入链接</b></p><p>请在下方的输入框内输入要插入的链接地址和标题</p></div>
+    <div><p><b>插入链接(markdown通用格式)</b></p><p>请在下方的输入框内输入要插入的链接地址和标题</p></div>
   <form>
     链接描述：<input type="text" name="link-title">
-    链接地址：<input type="text" name="link-link" value="https://">
+    链接地址：<input type="text" name="link-link" value="https://" onfocus="this.select();">
     <button type="button" class="btn btn-s primary btn-ok">确定</button>
     <button type="button" class="btn btn-s btn-cancel">取消</button></form>
 </div>`);
@@ -153,10 +156,10 @@ $(".btn-ok").click(function(){
 $("#b-wmd-md-img").on("click",function() {
     $("#ui-datepicker-div").after(`
     <div class="wmd-prompt-dialog" style="top: 45%;" role="dialog">
-    <div><p><b>插入图片</b></p><p>请在下方的输入框内输入要插入的图片链接地址和标题</p></div>
+    <div><p><b>插入图片(markdown通用格式)</b></p><p>请在下方的输入框内输入要插入的图片链接地址和标题</p></div>
   <form>
     图片描述：<input type="text" name="img-title">
-    图片地址：<input type="text" name="img-link" value="https://">
+    图片地址：<input type="text" name="img-link" value="https://" onfocus="this.select();">
     <button type="button" class="btn btn-s primary btn-ok">确定</button>
     <button type="button" class="btn btn-s btn-cancel">取消</button></form>
 </div>
@@ -173,7 +176,7 @@ $("#b-wmd-linecode").on("click",function() {
     <div class="wmd-prompt-dialog" role="dialog">
     <div><p><b>插入行内代码</b></p></div>
  <form>
-    填写内行代码：<input type="text" name="insert-linecode" value="内行代码">
+    填写内行代码：<input type="text" name="insert-linecode" value="内行代码" onfocus="this.select();">
     <input type="text" style="display:none;">
     <button type="button" class="btn btn-s primary btn-ok">确定</button>
     <button type="button" class="btn btn-s btn-cancel">取消</button></form>
@@ -241,7 +244,7 @@ $(".btn-ok").click(function(){
     let href = $('input[name="insert-href"]').val();
     let contents = $('input[name="insert-contents"]').val();
     let ico = $('input[name="insert-ico"]').val();
-    insertAtCursor('\n[btn href="'+href+'" type="'+type+''+color+''+position+'" ico="'+ico+'"]'+contents+'[/btn]\n');
+    insertAtCursor('\n[btn href="'+href+'" type="'+type+' '+color+''+position+'" ico="'+ico+'"]'+contents+'[/btn]\n');
 });
 });
 // note
@@ -334,6 +337,25 @@ $(".btn-ok").click(function(){
     insertAtCursor('\n!!!\n'+htmlcode+'\n!!!\n');
 });
 });
+
+// 标题插入
+$("#b-wmd-title").on("click", function() {
+$("#ui-datepicker-div").after(`
+    <div class="wmd-prompt-dialog" role="dialog">
+    <div><p><b>标题插入</b></p></div>
+<form>
+标题选择：<select id="select-title"><option selected="selected"value="#">h1(默认)</option><option value="##">h2</option><option value="###">h3</option><option value="####">h4</option><option value="#####">h5</option><option value="######">h6</option></select><br/>
+<input type="text" name="my-title" placeholder="标题名">
+<button type="button" class="btn btn-s primary btn-ok">确定</button>
+<button type="button" class="btn btn-s btn-cancel">取消</button></form>
+</div>`);
+$(".btn-ok").click(function(){
+    let titleType = $('#select-title option:selected').val();
+    let getTitle = $('input[name="my-title"]').val();
+    insertAtCursor(''+titleType+''+getTitle+'\n');
+});
+});
+
 // 复选框
 $("#b-wmd-wcheakbox").on("click", function() {
     $("#ui-datepicker-div").after(`
@@ -407,9 +429,10 @@ $("#ui-datepicker-div").after(`
     <div><p><b>说明</b></p></div>
     <hr>
     <p>这是一款兼容typecho原ui的md编辑器</p>
-    <p>采用typcho同款弹窗生成器</p>
+    <p>采用typecho同款弹窗生成器</p>
     <p>未来将更新更多内容....</p>
     <p>如有bug或者建议欢迎去<a href="https://github.com/wehaox/Typecho-Butterfly/issues">GitHub</a>向我反馈或者加群:218796706</p>
+    <p>有GitHub的同学帮忙点个start，谢谢了🌹</p>
     <button type="button" class="btn btn-s primary btn-ok">确定</button>
     <button type="button" class="btn btn-s btn-cancel">取消</button></form>
 </div>
@@ -434,7 +457,7 @@ $(".btn-ok").click(function(){
     insertAtCursor(' [label color="'+color+'"]'+contents+'[/label] ');
 });
 });
-$("#b-wmd-linecode,#b-wmd-code,#b-wmd-reply,#b-wmd-nhtml,#b-wmd-wcheakbox,#b-wmd-inline-tag,#b-wmd-radio,#b-wmd-md-link,#b-wmd-md-img,#b-wmd-mark,#b-wmd-btn,#b-wmd-note,#b-wmd-hide-block,#b-wmd-hide-inline,#b-wmd-hide-toggle,#b-wmd-note-ico,#b-wmd-md-explain").click(function(){
+$("#b-wmd-linecode,#b-wmd-code,#b-wmd-reply,#b-wmd-nhtml,#b-wmd-wcheakbox,#b-wmd-inline-tag,#b-wmd-radio,#b-wmd-md-link,#b-wmd-md-img,#b-wmd-mark,#b-wmd-btn,#b-wmd-note,#b-wmd-hide-block,#b-wmd-hide-inline,#b-wmd-hide-toggle,#b-wmd-note-ico,#b-wmd-md-explain,#b-wmd-title").click(function(){
 var y = document.createElement("div");
 let height = document.body.scrollHeight;
 z = y.style;
@@ -449,8 +472,6 @@ z.left = "0";
 document.body.appendChild(y);
 $(".btn-cancel,.btn-ok").click(function(){$(".wmd-prompt-dialog,.wmd-prompt-background").remove();});
 });
-
-
 var text = document.getElementById('text');
     var insert = document.getElementById('insert');
     function insertAtCursor(myValue , myField = $('#text')[0]) {
