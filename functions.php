@@ -2,8 +2,8 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 function themeConfig($form) {
     ?>
-    <style>.typecho-option-submit{position:fixed;top: 75%;right: 7%;}.mtoc a{display:block;float: left;padding: 10px;}.set_toc{position:sticky;top:3px;background-color:white;border:1px solid darkseagreen;padding:8px 0;overflow: auto;}.protected{margin-top:10px;}
-    </style>
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wehaox/CDN@0.2/css/themedash.css">-->
+    <link rel="stylesheet" href="<?php Helper::options()->themeUrl('css/themedash.css'); ?>">
     <div class='set_toc' >
     <div class='mtoc'>
     <a href='#themeBackup'>主题备份与还原</a>
@@ -47,6 +47,27 @@ function themeConfig($form) {
         '介绍：如果你是小白自行修改主题名会导致侵权提示，你可以在这里关闭同时希望你可以<b>尊重本主题</b>'
     );
     $form->addInput($showFramework->multiMode());
+    
+    $Defend = new Typecho_Widget_Helper_Form_Element_Select(
+        'Defend',
+        array('off' => '关闭（默认）', 'on' => '开启'),
+        'off',
+        '是否开启网站维护或密码访问',
+        '介绍：开启后，网站所有页面将会显示维护或者输入密码访问，登录用户不受限制'
+    );
+    $form->addInput($Defend->multiMode());
+    
+    $ThemePassword = new Typecho_Widget_Helper_Form_Element_Text('ThemePassword', NULL,NULL, _t('全站密码访问(非必填)'), _t('输入访问网站的密码，<b>需要在上方开启网站维护或密码访问</b>'));
+    $form->addInput($ThemePassword);
+    
+     $NoQQ = new Typecho_Widget_Helper_Form_Element_Select(
+        'NoQQ',
+        array('off' => '关闭（默认）', 'on' => '开启'),
+        'off',
+        '是否开启网站禁止手机QQ访问',
+        '介绍：烦人的QQ'
+    );
+    $form->addInput($NoQQ->multiMode());
     
     $Sitefavicon = new Typecho_Widget_Helper_Form_Element_Text('Sitefavicon', NULL, NULL, _t('网站图标'), _t('网站图标，使用png格式，大小建议不超过64x64'));
     $form->addInput($Sitefavicon);

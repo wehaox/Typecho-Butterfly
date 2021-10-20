@@ -48,6 +48,10 @@ $uid = $this->user->uid; //登录时，显示用户各自的私密文章
     $this->setTotal($this->getTotal()-count($sticky_cids)); //置顶文章不计算在所有文章内
 }
 ?>
+<?php $this->need('public/noqq.php'); ?>
+<?php if(!$this->user->hasLogin()):?>
+<?php $this->need('public/defend.php'); ?>
+<?php endif;?>
 <?php  $this->need('header.php'); ?>
 <main class="layout" id="content-inner">
 <div class="recent-posts" id="recent-posts">
@@ -146,7 +150,7 @@ $uid = $this->user->uid; //登录时，显示用户各自的私密文章
 		</button>
 	</div>
 </div>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.js'); ?>"></script>
+<script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.js?v1.2.1'); ?>"></script>
 <script>
 function ver() {console.log(`
 ===================================================================
@@ -158,7 +162,7 @@ function ver() {console.log(`
     #    # #    #   #     #   #      #   #  #      #        #    
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                           1.2.0
+                           1.2.3
 ===================================================================
 `);}
 </script>

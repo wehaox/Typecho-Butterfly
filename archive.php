@@ -1,4 +1,7 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php if(!$this->user->hasLogin()):?>
+<?php $this->need('public/defend.php'); ?>
+<?php endif;?>
 <?php $this->need('archive_header.php'); ?>
 <main class="layout" id="content-inner">
     <div class="recent-posts category_ui" id="recent-posts">

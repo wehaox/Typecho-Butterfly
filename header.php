@@ -1,5 +1,7 @@
 <?php  $this->need('header_com.php'); ?>
 <div id="web_bg"></div>
+<div class="page" id="body-wrap">
+<?php if (is_array($this->options->beautifyBlock) && in_array('ShowTopimg',$this->options->beautifyBlock)): ?>
 <script>function subtitleType(){
 fetch("https://api.btstu.cn/yan/api.php?charset=utf-8&encode=json").then(t=>t.json()).then(t=>{
 var e="出自 "+t.from,o=0=="".length?new Array:" ".split(",");
@@ -15,8 +17,6 @@ backSpeed:50
 )}
 "function"==typeof Typed?subtitleType():getScript("https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js").then(subtitleType
 )</script>
-<div class="page" id="body-wrap">
-<?php if (is_array($this->options->beautifyBlock) && in_array('ShowTopimg',$this->options->beautifyBlock)): ?> 
 <header class="full_page" id="page-header"  style="background-image: url(<?php $this->options->headerimg() ?>)">
         <div id="site-info">
             <h1 id="site-title"><?php $this->options->description() ?></h1>

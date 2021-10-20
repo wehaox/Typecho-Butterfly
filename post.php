@@ -1,4 +1,8 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php $this->need('public/noqq.php'); ?>
+<?php if(!$this->user->hasLogin()):?>
+<?php $this->need('public/defend.php'); ?>
+<?php endif;?>
 <?php $this->need('post_header.php'); ?>
 <main class="layout" id="content-inner">
 <div id="post" >
