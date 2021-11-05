@@ -2,21 +2,41 @@
 <div id="web_bg"></div>
 <div class="page" id="body-wrap">
 <?php if (is_array($this->options->beautifyBlock) && in_array('ShowTopimg',$this->options->beautifyBlock)): ?>
-<script>function subtitleType(){
-fetch("https://api.btstu.cn/yan/api.php?charset=utf-8&encode=json").then(t=>t.json()).then(t=>{
-var e="出自 "+t.from,o=0=="".length?new Array:" ".split(",");
-o.unshift(t.text),
-new Typed("#subtitle",
-{strings:o,
-startDelay:300,
-typeSpeed:150,
-loop:!0,
-backSpeed:50
+<?php if( !empty($this->options->CustomSubtitle)): ?>
+<script>
+ function subtitleType() {
+if (true) {
+var typed = new Typed("#subtitle", {
+strings: "<?php $this->options->CustomSubtitle()?>".split(","),
+startDelay: 300,
+typeSpeed: 150,
+loop: <?php $this->options->SubtitleLoop() ?>,
+backSpeed: 50
 })
 }
+}
+"function"==typeof Typed?subtitleType():getScript("https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js")
+.then(subtitleType)
+</script>
+<?php else: ?>
+<script>
+function subtitleType(){
+fetch("https://api.btstu.cn/yan/api.php?charset=utf-8&encode=json").then(t=>t.json()).then(t=>{
+o=0=="".length?new Array:" ".split(",");
+o.unshift(t.text),
+new Typed("#subtitle",{
+    strings:o,
+    startDelay:300,
+    typeSpeed:150,
+    loop: <?php $this->options->SubtitleLoop() ?>,
+    backSpeed:50
+      }
+  )}
 )}
-"function"==typeof Typed?subtitleType():getScript("https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js").then(subtitleType
-)</script>
+"function"==typeof Typed?subtitleType():getScript("https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js")
+.then(subtitleType)
+</script>
+<?php endif ?>
 <header class="full_page" id="page-header"  style="background-image: url(<?php $this->options->headerimg() ?>)">
         <div id="site-info">
             <h1 id="site-title"><?php $this->options->description() ?></h1>

@@ -245,6 +245,27 @@ function themeConfig($form) {
         '介绍：用于切换鼠标点击特效 '
     );
     $form->addInput($CursorEffects->multiMode());
+     // 自定义subtitle
+    $CustomSubtitle = new Typecho_Widget_Helper_Form_Element_Text(
+        'CustomSubtitle',
+        NULL,
+        NULL,
+        '自定义主页副标题/subtitle（非必填）',
+        '介绍：不填则使用默认的一言api。'
+    );
+    $CustomSubtitle->setAttribute('id', 'CustomSet');
+    $form->addInput($CustomSubtitle);
+    
+    $SubtitleLoop = new Typecho_Widget_Helper_Form_Element_Select('SubtitleLoop',
+    array(
+        'true' => '开启循环打字（默认）',
+        "false" => '关闭循环打字'
+        ),
+        'true',
+        '副标题循环打字',
+        '介绍：开启后主页副标题循环打字'
+    );
+    $form->addInput($SubtitleLoop->multiMode());
     
      // 自定义css和js
     $CustomCSS = new Typecho_Widget_Helper_Form_Element_Textarea(
@@ -254,8 +275,8 @@ function themeConfig($form) {
         '自定义CSS样式（非必填）',
         '介绍：请填写自定义CSS内容，填写时无需填写style标签。'
     );
-    $CustomCSS->setAttribute('id', 'CustomSet');
     $form->addInput($CustomCSS);
+    
     $CustomScript = new Typecho_Widget_Helper_Form_Element_Textarea(
         'CustomScript',
         NULL,

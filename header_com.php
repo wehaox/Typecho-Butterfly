@@ -38,7 +38,7 @@
     <?php if (!empty($this->options->sidebarBlock) && !in_array('ShowMobileSide',$this->options->sidebarBlock)): ?>
     <style>
         @media screen and (max-width:900px){
-            #aside-content .card-info,#aside-content .card-announcement,#aside-content .card-recent-post,#aside-content #card-newest-comments,#aside-content .card-categories,#aside-content .card-tags,#aside-content .card-archives,#aside-content .card-webinfo,#aside-content .card-ty-user{display:none;}
+            #aside-content .card-info,#aside-content .card-announcement,#aside-content .card-recent-post,#aside-content #card-newest-comments,#aside-content .card-categories,#aside-content .card-tags,#aside-content .card-archives,#aside-content .card-webinfo{display:none;}
         }
     </style>
     <?php endif; ?>
