@@ -244,7 +244,7 @@ $(".btn-ok").click(function(){
     let href = $('input[name="insert-href"]').val();
     let contents = $('input[name="insert-contents"]').val();
     let ico = $('input[name="insert-ico"]').val();
-    insertAtCursor('\n[btn href="'+href+'" type="'+type+' '+color+''+position+'" ico="'+ico+'"]'+contents+'[/btn]\n');
+    insertAtCursor('\n[btn href="'+href+'" type="'+type+' '+color+' '+position+'" ico="'+ico+'"]'+contents+'[/btn]\n');
 });
 });
 // note
