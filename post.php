@@ -9,7 +9,9 @@
 <?php if (is_array($this->options->beautifyBlock) && in_array('PostShowTopimg',$this->options->beautifyBlock)): ?>  
 <?php else: ?>
     <div id="post-info">
-  <h1 class="post-title"><?php $this->title() ?></h1>
+  <h1 class="post-title"><?php $this->title() ?>
+  <?php if($this->user->hasLogin()):?>
+  <a style="float: none;"  class="post-edit-link" href="<?php $this->options->adminUrl(); ?>write-post.php?cid=<?php echo $this->cid;?>" title="編輯" target="_blank"><i class="fas fa-pencil-alt"></i></a><?php endif;?></h1>
   <div id="post-meta">
     <div class="meta-firstline">
       <span class="post-meta-date">
@@ -181,10 +183,7 @@
 </nav>
     <?php $this->need('comments.php'); ?>
 </div>
-<!-- end #main-->
 <?php $this->need('post_sidebar.php'); ?>
-</main>
-</div>
 <script src="<?php $this->options->themeUrl('js/comjs.js'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.0'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/clipboard.min.js'); ?>"></script>
@@ -207,4 +206,49 @@ $("#card-toc,#mobile-toc-button").remove();}});
 <?php if($this->fields->ShowToc === 'off') : ?>
 <style>#card-toc,#mobile-toc-button{display: none!important;}</style>
 <?php endif?>
+</main>
+<!-- end #main-->
+
 <?php $this->need('footer.php'); ?>
+  
+<?php if($this->options->EnablePjax === 'on') : ?>
+<!--pjax-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jerryc127/CDN@m2/js/nprogress.min.css">
+<script src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@m2/js/nprogress.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
+<script>
+let pjaxSelectors = ["title", "#config-diff", "#body-wrap", "#rightside-config-hide", "#rightside-config-show", ".js-pjax"];
+var pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: !1,
+    analytics: !1,
+    scrollRestoration: !1});
+document.addEventListener("pjax:send", (function() {
+// if (window.removeEventListener("scroll", window.tocScrollFn), window.removeEventListener("scroll", scrollCollect), "object" == typeof preloader && preloader.initLoading(), window.aplayers)
+// for (let e = 0; e < window.aplayers.length; e++) window.aplayers[e].options.fixed || window.aplayers[e].destroy();"object" == typeof typed && typed.destroy();
+const e = document.body.classList;
+e.contains("read-mode") && e.remove("read-mode")
+})),
+
+document.addEventListener("pjax:complete", 
+(function() {
+    window.refreshFn(), 
+    document.querySelectorAll("script[data-pjax]").forEach(e => {
+        const t = document.createElement("script"),
+        o = e.text || e.textContent || e.innerHTML || "";
+        Array.from(e.attributes).forEach(e => t.setAttribute(e.name, e.value)), t.appendChild(document.createTextNode(o)), e.parentNode.replaceChild(t, e)
+        
+    }),
+    GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update(), "function" == typeof chatBtnFn && chatBtnFn(), "function" == typeof panguInit && panguInit(), "function" == typeof gtag && gtag("config", "", 
+    {page_path: window.location.pathname}), 
+    "object" == typeof _hmt && _hmt.push(["_trackPageview", window.location.pathname]), 
+    "function" == typeof loadMeting && document.getElementsByClassName("aplayer").length && loadMeting(),
+    "object" == typeof Prism && Prism.highlightAll(), "object" == typeof preloader && preloader.endLoading()
+})), 
+document.addEventListener("pjax:error", e => {
+    404 === e.request.status && pjax.loadUrl("/404.html")
+})
+</script>
+ <!--pjax end-->
+<?php endif?>

@@ -2,7 +2,7 @@
 <?php if(!$this->user->hasLogin()):?>
 <?php $this->need('public/defend.php'); ?>
 <?php endif;?>
-<?php $this->need('archive_header.php'); ?>
+<?php $this->need('page_header.php'); ?>
 <main class="layout" id="content-inner">
     <div class="recent-posts category_ui" id="recent-posts">
         <?php if ($this->have()): ?>
@@ -71,8 +71,5 @@
     </div><!-- end #main -->
 	<?php $this->need('sidebar.php'); ?>
 	</main>
-	</div>
-  </div>
-</div>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.js'); ?>"></script>
 <?php $this->need('footer.php'); ?>

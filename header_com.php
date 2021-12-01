@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.2.0'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.2.3'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.2.9'); ?>">
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.2.0'); ?>">
     <?php endif; ?>
@@ -125,6 +125,15 @@
 		    isToc: !0, 
 		   }
 </script>
+<?php if ($this->is('post')): ?>
+<script id="config_change">var GLOBAL_CONFIG_SITE = {
+    isPost: !0, 
+    isHome: !0, 
+    isHighlightShrink: !1, 
+    isToc: !0, 
+    }
+</script>
+<?php else: ?>
 <script id="config_change">var GLOBAL_CONFIG_SITE = {
     isPost: !1, 
     isHome: !0, 
@@ -132,6 +141,7 @@
     isToc: !0, 
     }
 </script>
+<?php endif; ?>
 <noscript>
     <style type="text/css">
       #nav {

@@ -108,6 +108,30 @@ function themeConfig($form) {
     $categorylink = new Typecho_Widget_Helper_Form_Element_Text('categorylink', NULL,_t('#null'), _t('侧栏分类链接'), _t('需在独立页面创建并手动填入链接'));
     $form->addInput($categorylink);
     
+    $EnableCommentsLogin = new Typecho_Widget_Helper_Form_Element_Select('EnableCommentsLogin',
+    array(
+        'off' => '关闭（默认）',
+        "on" => '开启'
+        ),
+        'off',
+        '开启用户评论区登录',
+        '介绍：开启后在评论区会显示登录按钮'
+    );
+    $form->addInput($EnableCommentsLogin->multiMode());
+    
+    
+    
+    $EnablePjax = new Typecho_Widget_Helper_Form_Element_Select('EnablePjax',
+    array(
+        'off' => '关闭（默认）',
+        "on" => '开启'
+        ),
+        'off',
+        '开启Pjax(实验性功能,如发生页面错误关闭此选项)',
+        '介绍：目前仅作用于文章内，全局pjax或许会在之后实现'
+    );
+    $form->addInput($EnablePjax->multiMode());
+    
     /* 友链设置 */
     $Friends = new Typecho_Widget_Helper_Form_Element_Textarea('Friends',NULL,NULL,
         '友情链接（非必填）',
@@ -794,7 +818,7 @@ function Hide_Toggle($text)
 function Cheak_Box($text)
 {
     $text = preg_replace_callback('/\[cb type=\"(.*?)\".*?\ checked=\"(.*?)"\](.*?)\[\/cb\]/ism', function ($text) {
-        return '<div class="checkbox '. $text[1] .' checked"><input type="checkbox" '. $text[2] .'><p>'. $text[3] .'</p></div>';
+        return '<div class="checkbox '. $text[1] .' checked"><input type="checkbox" '. $text[2] .'>'. $text[3] .'</div>';
     }, $text);
     return $text;
 }
@@ -810,7 +834,7 @@ function inline_Tag($text)
 function Bf_Radio($text)
 {
     $text = preg_replace_callback('/\[radio color=\"(.*?)\".*?\ checked=\"(.*?)"\](.*?)\[\/radio\]/ism', function ($text) {
-       return '<div class="checkbox '. $text[1] .' checked"><input type="radio" '. $text[2] .'><p>'. $text[3] .'</p></div>';
+       return '<div class="checkbox '. $text[1] .' checked"><input type="radio" '. $text[2] .'>'. $text[3] .'</div>';
     }, $text);
     return $text;
 }
@@ -1333,4 +1357,27 @@ function isMobile()
         }
     }
     return false;
+}
+
+
+// 说明：获取完整URL
+function curPageURL() 
+{
+  $pageURL = 'http';
+ 
+  if ($_SERVER["HTTPS"] == "on") 
+  {
+    $pageURL .= "s";
+  }
+  $pageURL .= "://";
+ 
+  if ($_SERVER["SERVER_PORT"] != "80") 
+  {
+    $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+  } 
+  else
+  {
+    $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+  }
+  return $pageURL;
 }

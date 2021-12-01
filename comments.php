@@ -1,6 +1,7 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <div id="rightside">
 	<div id="rightside-config-hide" class="">
+	    <button id="readmode" type="button" title="閱讀模式"><i class="fas fa-book-open"></i></button>
 		<button id="font-plus" type="button" title="放大字体">
 			<i class="fas fa-plus">
 			</i>
@@ -77,12 +78,30 @@
                 <label for="textarea" class="required"></label>
                 <textarea placeholder="你可以畅所欲言" rows="8" cols="50" name="text" id="textarea" class="textarea" required ><?php $this->remember('text'); ?></textarea>
                   </div>
+                  <?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
+                   <div class="submit" style="float:left" id="comment_keys"><i class="fas fa-key"></i></div>
+                  <?php endif; ?>
     		    <p style=" text-align: right;">
                 <button class="submit" type="submit" ><?php _e('评论'); ?></button>
             </p>
     	</form>
+<?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
+<div id="comment_login" style="display:none">
+<form action="<?php $this->options->loginAction()?>" method="post" name="login" rold="form">
+<input type="hidden" name="referer" value="<?php echo curPageURL() ?>">
+<input type="text" class="text" name="name" autocomplete="username" placeholder="请输入用户名" required/>
+<input type="password" class="text" name="password" autocomplete="current-password" placeholder="请输入密码" required/>
+<button class="submit" type="submit">登录</button>
+</form>
+</div>
+<?php endif; ?>	
     </div>
-    <script>$("#to_comment").click(function() {var hre = $(this).attr("href");$('html, body').animate({scrollTop: $(hre).offset().top}, 300);});</script>
+    <script>$("#to_comment").click(function() {var hre = $(this).attr("href");$('html, body').animate({scrollTop: $(hre).offset().top}, 300);});
+    $("#comment_keys").click(function(){
+        $('#comment_login').slideToggle("fast");
+    })
+    </script>
+    
     <?php elseif(!$this->allow('comment')&&$this->is('post')): ?>
     <hr></hr>
     <h3><?php _e('评论已关闭'); ?></h3>

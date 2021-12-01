@@ -8,7 +8,7 @@
  * <a href="https://blog.wehaox.com/archives/blogtheme.html#cl-4">主题更新日志</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.2.4
+ * @version 1.3.0
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -117,39 +117,7 @@ $uid = $this->user->uid; //登录时，显示用户各自的私密文章
 </div>
 <?php $this->need('sidebar.php'); ?>
 </main>
-<div id="rightside">
-	<div id="rightside-config-hide" class="">
-		<button id="font-plus" type="button" title="放大字体">
-			<i class="fas fa-plus">
-			</i>
-		</button>
-		<button id="font-minus" type="button" title="缩小字体">
-			<i class="fas fa-minus">
-			</i>
-		</button>
-		<button id="translateLink" type="button" title="简繁转换">
-			簡
-		</button>
-		<button id="darkmode" type="button" title="浅色和深色模式转换">
-			<i class="fas fa-adjust">
-			</i>
-		</button>
-		<button id="hide-aside-btn" type="button" title="单栏和双栏切换">
-			<i class="fas fa-arrows-alt-h">
-			</i>
-		</button>
-	</div>
-	<div id="rightside-config-show">
-		<button id="rightside_config" type="button" title="设置">
-			<i class="fas fa-cog fa-spin">
-			</i>
-		</button>
-		<button id="go-up" type="button" title="回到顶部">
-			<i class="fas fa-arrow-up">
-			</i>
-		</button>
-	</div>
-</div>
+<?php $this->need('footer.php'); ?>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.js?v1.2.1'); ?>"></script>
 <script>
 function ver() {console.log(`
@@ -162,8 +130,7 @@ function ver() {console.log(`
     #    # #    #   #     #   #      #   #  #      #        #    
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                           1.2.4
+                           1.3.0
 ===================================================================
 `);}
 </script>
-<?php $this->need('footer.php'); ?>

@@ -2,7 +2,8 @@
 <div id="web_bg"></div>
 <div class="page" id="body-wrap">
 <?php if (is_array($this->options->beautifyBlock) && in_array('ShowTopimg',$this->options->beautifyBlock)): ?>
-<?php if( !empty($this->options->CustomSubtitle)): ?>
+<?php if(!empty($this->options->CustomSubtitle)): ?>
+<div class="js-pjax">
 <script>
  function subtitleType() {
 if (true) {
@@ -18,12 +19,14 @@ backSpeed: 50
 "function"==typeof Typed?subtitleType():getScript("https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js")
 .then(subtitleType)
 </script>
+</div>
 <?php else: ?>
+<div class="js-pjax">
 <script>
 function subtitleType(){
-fetch("https://api.btstu.cn/yan/api.php?charset=utf-8&encode=json").then(t=>t.json()).then(t=>{
+fetch("https://v1.hitokoto.cn").then(t=>t.json()).then(t=>{
 o=0=="".length?new Array:" ".split(",");
-o.unshift(t.text),
+o.unshift(t.hitokoto),
 new Typed("#subtitle",{
     strings:o,
     startDelay:300,
@@ -36,7 +39,11 @@ new Typed("#subtitle",{
 "function"==typeof Typed?subtitleType():getScript("https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js")
 .then(subtitleType)
 </script>
+</div>
 <?php endif ?>
+<body style="zoom: 1;">
+    <div id="web_bg"></div>
+<div class="page" id="body-wrap">
 <header class="full_page" id="page-header"  style="background-image: url(<?php $this->options->headerimg() ?>)">
         <div id="site-info">
             <h1 id="site-title"><?php $this->options->description() ?></h1>

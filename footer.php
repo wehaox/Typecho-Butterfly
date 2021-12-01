@@ -1,5 +1,5 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<footer id="footer" role="contentinfo">
+<footer id="footer">
     <div id="footer-wrap"><div class="copyright">   
     <div class="copyright">©<?php echo date('Y'); ?> By <?php $this->author(); ?></div>
     <div class="framework-info">
@@ -11,30 +11,9 @@
     </div>
         <div class="footer_custom_text"><?php $this->options->Customfooter() ?></div>
     </div>
-</footer>
-<!--搜索  -->
-<div id="local-search">
-    <div class="search-dialog">
-      <div class="search-dialog__title" id="local-search-title">本地搜索</div>
-      <div id="local-input-panel">
-        <div id="local-search-input">
-          <div class="local-search-box">
-              <form  id="search" method="post" action="<?php $this->options->siteUrl(); ?>" role="search">
-                    <label for="s" class="sr-only"><?php _e('搜索关键字'); ?></label>
-                    <input type="text" id="s" name="s" class="text" placeholder="<?php _e('输入关键字搜索'); ?>" />
-                    <!--<button type="submit" class="submit"><?php _e('搜索'); ?></button>-->
-                </form>
-              </div>
-        </div>
-      </div>
-      <hr>
-      <div id="local-search-results"></div>
-      <span class="search-close-button"><i class="fas fa-times"></i></span>
-    </div>
-    <div id="search-mask"></div>
-  </div>
-<!--搜索  -->
+
 </div>
+</footer>
 <?php $this->footer(); ?>
 <style type="text/css" data-typed-js-css="true">
         .typed-cursor{
@@ -74,5 +53,60 @@
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.main.js'); ?>"></script>
 <script><?php $this->options->CustomScript() ?></script>
  <?php $this->options->CustomBodyEnd() ?>
+<div id="rightside">
+	<div id="rightside-config-hide">
+		<button id="font-plus" type="button" title="放大字体">
+			<i class="fas fa-plus">
+			</i>
+		</button>
+		<button id="font-minus" type="button" title="缩小字体">
+			<i class="fas fa-minus">
+			</i>
+		</button>
+		<button id="translateLink" type="button" title="简繁转换">
+			簡
+		</button>
+		<button id="darkmode" type="button" title="浅色和深色模式转换">
+			<i class="fas fa-adjust">
+			</i>
+		</button>
+		<button id="hide-aside-btn" type="button" title="单栏和双栏切换">
+			<i class="fas fa-arrows-alt-h">
+			</i>
+		</button>
+	</div>
+	<div id="rightside-config-show">
+		<button id="rightside_config" type="button" title="设置">
+			<i class="fas fa-cog fa-spin">
+			</i>
+		</button>
+		<button id="go-up" type="button" title="回到顶部">
+			<i class="fas fa-arrow-up">
+			</i>
+		</button>
+	</div>
+</div>
+<!--搜索  -->
+<div id="local-search">
+    <div class="search-dialog">
+      <div class="search-dialog__title" id="local-search-title">本地搜索</div>
+      <div id="local-input-panel">
+        <div id="local-search-input">
+          <div class="local-search-box">
+              <form  id="search" method="post" action="<?php $this->options->siteUrl(); ?>" role="search">
+                    <label for="s" class="sr-only"><?php _e('搜索关键字'); ?></label>
+                    <input type="text" id="s" name="s" class="text" placeholder="<?php _e('输入关键字搜索'); ?>" />
+                    <!--<button type="submit" class="submit"><?php _e('搜索'); ?></button>-->
+                </form>
+              </div>
+        </div>
+      </div>
+      <hr>
+      <div id="local-search-results"></div>
+      <span class="search-close-button"><i class="fas fa-times"></i></span>
+    </div>
+    <div id="search-mask"></div>
+  </div>
+<!--搜索  -->
 </body>
 </html>

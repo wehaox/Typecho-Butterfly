@@ -1,25 +1,14 @@
 <?php  $this->need('header_com.php'); ?>
-<script id="config-diff">var GLOBAL_CONFIG_SITE = { 
-		    isPost: !0, 
-		    isHome: !0, 
-		    isHighlightShrink: !0, 
-		    isToc: !0, 
-		   }
-</script>
-<script id="config_change">var GLOBAL_CONFIG_SITE = {
-    isPost: !0, 
-    isHome: !0, 
-    isHighlightShrink: !1, 
-    isToc: !0, 
-    }
-</script>
 <body style="zoom: 1;">
     <div id="web_bg"></div>
 <div class="page" id="body-wrap">
     <?php if (is_array($this->options->beautifyBlock) && in_array('PostShowTopimg',$this->options->beautifyBlock)): ?>
      <header id="page-header" class="post-bg" style="background-image: url(<?php GetRandomThumbnailPost($this); ?>)">
             <div id="post-info">
-          <h1 class="post-title"><?php $this->title() ?></h1>
+          <h1 class="post-title"><?php $this->title() ?>
+          <?php if($this->user->hasLogin()):?>
+          <a class="post-edit-link" href="<?php $this->options->adminUrl(); ?>write-post.php?cid=<?php echo $this->cid;?>" title="編輯" target="_blank"><i class="fas fa-pencil-alt"></i></a><?php endif;?>
+          </h1>
           <div id="post-meta">
               <div class="meta-firstline">
               <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
