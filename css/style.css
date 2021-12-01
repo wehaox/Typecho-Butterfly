@@ -459,6 +459,9 @@ code[class*="language-"], pre[class*="language-"] {
     transition: color .2s;
 }
 .copy-notices{color: rgba(238,255,255,.8);font-size: 14px;display:inline-block;}
-
+.checkbox{margin: -4px 0 -20px 0px;}
+#comment_login{
+    margin-bottom: 10px;
+}
 /*懒加载结束*/
 .ua-icon{display:inline-block;width:1pc;height:1pc;background-size:cover;background-repeat:no-repeat;vertical-align:text-top}.icon-360{background-image:url(https://z3.ax1x.com/2021/07/31/WvtC36.png)}.icon-uc{background-image:url(https://z3.ax1x.com/2021/07/31/Wvw9XV.png)}.icon-win1{background-image:url(https://z3.ax1x.com/2021/07/31/WvdfFH.png)}.icon-maxthon{background-image:url(https://z3.ax1x.com/2021/07/31/Wvw3Ae.png)}.icon-qqb{background-image:url(https://z3.ax1x.com/2021/07/31/Wvwo4J.png)}.icon-quark{background-image:url(https://z3.ax1x.com/2021/07/31/Wv0uCj.png)}.icon-mi{background-image:url(https://z3.ax1x.com/2021/07/31/WvB2wT.png)}.icon-arch{background-image:url(https://z3.ax1x.com/2021/07/31/WvywBq.png)}.icon-manjaro{width: 11px;height: 11px;margin-top: 4px;background-image:url(https://z3.ax1x.com/2021/08/08/flHSwd.png)}.icon-debian{background-image:url(https://z3.ax1x.com/2021/08/08/flOcxP.png)}
