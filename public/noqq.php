@@ -22,7 +22,12 @@
     <script src="https://unpkg.com/element-plus"></script>
     <script src="https://cdn.jsdelivr.net/gh/Inndy/vue-clipboard2@master/dist/vue-clipboard.min.js"></script>
     <title>请到浏览器访问      👉</title>
-    <?php  $this->need('header_com.php'); ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.2.0'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.2.9'); ?>">
+    <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.2.0'); ?>">
+    <?php endif; ?>    
 </head>
 <body>
     <style>
