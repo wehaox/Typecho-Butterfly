@@ -1,7 +1,3 @@
-<?php $this->need('public/noqq.php'); ?>
-<?php if(!$this->user->hasLogin()):?>
-<?php $this->need('public/defend.php'); ?>
-<?php endif;?>
 <?php  $this->need('header_com.php'); ?>
 <body style="zoom: 1;">
 <div id="web_bg"></div>

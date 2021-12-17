@@ -108,5 +108,10 @@
     <div id="search-mask"></div>
   </div>
 <!--搜索  -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $( ".fancybox").fancybox();
+    });
+</script>
 </body>
 </html>

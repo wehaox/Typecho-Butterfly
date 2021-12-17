@@ -1,8 +1,4 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<?php $this->need('public/noqq.php'); ?>
-<?php if(!$this->user->hasLogin()):?>
-<?php $this->need('public/defend.php'); ?>
-<?php endif;?>
 <?php $this->need('post_header.php'); ?>
 <main class="layout" id="content-inner">
 <div id="post" >
@@ -67,7 +63,7 @@
          } else {
          $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<p class="need-reply">此处内容 <a href="#comments">回复</a> 可见</p>', $this->content);
          }
-        echo $content
+        echo $content;
        ?>
     </article>
 <div class="post-copyright">

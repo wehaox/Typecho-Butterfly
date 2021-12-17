@@ -8,7 +8,7 @@
  * <a href="https://blog.wehaox.com/archives/blogtheme.html#cl-4">主题更新日志</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.3.0
+ * @version 1.3.3
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -48,10 +48,6 @@ $uid = $this->user->uid; //登录时，显示用户各自的私密文章
     $this->setTotal($this->getTotal()-count($sticky_cids)); //置顶文章不计算在所有文章内
 }
 ?>
-<?php $this->need('public/noqq.php'); ?>
-<?php if(!$this->user->hasLogin()):?>
-<?php $this->need('public/defend.php'); ?>
-<?php endif;?>
 <?php  $this->need('header.php'); ?>
 <main class="layout" id="content-inner">
 <div class="recent-posts" id="recent-posts">
@@ -130,7 +126,7 @@ function ver() {console.log(`
     #    # #    #   #     #   #      #   #  #      #        #    
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                           1.3.0
+                           1.3.3
 ===================================================================
 `);}
 </script>

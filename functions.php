@@ -108,6 +108,18 @@ function themeConfig($form) {
     $categorylink = new Typecho_Widget_Helper_Form_Element_Text('categorylink', NULL,_t('#null'), _t('侧栏分类链接'), _t('需在独立页面创建并手动填入链接'));
     $form->addInput($categorylink);
     
+    
+    $CloseComments = new Typecho_Widget_Helper_Form_Element_Select('CloseComments',
+    array(
+        'off' => '关闭（默认）',
+        "on" => '开启'
+        ),
+        'off',
+        '全站关闭评论',
+        '介绍：开启后所有文章不能评论'
+    );
+    $form->addInput($CloseComments->multiMode());    
+    
     $EnableCommentsLogin = new Typecho_Widget_Helper_Form_Element_Select('EnableCommentsLogin',
     array(
         'off' => '关闭（默认）',
@@ -340,7 +352,14 @@ function themeConfig($form) {
     );
     $form->addInput($Customfooter);
 
-
+    $CustomAuthenticated = new Typecho_Widget_Helper_Form_Element_Textarea(
+        'CustomAuthenticated',
+        NULL,
+        NULL,
+        '自定义认证用户',
+        '介绍：评论区认证用户专属头衔(一行一个)'
+    );
+    $form->addInput($CustomAuthenticated);
 
     
 $db = Typecho_Db::get();
@@ -715,7 +734,6 @@ function GetLazyLoad()
 /* 格式化标签 */
 function ParseCode($text)
 {
-    $text = Short_Lazyload($text);
     $text = Short_Tabs($text);
     $text = Note_Fsm($text);
     $text = Note_Ico($text);
@@ -727,6 +745,7 @@ function ParseCode($text)
     $text = inline_Tag($text);
     $text = Bf_Radio($text);
     $text = Bf_Mark($text);
+    $text = PostImage($text);
     return $text;
 }
 // 标签外挂-Tabs
@@ -845,14 +864,19 @@ function Bf_Mark($text)
     }, $text);
     return $text;
 }
-// 懒加载
-function Short_Lazyload($text)
+
+
+// 重写文章图片加载
+function PostImage($text)
 {
-    $text = preg_replace_callback('/<img src=\"(.*?)\".*?>/ism', function ($text) {
-        return '<img class="LazyLoad"  data-lazy-src="' . $text[1] . '" src="' . GetLazyLoad() . '" />';
+    $text = preg_replace_callback('/<img src=\"(.*?)\".*?alt\=\"(.*?)\".*?>/ism', function ($text) {
+        return '<a href="'.$text[1].'" data-fancybox="gallery" /><img class="LazyLoad" alt="'.$text[2].'" data-lazy-src="'.$text[1].'" src="'.GetLazyLoad().'" /></a>';
     }, $text);
     return $text;
 }
+
+
+
 function themeInit($archive) {
     if ($archive->is('single')) {
         $archive->content = createCatalog($archive->content);
@@ -1042,19 +1066,24 @@ function getOs($agent)
     }
     echo $os;
 }
-// 显示评论博主
-function dengji($i){
-$db=Typecho_Db::get();
-$mail=$db->fetchAll($db->select(array('COUNT(cid)'=>'rbq'))->from('table.comments')->where('mail = 
-?', $i)->where('authorId = ?','0'));
-foreach ($mail as $sl){
-$rbq=$sl['rbq'];}
-if($rbq<1){
-echo '<span class="vtag vmaster">博主</span>';
-}else{
-echo '<span class="vtag vvisitor">访客</span>';
+
+function commentRank($widget, $email = NULL)      
+{      
+    if (empty($email)) return;      
+    $txt = Helper::options()->CustomAuthenticated;
+    $authlList = explode("\r\n", $txt);
+    if ($widget->authorId == $widget->ownerId) {
+        echo '<span class="vtag vmaster">博主</span>';      
+    } 
+    else if (in_array($email, $authlList)) {
+        echo '<span class="vtag vauth">认证用户</span>';
+      
+    }
+    else{
+        echo '<span class="vtag vvisitor">访客</span>';
+    }
 }
-}
+
 //获取评论的锚点链接
 function get_comment_at($coid)
 {
@@ -1117,13 +1146,15 @@ echo $commentClass;
         <div class="comment-author">
             <?php $email=$comments->mail; $imgUrl = getGravatar($email);echo '<img class="vimg" data-lazy-src="'.$imgUrl.'" width="45px" height="45px" style="border-radius: 50%;" src="'.GetLazyLoad().'">'; ?>
             <cite class="vnick"><?php $comments->author(); ?></cite>
-            <?php dengji($comments->mail);?>
+            <?php commentRank($comments, $comments->mail); ?>
             <span class="comment-ua"><?php getOs($comments->agent); ?><?php getBrowser($comments->agent); ?></span>
         </div>
         <div class="vhead">
             <b><?php $parentMail = get_comment_at($comments->coid)?><?php echo $parentMail;?></b>
             <a class="vtime" href="<?php $comments->permalink(); ?>"><?php $comments->date('Y-m-d H:i'); ?></a>
+            <?php if(Helper::options()->CloseComments == 'off'): ?>
             <span class="comment-reply"><?php $comments->reply(); ?></span>
+            <?php endif ?>
         </div>
         <div class="comment-content"><?php $comments->content(); ?></div>
     </div>
@@ -1333,7 +1364,7 @@ class editor
 {
   public static function reset()
     {
-        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.1.4' . "'></script>";
+        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.3.3' . "'></script>";
         echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css?v1.1.3' . "'>";
     }
 

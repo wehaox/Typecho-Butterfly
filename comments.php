@@ -45,7 +45,7 @@
 </div>
 <div id="comments">
     <?php $this->comments()->to($comments); ?>
-    <?php if($this->allow('comment')): ?>
+    <?php if($this->allow('comment') && $this->options->CloseComments == 'off'): ?>
     <hr></hr>
     <h3 id="response"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div></h3>
     <div id="<?php $this->respondId(); ?>" class="respond">
