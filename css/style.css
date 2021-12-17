@@ -13,6 +13,13 @@
     padding: 1px 5px;
     border-radius: 4px;
 }
+.vauth{
+    background: #00A2D8;
+    font-size: 12px;
+    color: white;
+    padding: 1px 5px;
+    border-radius: 4px;
+}
 .vimg{
     float: left;
     margin: 8px 10px 0px 0px;

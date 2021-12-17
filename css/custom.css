@@ -1830,43 +1830,43 @@ pre[class*=language-] {
 	padding: 1.25em 1em
 }
 
-.language-css>code,.language-sass>code,.language-scss>code {
-	color: #f76d47
-}[class*=language-] .namespace {
-	opacity: .7
-}
+/*.language-css>code,.language-sass>code,.language-scss>code {*/
+/*	color: #f76d47*/
+/*}[class*=language-] .namespace {*/
+/*	opacity: .7*/
+/*}*/
 
-.token.id,.token.important {
-	font-weight: 700
-}
+/*.token.id,.token.important {*/
+/*	font-weight: 700*/
+/*}*/
 
-.token.atrule,.token.boolean,.token.constant,.token.function,.token.id,.token.important,.token.keyword,.token.symbol {
-	color: #7c4dff!important
-}
+/*.token.atrule,.token.boolean,.token.constant,.token.function,.token.id,.token.important,.token.keyword,.token.symbol {*/
+/*	color: #7c4dff!important*/
+/*}*/
 
-.token.class-name,.token.regex {
-	color: #6182b8!important
-}
+/*.token.class-name,.token.regex {*/
+/*	color: #6182b8!important*/
+/*}*/
 
-.token.hexcode,.token.number,.token.unit {
-	color: #f76d47!important
-}
+/*.token.hexcode,.token.number,.token.unit {*/
+/*	color: #f76d47!important*/
+/*}*/
 
-.token.comment,.token.doctype,.token.prolog {
-	color: #aabfc9!important
-}
+/*.token.comment,.token.doctype,.token.prolog {*/
+/*	color: #aabfc9!important*/
+/*}*/
 
-.token.attr-name,.token.builtin,.token.cdata,.token.char,.token.class,.token.inserted,.token.operator,.token.property,.token.punctuation {
-	color: #39adb5!important
-}
+/*.token.attr-name,.token.builtin,.token.cdata,.token.char,.token.class,.token.inserted,.token.operator,.token.property,.token.punctuation {*/
+/*	color: #39adb5!important*/
+/*}*/
 
-.token.attr-value,.token.attribute,.token.pseudo-class,.token.pseudo-element,.token.string {
-	color: #f6a434!important
-}
+/*.token.attr-value,.token.attribute,.token.pseudo-class,.token.pseudo-element,.token.string {*/
+/*	color: #f6a434!important*/
+/*}*/
 
-.token.deleted,.token.entity,.token.selector,.token.tag,.token.url,.token.variable {
-	color: #e53935!important
-}
+/*.token.deleted,.token.entity,.token.selector,.token.tag,.token.url,.token.variable {*/
+/*	color: #e53935!important*/
+/*}*/
 
 #page h1.page-title,#post>#post-info {
 	text-align: center
