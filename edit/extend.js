@@ -432,7 +432,7 @@ $("#ui-datepicker-div").after(`
     <p>采用typecho同款弹窗生成器</p>
     <p>未来将更新更多内容....</p>
     <p>如有bug或者建议欢迎去<a href="https://github.com/wehaox/Typecho-Butterfly/issues">GitHub</a>向我反馈或者加群:218796706</p>
-    <p>有GitHub的同学帮忙点个start，谢谢了🌹</p>
+    <p>有GitHub的同学帮忙点个star，谢谢了🌹</p>
     <button type="button" class="btn btn-s primary btn-ok">确定</button>
     <button type="button" class="btn btn-s btn-cancel">取消</button></form>
 </div>
