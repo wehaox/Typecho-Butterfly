@@ -1,48 +1,4 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<div id="rightside">
-	<div id="rightside-config-hide" class="">
-	    <button id="readmode" type="button" title="閱讀模式"><i class="fas fa-book-open"></i></button>
-		<button id="font-plus" type="button" title="放大字体">
-			<i class="fas fa-plus">
-			</i>
-		</button>
-		<button id="font-minus" type="button" title="缩小字体">
-			<i class="fas fa-minus">
-			</i>
-		</button>
-		<button id="translateLink" type="button" title="简繁转换">
-			簡
-		</button>
-		<button id="darkmode" type="button" title="浅色和深色模式转换">
-			<i class="fas fa-adjust">
-			</i>
-		</button>
-		<button id="hide-aside-btn" type="button" title="单栏和双栏切换">
-			<i class="fas fa-arrows-alt-h">
-			</i>
-		</button>
-	</div>
-	<div id="rightside-config-show">
-		<button id="rightside_config" type="button" title="设置">
-			<i class="fas fa-cog fa-spin">
-			</i>
-		</button>
-		<button class="close" id="mobile-toc-button" type="button" title="目录">
-			<i class="fas fa-list-ul">
-			</i>
-		</button>
-		<?php if($this->allow('comment')): ?>
-		<a id="to_comment" href="#comments" title="直达评论">
-			<i class="fas fa-comments">
-			</i>
-		</a>
-		<?php endif ?>
-		<button id="go-up" type="button" title="回到顶部">
-			<i class="fas fa-arrow-up">
-			</i>
-		</button>
-	</div>
-</div>
 <div id="comments">
     <?php $this->comments()->to($comments); ?>
     <?php if($this->allow('comment') && $this->options->CloseComments == 'off'): ?>
@@ -79,7 +35,7 @@
                 <textarea placeholder="你可以畅所欲言" rows="8" cols="50" name="text" id="textarea" class="textarea" required ><?php $this->remember('text'); ?></textarea>
                   </div>
                   <?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
-                   <div class="submit" style="float:left" id="comment_keys"><i class="fas fa-key"></i></div>
+                   <div class="submit" style="float:left;margin-top: 24px;" id="comment_keys"><i class="fas fa-key"></i></div>
                   <?php endif; ?>
     		    <p style=" text-align: right;">
                 <button class="submit" type="submit" ><?php _e('评论'); ?></button>
@@ -101,7 +57,6 @@
         $('#comment_login').slideToggle("fast");
     })
     </script>
-    
     <?php elseif(!$this->allow('comment')&&$this->is('post')): ?>
     <hr></hr>
     <h3><?php _e('评论已关闭'); ?></h3>
@@ -110,6 +65,6 @@
    <?php if ($comments->have()): ?>
 	<h3><?php $this->commentsNum(_t('暂无评论'), _t('仅有一条评论'), _t('已有 %d 条评论')); ?></h3>
     <?php  $comments->listComments(); ?>
-    <?php $comments->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>'); ?>
+    <?php $comments->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>', 1, '...', array('wrapTag' => 'ol', 'wrapClass' => 'page-navigator', 'itemTag' => '', 'prevClass' => 'prev', 'nextClass' => 'next', 'currentClass' => 'current' )); ?>
     <?php endif; ?>
 </div>

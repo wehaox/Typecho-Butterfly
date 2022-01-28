@@ -1,14 +1,14 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php   
 /**  
-    * 归档  
+    * 归档
     *  
     * @package custom  
     */  
-    
-$this->need('page_header.php'); ?>
-<style>.card-recent-post{display: none;}</style>
-  <main class="layout" id="content-inner">
+$this->need('page_header.php');
+?>
+<style>#to_comment{display: none!important;}</style>
+<main class="layout" id="content-inner">
     <div id="archive">
         <section class="page-title">
 <?php if($this -> authorId == $this -> user -> uid): ?>            
@@ -51,5 +51,6 @@ $this->need('page_header.php'); ?>
     </div>
      </div>
     <?php $this->need('sidebar.php'); ?>
+    <style>.card-recent-post{display:none}</style>
 </main>
 <?php $this -> need('footer.php'); ?>

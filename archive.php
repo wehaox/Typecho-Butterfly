@@ -68,5 +68,5 @@
     </div><!-- end #main -->
 	<?php $this->need('sidebar.php'); ?>
 	</main>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.js'); ?>"></script>
+<script type="text/javascript" src="<?php $this->options->themeUrl('js/wehao.js?v1.4'); ?>"></script>
 <?php $this->need('footer.php'); ?>

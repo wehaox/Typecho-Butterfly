@@ -17,7 +17,6 @@ function themeConfig($form) {
     </div></div>
     <form class="protected" action="?butterflybf" method="post" id="themeBackup">
         <input type="submit" name="type" class="btn btn-s" value="备份主题数据" />&nbsp;&nbsp;<input type="submit" name="type" class="btn btn-s" value="还原主题数据" />&nbsp;&nbsp;<input type="submit" name="type" class="btn btn-s" value="删除备份数据" /></form>
-    
     <script src='https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js'></script>
     <script src="<?php Helper::options()->themeUrl('js/themecustom.js?v1.1.9'); ?>"></script>
     <script src='https://cdn.jsdelivr.net/gh/wehaox/CDN@main/postdomai.js'></script>
@@ -90,7 +89,7 @@ function themeConfig($form) {
     $announcement = new Typecho_Widget_Helper_Form_Element_Textarea('announcement', NULL, _t('这里是公告<br>'), _t('公告'), _t('在这里填入公告，它会显示在右侧栏的公告上,采用html写法'));
     $form->addInput($announcement);
     
-    $headerimg = new Typecho_Widget_Helper_Form_Element_Text('headerimg', NULL,_t('https://tva1.sinaimg.cn/large/007X0Rdyly1ghm1qiihrdj31hc0u07jk.jpg'), _t('主页头图'), _t('填入主页头图链接'));
+    $headerimg = new Typecho_Widget_Helper_Form_Element_Text('headerimg', NULL,_t('https://tva1.sinaimg.cn/large/007X0Rdyly1ghm1qiihrdj31hc0u07jk.jpg'), _t('主页顶图(banner image)'), _t('填入主页头图链接'));
     $form->addInput($headerimg);
     
     $buildtime = new Typecho_Widget_Helper_Form_Element_Text('buildtime', NULL,_t('2021/04/05'), _t('建站时间'), _t('按照输入框内格式填写'));
@@ -140,7 +139,7 @@ function themeConfig($form) {
         ),
         'off',
         '开启Pjax(实验性功能,如发生页面错误关闭此选项)',
-        '介绍：目前仅作用于文章内，全局pjax或许会在之后实现'
+        '介绍：页面无刷新加载,有效提高页面加载速度'
     );
     $form->addInput($EnablePjax->multiMode());
     
@@ -222,22 +221,20 @@ function themeConfig($form) {
     'ShowOther' => _t('显示其它杂项')),
     array('ShowRecentPosts', 'ShowWebinfo', 'ShowOther'), _t('文章侧边栏显示'),_t('说明:单独设置文章内侧栏'));
     $form->addInput($PostSidebarBlock->multiMode());
-    
-    
-    
-    
+
 // 美化选项
     $beautifyBlock = new Typecho_Widget_Helper_Form_Element_Checkbox('beautifyBlock', 
     array(
     'ShowBeautifyChange' => _t('是否开启美化(基于butterfly小康的魔改)'),
     'ShowColorTags' => _t('是否开启彩色标签云'),
-    'ShowTopimg' => _t('是否显示顶图'),
-    'PostShowTopimg' => _t('文章是否显示顶图'),
+    'ShowTopimg' => _t('是否显示主页顶图'),
+    'PostShowTopimg' => _t('是否显示文章示顶图'),
+    'PageShowTopimg' => _t('是否显示独立页面顶图'),
     'showLineNumber' => _t('是否显示代码块行号'),
     'showSnackbar' => _t('是否显示主题以及简繁切换弹窗'),
     'showLazyloadBlur' => _t('是否开启懒加载模糊效果'),
     ),
-    array('ShowTopimg','PostShowTopimg','showLineNumber','showLazyloadBlur'), _t('美化选项'));
+    array('ShowTopimg','PostShowTopimg','PageShowTopimg','showLineNumber','showLazyloadBlur'), _t('美化选项'));
     $beautifyBlock->setAttribute('id', 'beautifyBlock');
     $form->addInput($beautifyBlock->multiMode());
     
@@ -303,6 +300,89 @@ function themeConfig($form) {
     );
     $form->addInput($SubtitleLoop->multiMode());
     
+    
+    $EnableAutoHeaderLink = new Typecho_Widget_Helper_Form_Element_Select('EnableAutoHeaderLink',
+    array(
+        'on' => '开启（默认）',
+        "off" => '关闭'
+        ),
+        'on',
+        '自动生成导航栏独立页面链接',
+        '介绍：如果你要自定义导航栏链接部分,你可以选择关闭此项'
+    );
+    $form->addInput($EnableAutoHeaderLink->multiMode());    
+    
+     // 自定义导航栏链接
+    $CustomHeaderLink = new Typecho_Widget_Helper_Form_Element_Textarea(
+        'CustomHeaderLink',
+        NULL,
+        NULL,
+        '自定义导航栏链接',
+        '介绍：目前使用html写法'
+    );
+    $form->addInput($CustomHeaderLink);        
+    
+    // 自定义认证用户
+    $CustomAuthenticated = new Typecho_Widget_Helper_Form_Element_Textarea(
+        'CustomAuthenticated',
+        NULL,
+        NULL,
+        '自定义认证用户',
+        '介绍：评论区认证用户专属头衔<br>
+         格式：邮箱||认证头衔 如:<br> xxx@xxx.com||xxx认证<br>
+        (一行一个)'
+    );
+    $form->addInput($CustomAuthenticated);
+    
+    //自定义颜色    
+    $EnableCustomColor = new Typecho_Widget_Helper_Form_Element_Select('EnableCustomColor',
+    array(
+        "false" => '关闭（默认）',
+        'true' => '开启'
+        ),
+        'false',
+        '开启主题自定义颜色(实验性功能)',
+        '介绍：需要开启此选项下面的自定义颜色才能生效'
+    );
+    $form->addInput($EnableCustomColor->multiMode());    
+ 
+    $CustomColorMain = new Typecho_Widget_Helper_Form_Element_Text(
+        'CustomColorMain',
+        NULL,
+        NULL,
+        '自定主题主要颜色',
+        '介绍：使用hex格式如#fff'
+    );
+    $form->addInput($CustomColorMain);
+    
+    $CustomColorButtonBG = new Typecho_Widget_Helper_Form_Element_Text(
+        'CustomColorButtonBG',
+        NULL,
+        NULL,
+        '自定按钮颜色',
+        '介绍：'
+    );
+    $form->addInput($CustomColorButtonBG);        
+    
+    $CustomColorButtonHover = new Typecho_Widget_Helper_Form_Element_Text(
+        'CustomColorButtonHover',
+        NULL,
+        NULL,
+        '自定按钮悬停色',
+        '介绍：'
+    );
+    $form->addInput($CustomColorButtonHover);
+    
+    $CustomColorSelection = new Typecho_Widget_Helper_Form_Element_Text(
+        'CustomColorSelection',
+        NULL,
+        NULL,
+        '自定文本选择色',
+        '介绍：'
+    );
+    $form->addInput($CustomColorSelection);    
+    //自定义颜色end
+
      // 自定义css和js
     $CustomCSS = new Typecho_Widget_Helper_Form_Element_Textarea(
         'CustomCSS',
@@ -351,16 +431,6 @@ function themeConfig($form) {
         '介绍：网页底部的信息，如备案号等等(可使用html)'
     );
     $form->addInput($Customfooter);
-
-    $CustomAuthenticated = new Typecho_Widget_Helper_Form_Element_Textarea(
-        'CustomAuthenticated',
-        NULL,
-        NULL,
-        '自定义认证用户',
-        '介绍：评论区认证用户专属头衔(一行一个)'
-    );
-    $form->addInput($CustomAuthenticated);
-
     
 $db = Typecho_Db::get();
 $sjdq=$db->fetchRow($db->select()->from ('table.options')->where ('name = ?', 'theme:butterfly'));
@@ -674,7 +744,7 @@ function createCatalog($obj) {    //为文章标题添加锚点
         global $catalog_count;
         $catalog_count ++;
         $catalog[] = array('text' => trim(strip_tags($obj[3])), 'depth' => $obj[1], 'count' => $catalog_count);
-        return '<h'.$obj[1].$obj[2].' id="cl-'.$catalog_count.'"><a class="markdownIt-Anchor" href="#cl-'.$catalog_count.'" data-pjax-state></a>'.$obj[3].'</h'.$obj[1].'>';
+        return '<h'.$obj[1].$obj[2].' id="cl-'.$catalog_count.'"><a class="markdownIt-Anchor" href="#cl-'.$catalog_count.'"></a>'.$obj[3].'</h'.$obj[1].'>';
     }, $obj);
     return $obj;
 }
@@ -707,7 +777,7 @@ function getCatalog() {    //输出文章目录容器
                 }
             }
             $index .= '<li class="toc-item">
-            <a class="toc-link" href="#cl-'.$catalog_item['count'].'" data-pjax-state="anchor">
+            <a class="toc-link" href="#cl-'.$catalog_item['count'].'">
             <span class="toc-number"></span>
             <span class="toc-text">'.$catalog_item['text'].'</span>
             </a>';
@@ -874,9 +944,6 @@ function PostImage($text)
     }, $text);
     return $text;
 }
-
-
-
 function themeInit($archive) {
     if ($archive->is('single')) {
         $archive->content = createCatalog($archive->content);
@@ -949,9 +1016,9 @@ $FireFox_vern = explode('.', $str1[1]);
     } else if (preg_match('/Maxthon([\d]*)\/([^\s]+)/i', $agent, $regs)) {
       $str1 = explode('Maxthon/', $agent);
 $Maxthon_vern = explode('.', $str1[1]);
-        $outputer = '<i class="ua-icon icon-maxthon"></i>&nbsp遨游';
+        $outputer = '<i class="iconfont icon-maxthon"></i>&nbsp遨游';
     } else if (preg_match('#360([a-zA-Z0-9.]+)#i', $agent, $regs)) {
-$outputer = '<i class="ua-icon icon-360"></i>&nbsp;360极速浏览器';
+$outputer = '<i class="iconfont icon-chrome"></i>&nbsp;360极速浏览器';
     } else if (preg_match('/Edg([\d]*)\/([^\s]+)/i', $agent, $regs)) {
         $str1 = explode('Edge/', $regs[0]);
 $Edge_vern = explode('.', $str1[1]);
@@ -959,15 +1026,15 @@ $Edge_vern = explode('.', $str1[1]);
     } else if (preg_match('/UC/i', $agent)) {
               $str1 = explode('rowser/',  $agent);
 $UCBrowser_vern = explode('.', $str1[1]);
-        $outputer = '<i class="ua-icon icon-uc"></i>&nbsp;UC浏览器';
+        $outputer = '<i class="iconfont icon-UCliulanqi"></i>&nbsp;UC浏览器';
     }  else if (preg_match('/QQ/i', $agent, $regs)||preg_match('/QQBrowser\/([^\s]+)/i', $agent, $regs)) {
                   $str1 = explode('rowser/',  $agent);
 $QQ_vern = explode('.', $str1[1]);
-        $outputer = '<i class= "ua-icon icon-qqb"></i>&nbsp;QQ浏览器';
+        $outputer = '<i class="iconfont icon-QQliulanqi"></i>&nbsp;QQ浏览器';
     } else if (preg_match('/UBrowser/i', $agent, $regs)) {
               $str1 = explode('rowser/',  $agent);
 $UCBrowser_vern = explode('.', $str1[1]);
-        $outputer = '<i class="ua-icon icon-uc"></i>&nbsp;UC浏览器';
+        $outputer = '<i class="iconfont icon-UCliulanqi"></i>&nbsp;UC浏览器';
     }  else if (preg_match('/Opera[\s|\/]([^\s]+)|OPR/i', $agent, $regs)) {
         $outputer = '<i class="fab fa-opera"></i>&nbsp;&nbsp;Opera';
     } else if (preg_match('/YaBrowser/i', $agent, $regs)) {
@@ -977,9 +1044,9 @@ $yandex_brower = explode('.', $str1[1]);
     }else if (preg_match('/Quark/i', $agent, $regs)) {
          $str1 = explode('Version/',  $agent);
 $quark_brower = explode('.', $str1[1]);
-        $outputer = '<i class="ua-icon icon-quark"></i>&nbsp;Quark';
+        $outputer = '<i class="iconfont icon-quark"></i>&nbsp;Quark';
     }else if (preg_match('/XiaoMi/i', $agent, $regs)) {
-$outputer = '<i class="ua-icon icon-mi"></i>&nbsp;小米浏览器';}
+$outputer = '<i class="iconfont icon-XiaoMi"></i>&nbsp;小米浏览器';}
     else if (preg_match('/Chrome([\d]*)\/([^\s]+)/i', $agent, $regs)) {
 $str1 = explode('Chrome/', $agent);
 $chrome_vern = explode('.', $str1[1]);
@@ -1000,15 +1067,15 @@ function getOs($agent)
     $os = false;
     if (preg_match('/win/i', $agent)) {
         if (preg_match('/nt 6.0/i', $agent)) {
-            $os = '&nbsp;&nbsp;<i class= "ua-icon icon-win1"></i>&nbsp;Windows Vista&nbsp;/&nbsp;';
+            $os = '&nbsp;&nbsp;<i class="iconfont icon-windows"></i>&nbsp;Windows Vista&nbsp;/&nbsp;';
         } else if (preg_match('/nt 6.1/i', $agent)) {
-            $os = '&nbsp;&nbsp;<i class= "ua-icon icon-win1"></i>&nbsp;Windows 7&nbsp;/&nbsp;';
+            $os = '&nbsp;&nbsp;<i class="iconfont icon-windows"></i>&nbsp;Windows 7&nbsp;/&nbsp;';
         } else if (preg_match('/nt 6.2/i', $agent)) {
             $os = '&nbsp;&nbsp;<i class="fab fa-windows"></i>&nbsp;&nbsp;Windows 8&nbsp;/&nbsp;';
         } else if(preg_match('/nt 6.3/i', $agent)) {
             $os = '&nbsp;&nbsp;<i class="fab fa-windows"></i>&nbsp;&nbsp;Windows 8.1&nbsp;/&nbsp;';
         } else if(preg_match('/nt 5.1/i', $agent)) {
-            $os = '&nbsp;&nbsp;<i class="ua-icon icon-win1"></i>&nbsp;Windows XP&nbsp;/&nbsp;';
+            $os = '&nbsp;&nbsp;<i class="iconfont icon-windows"></i>&nbsp;Windows XP&nbsp;/&nbsp;';
         } else if (preg_match('/nt 10.0/i', $agent)) {
             $os = '&nbsp;&nbsp;<i class="fab fa-windows"></i>&nbsp;&nbsp;Windows 10&nbsp;/&nbsp;';
         }else if (preg_match('/nt 11.0/i', $agent)) {
@@ -1046,11 +1113,11 @@ function getOs($agent)
     else if (preg_match('/ubuntu/i', $agent)) {
         $os = '&nbsp;&nbsp;<i class="fab fa-ubuntu"></i>&nbsp;&nbsp;Ubuntu&nbsp;/&nbsp;';
     }else if (preg_match('/Arch/i', $agent)) {
-        $os = '&nbsp;&nbsp;<i class= "ua-icon icon-arch"></i>&nbsp;Arch Linux&nbsp;/&nbsp;';
+        $os = '&nbsp;&nbsp;<i class="iconfont icon-Arch-Linux"></i>&nbsp;Arch Linux&nbsp;/&nbsp;';
     }else if (preg_match('/manjaro/i', $agent)) {
-        $os = '&nbsp;&nbsp;<i class= "ua-icon icon-manjaro"></i>&nbsp;&nbsp;Manjaro&nbsp;/&nbsp;';
+        $os = '&nbsp;&nbsp;<i class="iconfont icon-manjaro"></i>&nbsp;&nbsp;Manjaro&nbsp;/&nbsp;';
     }else if (preg_match('/debian/i', $agent)) {
-        $os = '&nbsp;&nbsp;<i class= "ua-icon icon-debian"></i>&nbsp;Debian&nbsp;/&nbsp;';
+        $os = '&nbsp;&nbsp;<i class="iconfont icon-debianos"></i>&nbsp;Debian&nbsp;/&nbsp;';
     }else if (preg_match('/linux/i', $agent)) {
         $os = '&nbsp;&nbsp;<i class="fab fa-linux"></i>&nbsp;&nbsp;Linux&nbsp;/&nbsp;';
     }else if (preg_match('/iPad/i', $agent)) {
@@ -1071,12 +1138,19 @@ function commentRank($widget, $email = NULL)
 {      
     if (empty($email)) return;      
     $txt = Helper::options()->CustomAuthenticated;
-    $authlList = explode("\r\n", $txt);
+    $string_arr = explode("\r\n", $txt);
+    $long = count($string_arr);
+    for ($i = 0; $i < $long; $i++) {
+        $mailList[] =  explode("||", $string_arr[$i])[0];
+        $authList[] =  explode("||", $string_arr[$i])[1];
+    }
+    $all = array_combine($mailList,$authList);
+    
     if ($widget->authorId == $widget->ownerId) {
         echo '<span class="vtag vmaster">博主</span>';      
     } 
-    else if (in_array($email, $authlList)) {
-        echo '<span class="vtag vauth">认证用户</span>';
+    else if (in_array($email, $mailList)) {
+        echo '<span class="vtag vauth">'.$all[$email].'</span>';
       
     }
     else{
@@ -1147,7 +1221,7 @@ echo $commentClass;
             <?php $email=$comments->mail; $imgUrl = getGravatar($email);echo '<img class="vimg" data-lazy-src="'.$imgUrl.'" width="45px" height="45px" style="border-radius: 50%;" src="'.GetLazyLoad().'">'; ?>
             <cite class="vnick"><?php $comments->author(); ?></cite>
             <?php commentRank($comments, $comments->mail); ?>
-            <span class="comment-ua"><?php getOs($comments->agent); ?><?php getBrowser($comments->agent); ?></span>
+            
         </div>
         <div class="vhead">
             <b><?php $parentMail = get_comment_at($comments->coid)?><?php echo $parentMail;?></b>
@@ -1157,6 +1231,7 @@ echo $commentClass;
             <?php endif ?>
         </div>
         <div class="comment-content"><?php $comments->content(); ?></div>
+        <span class="comment-ua"><?php getOs($comments->agent); ?><?php getBrowser($comments->agent); ?></span>
     </div>
 <?php if ($comments->children) { ?>
     <div class="comment-children">

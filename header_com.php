@@ -19,16 +19,16 @@
         ), '', ' - '); ?><?php $this->options->title(); ?></title>
     <!-- 使用url函数转换相关路径 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.2.0'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.3.3'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.4.0'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.4.0'); ?>">
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.3.3'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.4.0'); ?>">
     <?php endif; ?>
     <link rel="preconnect" href="//cdn.jsdelivr.net" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+    <link href="https://at.alicdn.com/t/font_3159629_ym9tau0j4d.css" rel="stylesheet" />
     <?php if (!empty($this->options->beautifyBlock) && in_array('showSnackbar',$this->options->beautifyBlock)): ?>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'">
     <script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script>
@@ -48,40 +48,66 @@
     <?php endif; ?>
 <!--额外的-->
 <script>
-    var GLOBAL_CONFIG = {
-      root: '/',
-      algolia: undefined,
-      localSearch: { "path": "", "languages": { "hits_empty": "回车查询：${query}" } },
-      translate: { "defaultEncoding": 2, "translateDelay": 0, "msgToTraditionalChinese": "繁", "msgToSimplifiedChinese": "簡" },
-      noticeOutdate: undefined,
-      highlight: { "plugin": "highlighjs", "highlightCopy": true, "highlightLang": true },
-      copy: {
-        success: '复制成功',
-        error: '复制错误',
-        noSupport: '浏览器不支持'
-      },
-      relativeDate: {
-        homepage: false,
-        post: false
-      },
-      copyright: undefined,
-      lightbox: 'mediumZoom',
-      Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"<?php $this->options->SnackbarPosition() ?>"},
-      source: {
-        jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
-        justifiedGallery: {
-          js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
-          css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    const GLOBAL_CONFIG = {
+        root: "/",
+        algolia: void 0,
+        localSearch: {
+            path: "search.xml",
+            languages: {
+                hits_empty: "回车查询：${query}"
+            }
         },
-        fancybox: {
-          js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
-          css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
-        }
-      },
-      isPhotoFigcaption: true,
-      islazyload: true,
-      isanchor: true
-    };
+        translate: {
+            defaultEncoding: 1,
+            translateDelay: 0,
+            msgToTraditionalChinese: "繁",
+            msgToSimplifiedChinese: "简"
+        },
+        noticeOutdate: void 0,
+        highlight: {
+            plugin: "highlighjs",
+            highlightCopy: !0,
+            highlightLang: !0,
+            highlightHeightLimit: 400
+        },
+        copy: {
+            success: "复制成功",
+            error: "复制错误",
+            noSupport: "浏览器不支持"
+        },
+        relativeDate: {
+            homepage: !0,
+            post: !0
+        },
+        runtime: "天",
+        date_suffix: {
+            just: "",
+            min: "",
+            hour: "",
+            day: "",
+            month: ""
+        },
+        copyright: undefined,
+        lightbox: "",
+        Snackbar: {
+            "chs_to_cht": "你已切换为繁体",
+            "cht_to_chs": "你已切换为简体",
+            "day_to_night": "你已切换为深色模式",
+            "night_to_day": "你已切换为浅色模式",
+            "bgLight": "#49b1f5",
+            "bgDark": "#121212",
+            "position": "<?php $this->options->SnackbarPosition() ?>"
+        },
+        source: {
+            justifiedGallery: {
+                js: "https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js",
+                css: "https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css"
+            }
+        },
+        isPhotoFigcaption: !1,
+        islazyload: !0,
+        isAnchor: !0
+    }
     var saveToLocal = {
       set: function setWithExpiry(key, value, ttl) {
         const now = new Date()
@@ -122,15 +148,17 @@
       document.head.appendChild(script)
     })
   </script>
-<script id="config-diff">var GLOBAL_CONFIG_SITE = { 
-		    isPost: !0, 
-		    isHome: !0, 
-		    isHighlightShrink: !0, 
-		    isToc: !0, 
+<script id="config-diff">
+var GLOBAL_CONFIG_SITE = { 
+		    isPost: !0,
+		    isHome: !0,
+		    isHighlightShrink: !0,
+		    isToc: !0,
 		   }
 </script>
 <?php if ($this->is('post')): ?>
-<script id="config_change">var GLOBAL_CONFIG_SITE = {
+<script id="config_change">
+var GLOBAL_CONFIG_SITE = {
     isPost: !0, 
     isHome: !0, 
     isHighlightShrink: !1, 
@@ -138,7 +166,8 @@
     }
 </script>
 <?php else: ?>
-<script id="config_change">var GLOBAL_CONFIG_SITE = {
+<script id="config_change">
+var GLOBAL_CONFIG_SITE = {
     isPost: !1, 
     isHome: !0, 
     isHighlightShrink: !1, 
@@ -250,11 +279,27 @@
     }
   </style>
 <!--额外的-->
-    <!--[if lt IE 9]>
-    <script src="//cdnjscn.b0.upaiyun.com/libs/html5shiv/r29/html5.min.js"></script>
-    <script src="//cdnjscn.b0.upaiyun.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-    <!-- 通过自有函数输出HTML头部信息 -->
+<?php if ($this->options->EnableCustomColor === 'true'): ?>
+<style>
+:root {
+    --btn-hover-color: <?php $this->options->CustomColorButtonHover()?>;
+    --btn-bg: <?php $this->options->CustomColorButtonBG()?>;
+    --text-bg-hover: <?php $this->options->CustomColorButtonBG()?>;
+} 
+::selection,#aside-content #card-toc .toc-content .toc-link.active {
+    background: <?php $this->options->CustomColorSelection()?>;
+}
+#page-header.nav-fixed #nav #site-name:hover, #page-header.nav-fixed #nav #toggle-menu:hover, #page-header.nav-fixed #nav #menus .menus_items .menus_item  a:hover,#aside-content #card-toc .toc-content .toc-link:hover,#recent-posts>.recent-post-item>.recent-post-info>.article-title:hover,#aside-content .aside-list>.aside-list-item .content>.comment:hover, #aside-content .aside-list>.aside-list-item .content>.title:hover,.widget-list a:hover,.post-copyright-info a:hover,.article-sort-item-title:hover,.search-dialog .search-nav,#page-header.nav-fixed #nav a:hover,.search-dialog .search-nav .search-close-button:hover {
+    color: <?php $this->options->CustomColorMain()?>;
+}
+#nav .site-page:not(.child):after {background-color:<?php $this->options->CustomColorMain()?>}
+#local-search .search-dialog .local-search-box input {border: 2px solid <?php $this->options->CustomColorMain()?>!important;}
+#aside-content .card-archives ul.card-archive-list > .card-archive-list-item a:hover, #aside-content .card-categories ul.card-category-list > .card-category-list-item a:hover{
+    background-color: var(--btn-bg);
+}
+#aside-content .card-tag-cloud a:hover {color: <?php $this->options->CustomColorMain()?>!important; }
+</style>
+<?php endif ?>
     <?php $this->header(); ?>
     <?php $this->options->CustomHead() ?>
     <link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.2/jquery.fancybox.min.css">
@@ -263,8 +308,8 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script>
 <script src="<?php $this->options->themeUrl('/js/local-search.js'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/tw_cn.js'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/main.js?v1.2'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/utils.js?v1.2'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/js/main.js?v1.4.0'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/js/utils.js?v1.4.0'); ?>"> </script>
 <script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"> </script>
 <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"> </script>
 <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script>
@@ -304,6 +349,7 @@
         <div class="menus_item">
         <a class="site-page" href="<?php $this->options->siteUrl(); ?>"><i
               class="fa-fw fas fa-home"></i><span> 首页</span></a></div>
+              <?php if($this->options->EnableAutoHeaderLink === 'on') : ?>
       <?php $this->widget('Widget_Contents_Page_List')->to($pages); ?> <?php while($pages->next()): ?>
         <div class="menus_item">
                <a<?php if($this->is('page', $pages->slug)): ?><?php endif; ?> class="site-page" href="<?php $pages->permalink(); ?>">
@@ -333,6 +379,8 @@
                     </a>
               </div>
          <?php endwhile; ?>
+         <?php endif; ?>
+         <?php $this->options->CustomHeaderLink() ?>
       </div>
     </div>
   </div>

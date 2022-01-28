@@ -5,10 +5,10 @@
  * 主题为移植至Typecho，你可以替换原butterfly主题的index.css文件
  * <a href="https://www.wehaox.com">个人网站</a>
  * <a href="https://blog.wehaox.com/archives/typecho-butterfly.html">主题详细使用说明</a>
- * <a href="https://blog.wehaox.com/archives/blogtheme.html#cl-4">主题更新日志</a>
+ * <a href="https://blog.wehaox.com/archives/blogtheme.html#cl-9">主题更新日志</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.3.3
+ * @version 1.4.0
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -19,7 +19,7 @@ if($sticky && $this->is('index') || $this->is('front')){
     $sticky_html = 
 "<span class='article-meta'>
 <i class='fas fa-thumbtack article-meta__icon sticky'></i>
-<span class='sticky'>置顶</span>
+<span class='sticky'>置顶 </span>
 <span class='article-meta__separator'>|</span>
 </span>";
     $db = Typecho_Db::get();
@@ -53,68 +53,58 @@ $uid = $this->user->uid; //登录时，显示用户各自的私密文章
 <div class="recent-posts" id="recent-posts">
 	<?php while($this->next()): ?>
         <div class="recent-post-item" >
-           <wehao class="post_cover" id="post_rl">
-               <a  class="article-title" href="<?php $this->permalink() ?>">     
-<img class="post_bg" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" src="<?php echo GetLazyLoad() ?>" onerror="this.onerror=null;this.src='https://tva1.sinaimg.cn/large/007X0Rdyly1gpaaf55n1rj30ic09u0sw.jpg'">
-               </a>
+           <wehao class="post_cover">
+               <a  class="article-title" href="<?php $this->permalink() ?>"><img class="post_bg" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" src="<?php echo GetLazyLoad() ?>" onerror="this.onerror=null;this.src='https://tva1.sinaimg.cn/large/007X0Rdyly1gpaaf55n1rj30ic09u0sw.jpg'"></a>
             </wehao>
-              <div class="recent-post-info">
-			    <a  class="article-title" href="<?php $this->permalink() ?>"><?php $this->title() ?></a>
-			    <div class="article-meta-wrap">
-			         <?php $this->sticky();?>
-			   <span class="post-meta-date">
-			        <i class="far fa-calendar-alt"></i>
-				    <?php _e('发表于  '); ?> <?php $this->date(); ?>
-				    <time class="post-meta-date-created" datetime="<?php $this->date('c'); ?>">
-				    </time>
-				     <span class="article-meta__separator">|</span>
-				</span>
-				<i class="fas fa-history"></i>
-				<span class="article-meta-label">更新于</span>
-				  <?php echo date('Y-m-d' , $this->modified);?>
-				<time class="post-meta-date-updated" datetime="<?php echo date('Y-m-d' , $this->modified);?>" title="更新于 ">
-				</time>
-				<span class="article-meta">
-				    <span class="article-meta__separator">|</span>
-				    <i class="fas fa-inbox article-meta__icon"></i>
-				  <span class="post-meta-date">
-				    <?php _e('分类: '); ?>
-				    <?php $this->category(' '); ?>
-				</span>
-				    	<span class="article-meta__separator">|</span>
-			     <span class="post-meta-date" itemprop="author">
-				    <?php _e('作者: '); ?>
-				<a itemprop="name" href="<?php $this->author->permalink(); ?>" rel="author">
-				    <?php $this->author(); ?>
-				    </a>
-				</span>
-					<span class="article-meta__separator">|</span>
-				<i class="fas fa-comments"></i>
-			     <span class="post-meta-date" itemprop="interactionCount">
-				    <a itemprop="discussionUrl" href="<?php $this->permalink() ?>#comments">
-				        <?php $this->commentsNum('0条评论', '1 条评论', '%d 条评论'); ?>
-				    </a>
-				</span>
-				</span>
-			    </div>
-			    <div class="content">
-			    <?php if($this->fields->excerpt && $this->fields->excerpt!='') {
-				    echo $this->fields->excerpt;
-				  }else{
-					echo $this->excerpt(130);
-				  }
-			       echo '<br><br><a href="',$this->permalink(),'" title="',$this->title(),'">阅读全文...</a>';
-			        ?>
-                   </div>
+           <div class="recent-post-info">
+	            <a  class="article-title" href="<?php $this->permalink() ?>"><?php $this->title() ?></a>
+                <div class="article-meta-wrap">
+    <?php $this->sticky(); ?>
+    <span class="post-meta-date">
+        <i class="far fa-calendar-alt"></i>
+        <span class="article-meta-label">发表于</span>
+        <span datetime="<?php $this->date('Y-m-d'); ?>" style="display: inline;" pubdate><?php $this->date('Y-m-d'); ?></span>
+    </span>
+    <span class="post-meta-date">
+        <span class="article-meta-separator">|</span>
+        <i class="fas fa-history"></i>
+        <span class="article-meta-label">更新于</span>
+        <span datetime="<?php echo date('Y-m-d', $this->modified); ?>"  style="display: inline;"><?php echo date('Y-m-d', $this->modified); ?></span>
+    </span>
+    <span class="article-meta">
+        <span class="article-meta-separator">|</span>
+        <i class="fas fa-inbox"></i>
+        <?php $this->category(' '); ?>
+    </span>
+    <span class="article-meta">
+        <span class="article-meta-separator">|</span>
+        <i class="fas fa-inbox"></i>
+        <?php _e('作者: '); ?><a itemprop="name" href="<?php $this->author->permalink(); ?>" rel="author"><?php $this->author(); ?></a>
+    </span>
+    <span class="article-meta">
+        <span class="article-meta-separator">|</span>
+        <i class="fas fa-comments"></i>
+        <a class="twikoo-count" href="<?php $this->permalink() ?>#comments"><?php $this->commentsNum('0条评论', '1 条评论', '%d 条评论'); ?></a></span>
+</div>
+           	    <div class="content">
+	               <?php if($this->fields->excerpt && $this->fields->excerpt!='') {
+                         echo $this->fields->excerpt;}
+	                	else{
+		                echo $this->excerpt(130);}
+		                 echo '<br><br><a href="',$this->permalink(),'" title="',$this->title(),'">阅读全文...</a>';
+	                   	?>
+                </div>
             </div>
         </div>
 	<?php endwhile; ?>
- <?php $this->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>', 1, '...', array('wrapTag' => 'nav', 'wrapClass' => 'page-nav', 'itemTag' => '', 'prevClass' => 'extend prev', 'nextClass' => 'extend next', 'currentClass' => 'page-number current' )); ?>
+<nav id="pagination">
+ <?php $this->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>', 1, '...', array('wrapTag' => 'div', 'wrapClass' => 'pagination', 'itemTag' => '', 'prevClass' => 'extend prev', 'nextClass' => 'extend next', 'currentClass' => 'page-number current' )); ?>
+</nav>	 
 </div>
 <?php $this->need('sidebar.php'); ?>
 </main>
 <?php $this->need('footer.php'); ?>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.js?v1.2.1'); ?>"></script>
+
 <script>
 function ver() {console.log(`
 ===================================================================
@@ -126,7 +116,7 @@ function ver() {console.log(`
     #    # #    #   #     #   #      #   #  #      #        #    
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                           1.3.3
+                           1.4.0
 ===================================================================
 `);}
 </script>
