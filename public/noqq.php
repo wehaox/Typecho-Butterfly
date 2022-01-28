@@ -39,11 +39,13 @@
 <div class="error404" id="body-wrap">
 <div id="error-wrap">
   <div class="error-content">
-    <div class="error-img" style="background-image: url(https://i.loli.net/2021/10/11/rVR97X3zmoEj2WA.png)"></div>
+    <div class="error-img">
+                <img src="https://i.loli.net/2021/10/11/rVR97X3zmoEj2WA.png" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" alt="到浏览器访问" class="entered">
+    </div>
     <div class="error-info">
       <b class="title">{{ title }}</b>
       <p style="word-break: break-word">{{ url }} </p>
-       <el-button type="primary" @click="copy">或点我复制网址</el-button>
+       <el-button style="width: 65%;margin: 0 auto;" type="primary" @click="copy">或点我复制网址</el-button>
     </div>
   </div>
 </div>

@@ -23,26 +23,26 @@ if($_COOKIE["ThemePassword"]!==$this->options->ThemePassword && $this->options->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="//unpkg.com/element-plus"></script>
     <div id="web_bg"></div>
+
 <div class="error404" id="body-wrap">
 <div id="error-wrap">
   <div class="error-content">
-    <div class="error-img" style="background-image: url(https://i.loli.net/2021/10/09/oPZA9nBlTDevy3S.png)"></div>
+    <div class="error-img">
+        <img src="https://i.loli.net/2021/10/09/oPZA9nBlTDevy3S.png" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" alt="403" class="entered">
+    </div>
     <div class="error-info">
       <h1 class="error_title">403</h1>
-      <div class="error_subtitle">{{ error_subtitle }}</div>
+      <div class="error_subtitle">站点维护中... 请稍后访问</div>
       <?php if( !empty($this->options->ThemePassword)): ?>
-      <p>
           <form onsubmit="return false">
           <input style="text-align: center" type="password" class="text" placeholder="或在此输入密码访问" v-model="pwd" autocomplete="off">
           <input type="submit" class="submit" value="提交" @click="send">
           </form>
-      </p>
-          <script>
-   const HelloVueApp = {
+<script>
+   const passwordApp = {
        data() {
            return {
-               pwd: '',
-               error_subtitle: '站点维护中... 请稍后访问'
+               pwd: ''
           }
        },
    methods:{
@@ -77,7 +77,7 @@ if($_COOKIE["ThemePassword"]!==$this->options->ThemePassword && $this->options->
        }
    }
 }
-const app = Vue.createApp(HelloVueApp);
+const app = Vue.createApp(passwordApp);
 app.use(ElementPlus);
 app.mount("#error-wrap");
 </script>
