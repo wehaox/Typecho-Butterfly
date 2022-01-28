@@ -23,6 +23,7 @@
 .vimg{
     float: left;
     margin: 8px 10px 0px 0px;
+    transition: filter 375ms ease-in .2s,transform .3s;
 }
 
 .vimg:hover {
@@ -75,6 +76,9 @@
 }
 .comment-content{
     margin-left: 56px;
+}
+.comment-content p{
+    word-break: break-all;
 }
 .comment-parent{border-bottom: 1px solid #f0f0f0;}
 .comment-list li {
@@ -153,27 +157,38 @@
     background: var(--btn-hover-color);
 }
 
-.page-nav{
-    overflow: hidden;
-    margin-top: 1rem;
-    width: 100%;
-    text-align: center;
-}
-.page-nav a{
-    margin: 10px;
-    
-}
 .page-number{
-    background: #00c4b6;
-    color: var(--white);
+    background: #00c4b6!important;
     cursor: default;
     display: inline-block;
-    margin: 0 .2rem;
-    min-width: 1.2rem;
-    height: 1.2rem;
+    margin: 0 0.2rem;
+    min-width: 2.5em;
+    height: 2.5em;
+    border-radius: 8px;
     text-align: center;
-    line-height: 1.2rem;
+    line-height: 2.2rem;
+    color: var(--white);
+}
+.extend{
+    color: #99a9bf;
+    cursor: default;
+    display: inline-block;
+    margin: 0 0.2rem;
+    min-width: 2.5em;
+    height: 2.5em;
+    border-radius: 8px;
+    text-align: center;
+    line-height: 2.2rem;
     cursor: pointer;
+}
+
+.extend:hover{
+    background: var(--btn-hover-color);
+    color: var(--btn-color);
+}
+
+.current:hover{
+    background: #00c4b6!important;
 }
 
 .required{
@@ -196,19 +211,26 @@
     text-align: center;
     padding-left: 0px;
 }
-.page-navigator > li{
+.page-navigator > *{
     list-style-type: none;
     display: inline-block;
-    min-width: 1.2rem;
-    height: 1.2rem;
-    line-height: 1.2rem;
+    min-width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
     cursor: pointer;
+    border-radius: 8px;
+    margin: 0 6px;
+    background: var(--white);
 }
-.page-navigator > .current a{
-    color: var(--white);
+
+.page-navigator > *:hover{
+    background: var(--btn-hover-color);
+    color: var(--btn-color);
 }
+
 .page-navigator > .current{
     background: #00c4b6;
+    color: white;
 }
 .post-content p img {
     display: none;
@@ -334,7 +356,7 @@ code::-webkit-scrollbar-thumb{
 .toolbar-item>span{
     opacity: 1!important;
     position: absolute;
-    left: 3.8rem!important;
+    left: 4.8rem!important;
     top: -1px;
     text-transform: uppercase;
     font-weight: 700!important;
@@ -382,7 +404,7 @@ code[class*="language-"], pre[class*="language-"] {
     color: var(--font-color);
 }
 .widget-list a:hover {
-    color: var(--text-bg-hover)!important;
+    color: var(--text-bg-hover);
 }
 
 .last{
@@ -398,9 +420,6 @@ code[class*="language-"], pre[class*="language-"] {
     content: none;
 }
 
-:root {
-    --card-bg: none!important
-}
 #web_bg:before{
     position: absolute!important;
 }
@@ -434,6 +453,8 @@ code[class*="language-"], pre[class*="language-"] {
 }
 .comment-ua{
     font-size: .875em;
+    color: #999999;
+    margin-left: 50px;
 }
 #aside-content .aside-list>.aside-list-item .thumbnail {
     border-radius: 4px;
@@ -471,4 +492,75 @@ code[class*="language-"], pre[class*="language-"] {
     margin-bottom: 10px;
 }
 /*懒加载结束*/
-.ua-icon{display:inline-block;width:1pc;height:1pc;background-size:cover;background-repeat:no-repeat;vertical-align:text-top}.icon-360{background-image:url(https://z3.ax1x.com/2021/07/31/WvtC36.png)}.icon-uc{background-image:url(https://z3.ax1x.com/2021/07/31/Wvw9XV.png)}.icon-win1{background-image:url(https://z3.ax1x.com/2021/07/31/WvdfFH.png)}.icon-maxthon{background-image:url(https://z3.ax1x.com/2021/07/31/Wvw3Ae.png)}.icon-qqb{background-image:url(https://z3.ax1x.com/2021/07/31/Wvwo4J.png)}.icon-quark{background-image:url(https://z3.ax1x.com/2021/07/31/Wv0uCj.png)}.icon-mi{background-image:url(https://z3.ax1x.com/2021/07/31/WvB2wT.png)}.icon-arch{background-image:url(https://z3.ax1x.com/2021/07/31/WvywBq.png)}.icon-manjaro{width: 11px;height: 11px;margin-top: 4px;background-image:url(https://z3.ax1x.com/2021/08/08/flHSwd.png)}.icon-debian{background-image:url(https://z3.ax1x.com/2021/08/08/flOcxP.png)}
+.iconfont{font-size: 14px!important;}
+/*已移除内容*/
+/*#article-container.post-content ul>li:not(.tab):before {*/
+/*    top: 0.78em;*/
+/*    width: 0.42em;*/
+/*    height: 0.42em;*/
+/*    border: 0.21em solid #49b1f5;*/
+/*    border-radius: 0.42em;*/
+/*    background: 0 0;*/
+/*    content: '';*/
+/*    line-height: .42em;*/
+/*    position: absolute;*/
+/*}*/
+/*#article-container.post-content ol li:before, #article-container.post-content ul li:before {*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    background: #49b1f5;*/
+/*    transition: all .3s ease-out; */
+/*}*/
+/*#article-container ol li, #article-container ul li {*/
+/*    position: relative;*/
+/*    margin: 0.3rem0;*/
+/*    padding-left: 0.3rem;*/
+/*}*/
+
+/*.button--animated {*/
+/*    position: relative;*/
+/*    z-index: 1;*/
+/*    -webkit-transition: color 1s;*/
+/*    -moz-transition: color 1s;*/
+/*    -o-transition: color 1s;*/
+/*    -ms-transition: color 1s;*/
+/*    transition: color 1s;*/
+/*}*/
+/*.button--animated:hover:before {*/
+/*    -webkit-transition-timing-function: cubic-bezier(.45,1.64,.47,.66);*/
+/*    -moz-transition-timing-function: cubic-bezier(.45,1.64,.47,.66);*/
+/*    -o-transition-timing-function: cubic-bezier(.45,1.64,.47,.66);*/
+/*    -ms-transition-timing-function: cubic-bezier(.45,1.64,.47,.66);*/
+/*    transition-timing-function: cubic-bezier(.45,1.64,.47,.66);*/
+/*    -webkit-transform: scaleX(1);*/
+/*    -moz-transform: scaleX(1);*/
+/*    -o-transform: scaleX(1);*/
+/*    -ms-transform: scaleX(1);*/
+/*    transform: scaleX(1);*/
+/*}*/
+/*.button--animated:before {*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    right: 0;*/
+/*    bottom: 0;*/
+/*    left: 0;*/
+/*    z-index: -1;*/
+/*    background: var(--btn-hover-color);*/
+/*    content: '';*/
+/*    -webkit-transition: -webkit-transform .5s ease-out;*/
+/*    -moz-transition: -moz-transform .5s ease-out;*/
+/*    -o-transition: -o-transform .5s ease-out;*/
+/*    -ms-transition: -ms-transform .5s ease-out;*/
+/*    transition: transform .5s ease-out;*/
+/*    -webkit-transform: scaleX(0);*/
+/*    -moz-transform: scaleX(0);*/
+/*    -o-transform: scaleX(0);*/
+/*    -ms-transform: scaleX(0);*/
+/*    transform: scaleX(0);*/
+/*    -webkit-transform-origin: 0 50%;*/
+/*    -moz-transform-origin: 0 50%;*/
+/*    -o-transform-origin: 0 50%;*/
+/*    -ms-transform-origin: 0 50%;*/
+/*    transform-origin: 0 50%;*/
+/*}*/
