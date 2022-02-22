@@ -89,6 +89,9 @@
     color: var(--font-color);;
     padding-left: 50px;
 }
+.comment-content p > img {
+    width: 100%;
+}
 .text{
     border: none;
     resize: none;
@@ -493,6 +496,8 @@ code[class*="language-"], pre[class*="language-"] {
 }
 /*懒加载结束*/
 .iconfont{font-size: 14px!important;}
+
+
 /*已移除内容*/
 /*#article-container.post-content ul>li:not(.tab):before {*/
 /*    top: 0.78em;*/
