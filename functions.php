@@ -1317,6 +1317,9 @@ function get_post_view($archive)
 //总访问量
 function theAllViews(){
     $db = Typecho_Db::get();
+        if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')))) {
+        $db->query('ALTER TABLE `'.$db->getPrefix().'contents` ADD `views` INT(10) DEFAULT 0;');
+    }
     $row = $db->fetchAll($db->select('SUM(views)')->from('table.contents'));
     echo $row[0]["SUM(`views`)"];
 }
