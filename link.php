@@ -1,9 +1,14 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<?php $this->need('page_header.php'); ?>
+<?php 
+/**  
+    * 友链
+    *  
+    * @package custom  
+    */  
+$this->need('page_header.php'); 
+?>
 <main class="layout" id="content-inner">
 <div id="page">
-    
-    
 <div id="article-container">
   <div class="flink">
        <div class="flink-list">
