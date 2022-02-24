@@ -62,7 +62,15 @@
 .comment-reply a{
     color: var(--btn-color);
 }
+
+#cancel-comment-reply-link{
+    position: absolute;
+    margin-top: 5px;
+    right: 5px;
+}
+
 .cancel-comment-reply{
+    position: relative;
     text-align: right;
 }
 #post-comment {
@@ -89,7 +97,7 @@
     color: var(--font-color);;
     padding-left: 50px;
 }
-.comment-content p > img {
+.comment-content img {
     width: 100%;
 }
 .text{
