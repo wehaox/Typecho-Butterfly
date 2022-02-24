@@ -79,6 +79,7 @@
     });
 </script>
 <div class="js-pjax">
+<?php $this->header('commentReply=1&description=0&keywords=0&generator=0&template=0&pingback=0&xmlrpc=0&wlw=0&rss2=0&rss1=0&antiSpam=0&atom'); ?>  
 <script>
             (function() {
                 var a = document.addEventListener ? {
@@ -209,6 +210,7 @@ e.contains("read-mode") && e.remove("read-mode")
 NProgress.start();
 })),
 document.addEventListener("pjax:complete", (function() {
+
     NProgress.done();
     window.refreshFn(), 
     document.querySelectorAll("script[data-pjax]").forEach(e => {

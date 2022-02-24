@@ -6,7 +6,7 @@
     <h3 id="response"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div></h3>
     <div id="<?php $this->respondId(); ?>" class="respond">
         <div class="cancel-comment-reply">
-        <?php $comments->cancelReply(); ?>
+        <?php $comments->cancelReply("<svg class='vicon cancel-reply-btn' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4220' width='22' height='22'><path d='M796.454 985H227.545c-50.183 0-97.481-19.662-133.183-55.363-35.7-35.701-55.362-83-55.362-133.183V227.545c0-50.183 19.662-97.481 55.363-133.183 35.701-35.7 83-55.362 133.182-55.362h568.909c50.183 0 97.481 19.662 133.183 55.363 35.701 35.702 55.363 83 55.363 133.183v568.909c0 50.183-19.662 97.481-55.363 133.183S846.637 985 796.454 985zM227.545 91C152.254 91 91 152.254 91 227.545v568.909C91 871.746 152.254 933 227.545 933h568.909C871.746 933 933 871.746 933 796.454V227.545C933 152.254 871.746 91 796.454 91H227.545z' p-id='4221'></path><path d='M568.569 512l170.267-170.267c15.556-15.556 15.556-41.012 0-56.569s-41.012-15.556-56.569 0L512 455.431 341.733 285.165c-15.556-15.556-41.012-15.556-56.569 0s-15.556 41.012 0 56.569L455.431 512 285.165 682.267c-15.556 15.556-15.556 41.012 0 56.569 15.556 15.556 41.012 15.556 56.569 0L512 568.569l170.267 170.267c15.556 15.556 41.012 15.556 56.569 0 15.556-15.556 15.556-41.012 0-56.569L568.569 512z' p-id='4222'></path></svg>"); ?>
         </div>
     	      <div class="change" id="commentType">
             </div>
@@ -52,10 +52,11 @@
 </div>
 <?php endif; ?>	
     </div>
-    <script>$("#to_comment").click(function() {var hre = $(this).attr("href");$('html, body').animate({scrollTop: $(hre).offset().top}, 300);});
+    <script>
+    $("#to_comment").click(function() {var hre = $(this).attr("href");$('html, body').animate({scrollTop: $(hre).offset().top}, 300);});
     $("#comment_keys").click(function(){
         $('#comment_login').slideToggle("fast");
-    })
+    });
     </script>
     <?php elseif(!$this->allow('comment')&&$this->is('post')): ?>
     <hr></hr>

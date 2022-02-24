@@ -139,7 +139,8 @@ function themeConfig($form) {
         ),
         'off',
         '开启Pjax(实验性功能,如发生页面错误关闭此选项)',
-        '介绍：页面无刷新加载,有效提高页面加载速度'
+        '介绍：页面无刷新加载,有效提高页面加载速度<br>
+         此功能目前为实验性功能，请查看<a href="https://blog.wehaox.com/archives/typecho-butterfly.html#cl-13">使用文档</a>'
     );
     $form->addInput($EnablePjax->multiMode());
     
