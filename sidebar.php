@@ -98,11 +98,11 @@
         <?php $this->widget('Widget_Comments_Recent', 'pageSize=6')->to($comments); ?>
         <?php while($comments->next()): ?>
             <div class="aside-list-item">
-                <a href="<?php $comments->permalink(); ?>" class="thumbnail" data-pjax-state="">
+                <a href="<?php $comments->permalink(); ?>" class="thumbnail">
                     <?php $email=$comments->mail; $imgUrl = getGravatar($email);echo '<img src="'.GetLazyLoad().'" data-lazy-src="'.$imgUrl.'" >'; ?>
                 </a>
                 <div class="content">
-                <a class="comment" href="<?php $comments->permalink(); ?>" data-pjax-state>
+                <a class="comment" href="<?php $comments->permalink(); ?>">
                     <?php $comments->excerpt(35, '...'); ?>
                 </a>
                      <div class="name"> 
