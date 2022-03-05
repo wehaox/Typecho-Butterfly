@@ -191,9 +191,16 @@ new Typed("#subtitle",{
 </div>
 <!--pjax-->
 <?php if($this->options->EnablePjax === 'on') : ?>
+
+<?php if($this->options->StaticFile == 'CDN'): ?>
 <link rel="stylesheet" href="https://unpkg.com/nprogress@0.2.0/nprogress.css">
 <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
+<?php else: ?>
+<link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/nprogress.css'); ?>">
+<script src="<?php $this->options->themeUrl('static/js/nprogress.js'); ?>"></script>
+<script src="<?php $this->options->themeUrl('static/js/pjax.min.js'); ?>"></script>
+<?php endif; ?>
 <script>
 let pjaxSelectors = ["title", "#body-wrap", "#rightside-config-hide", "#rightside-config-show", ".js-pjax"];
 var pjax = new Pjax({
