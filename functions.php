@@ -25,6 +25,19 @@ function themeConfig($form) {
     $sticky_cids->setAttribute('id', 'cids');
     $form->addInput($sticky_cids);
     
+    $StaticFile = new Typecho_Widget_Helper_Form_Element_Select('StaticFile',
+        array(
+            'CDN' => '关闭（CDN加载）',
+            'local' => '开启（本地加载）',
+        ),
+        'CDN',
+        '博客静态资源加载方式',
+        '介绍：无网络服务器或者CDN炸了可开启此项<br>
+         将博客静态资源，如js、css、图片从服务器加载(会稍微增加服务器流量消耗)<br>
+         注意：你需要额外<a href="#">下载</a>静态资源放进主题根目录'
+    );
+    $form->addInput($StaticFile->multiMode());    
+    
     $NewTabLink = new Typecho_Widget_Helper_Form_Element_Select('NewTabLink',
         array(
             'on' => '开启（默认）',
@@ -946,6 +959,7 @@ function PostImage($text)
     return $text;
 }
 function themeInit($archive) {
+    Helper::options()->commentsAntiSpam = false;
     if ($archive->is('single')) {
         $archive->content = createCatalog($archive->content);
         $archive->content = ParseCode($archive->content);
@@ -999,11 +1013,29 @@ if (empty($vai['1']['0'])) {
         $url .= ' />';
     }
 }else{
-    $url = 'https://q1.qlogo.cn/headimg_dl?dst_uin='.$vai['1']['0'].'&spec=100';
+$qquser = $vai['1']['0'];
+
+$db=Typecho_Db::get();    
+if (!array_key_exists('qqk', $db->fetchRow($db->select()->from('table.comments')))) {
+    $db->query('ALTER TABLE `'.$db->getPrefix().'comments` ADD `qqk` varchar(64) DEFAULT NULL;');
+}
+
+$dbk = $db->fetchRow($db->select('qqk')->from('table.comments')->where('mail=?',$email))['qqk'];
+if($dbk == NULL){
+   $geturl = 'https://ptlogin2.qq.com/getface?&imgtype=1&uin='.$qquser;
+   $qqurl = file_get_contents($geturl);
+   $str1 = explode('sdk&k=', $qqurl);
+   $str2 = explode('&t=', $str1[1]);
+   $k = $str2[0];
+   $db->query($db->update('table.comments')->rows(array('qqk'=>$k))->where('mail=?',$email));
+   $url = 'https://q1.qlogo.cn/headimg_dl?dst_uin='.$qquser.'&spec=100';
+}else{
+    $url = 'https://q1.qlogo.cn/g?b=qq&k='.$dbk.'&s=100';
+}
+
 }
 return  $url;
-} 
- 
+}
  
 // 获取浏览器信息
 function getBrowser($agent)

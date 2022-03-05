@@ -18,6 +18,7 @@
             'author'    =>  _t('%s 发布的文章')
         ), '', ' - '); ?><?php $this->options->title(); ?></title>
     <!-- 使用url函数转换相关路径 -->
+    <link rel="preconnect" href="//cdn.jsdelivr.net" />    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.4.0'); ?>">
@@ -25,13 +26,15 @@
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.4.0'); ?>">
     <?php endif; ?>
-    <link rel="preconnect" href="//cdn.jsdelivr.net" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
     <link href="https://at.alicdn.com/t/font_3159629_ym9tau0j4d.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">    
+    <?php if($this->options->StaticFile == 'CDN'): ?>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css" />
+    <?php else: ?>
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/jquery.fancybox.min.css'); ?>" />
+    <?php endif; ?>
     <?php if (!empty($this->options->beautifyBlock) && in_array('showSnackbar',$this->options->beautifyBlock)): ?>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'">
-    <script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script>
     <?php endif; ?>
     <?php if (!empty($this->options->beautifyBlock) && in_array('showLazyloadBlur',$this->options->beautifyBlock)): ?>
     <style>
@@ -302,18 +305,26 @@ var GLOBAL_CONFIG_SITE = {
 <?php endif ?>
     <?php $this->header(); ?>
     <?php $this->options->CustomHead() ?>
-    <link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.2/jquery.fancybox.min.css">
 </head>
 <body>
-<script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script>
 <script src="<?php $this->options->themeUrl('/js/local-search.js'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/tw_cn.js'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/main.js?v1.4.0'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/utils.js?v1.4.0'); ?>"> </script>
+<?php if($this->options->StaticFile == 'CDN'): ?>
+<script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"> </script>
 <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"> </script>
 <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script>
-    <script src="https://cdn.staticfile.org/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+<script src="https://cdn.staticfile.org/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script>
+<?php else: ?>
+<script src="<?php $this->options->themeUrl('static/js/jquery.min.js'); ?>"></script>
+<script src="<?php $this->options->themeUrl('static/js/instantpage.min.js'); ?>" type="module"> </script>
+<script src="<?php $this->options->themeUrl('static/js/medium-zoom.min.js'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('static/js/lazyload.iife.min.js'); ?>"></script>
+<script src="<?php $this->options->themeUrl('static/js/jquery.fancybox.min.js'); ?>"></script>
+<?php endif; ?>
 <!--[if lt IE 8]>
     <div class="browsehappy" role="dialog"><?php _e('当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>'); ?>.</div>
 <![endif]-->
