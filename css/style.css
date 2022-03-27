@@ -1,4 +1,6 @@
-/*评论区显示*/
+/*
+此css用于适配移植
+*/
 .vmaster{
     background: #ffa51e;
     font-size: 12px;
@@ -144,7 +146,6 @@
     border-radius: .3em;
     display: inline-block;
     background: transparent;
-    margin-top: 10px;
     font-weight: 400;
     vertical-align: middle;
     -ms-touch-action: manipulation;
@@ -166,6 +167,12 @@
 
 .submit:hover {
     background: var(--btn-hover-color);
+}
+
+@media screen and (max-width: 520px) {
+    .submit{
+        margin-top: 5px;
+    }
 }
 
 .page-number{
@@ -339,8 +346,25 @@ pre code {
     overflow-x:auto;
     margin:4.4px 0.px .4px 1px;
     padding:0;
-    max-height:500px;
+    max-height:200px;
     padding:8px 8px 8px 42px!important;;
+}
+.expand-bcode{
+    max-height:100%!important;
+}
+.code-expand-btn i {
+    color: white!important;
+}
+div.code-toolbar {
+    box-shadow: 0 5px 10px 0 rgb(144 164 174 / 40%);    
+}
+.expand-done + code{
+    margin-bottom: 1.8em;
+}
+
+#article-container .code-expand-btn {
+    background: linear-gradient(180deg, rgb(33 34 34 / 60%), rgb(0 0 0 / 90%))!important;
+    border-radius: 7px;
 }
 #post-content pre code {
     display:block;
