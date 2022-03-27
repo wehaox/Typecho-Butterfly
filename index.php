@@ -8,7 +8,7 @@
  * <a href="https://blog.wehaox.com/archives/blogtheme.html#cl-9">主题更新日志</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.4.3-rc1
+ * @version 1.4.3
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;

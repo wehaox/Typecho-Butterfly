@@ -13,7 +13,8 @@ function themeConfig($form) {
     <a href='#aside'>侧边栏显示设置</a>
     <a href='#beautifyBlock'>美化选项</a>
     <a href='#ShowLive2D'>Live2D设置</a>
-    <a href='#CustomSet'>自定义内容</a>
+    <a href='#typecho-option-item-CustomSubtitle-34'>其他自定义内容</a>
+    <a href='#typecho-option-item-EnableCustomColor-44'>自定义颜色</a>
     </div></div>
     <form class="protected" action="?butterflybf" method="post" id="themeBackup">
         <input type="submit" name="type" class="btn btn-s" value="备份主题数据" />&nbsp;&nbsp;<input type="submit" name="type" class="btn btn-s" value="还原主题数据" />&nbsp;&nbsp;<input type="submit" name="type" class="btn btn-s" value="删除备份数据" /></form>
@@ -31,10 +32,10 @@ function themeConfig($form) {
             'local' => '开启（本地加载）',
         ),
         'CDN',
-        '博客静态资源加载方式',
+        '博客静态资源加载方式(实验性功能,预计下个版本完善)',
         '介绍：无网络服务器或者CDN炸了可开启此项<br>
          将博客静态资源，如js、css、图片从服务器加载(会稍微增加服务器流量消耗)<br>
-         注意：你需要额外<a href="#">下载</a>静态资源放进主题根目录'
+         注意：你需要额外<a href="https://github.do/https://raw.githubusercontent.com/wehaox/CDN/main/static.zip">下载</a>静态资源放进主题根目录解压'
     );
     $form->addInput($StaticFile->multiMode());    
     
@@ -300,7 +301,6 @@ function themeConfig($form) {
         '自定义主页副标题/subtitle（非必填）',
         '介绍：不填则使用默认的一言api。'
     );
-    $CustomSubtitle->setAttribute('id', 'CustomSet');
     $form->addInput($CustomSubtitle);
     
     $SubtitleLoop = new Typecho_Widget_Helper_Form_Element_Select('SubtitleLoop',
@@ -348,55 +348,6 @@ function themeConfig($form) {
     );
     $form->addInput($CustomAuthenticated);
     
-    //自定义颜色    
-    $EnableCustomColor = new Typecho_Widget_Helper_Form_Element_Select('EnableCustomColor',
-    array(
-        "false" => '关闭（默认）',
-        'true' => '开启'
-        ),
-        'false',
-        '开启主题自定义颜色(实验性功能)',
-        '介绍：需要开启此选项下面的自定义颜色才能生效'
-    );
-    $form->addInput($EnableCustomColor->multiMode());    
- 
-    $CustomColorMain = new Typecho_Widget_Helper_Form_Element_Text(
-        'CustomColorMain',
-        NULL,
-        NULL,
-        '自定主题主要颜色',
-        '介绍：使用hex格式如#fff'
-    );
-    $form->addInput($CustomColorMain);
-    
-    $CustomColorButtonBG = new Typecho_Widget_Helper_Form_Element_Text(
-        'CustomColorButtonBG',
-        NULL,
-        NULL,
-        '自定按钮颜色',
-        '介绍：'
-    );
-    $form->addInput($CustomColorButtonBG);        
-    
-    $CustomColorButtonHover = new Typecho_Widget_Helper_Form_Element_Text(
-        'CustomColorButtonHover',
-        NULL,
-        NULL,
-        '自定按钮悬停色',
-        '介绍：'
-    );
-    $form->addInput($CustomColorButtonHover);
-    
-    $CustomColorSelection = new Typecho_Widget_Helper_Form_Element_Text(
-        'CustomColorSelection',
-        NULL,
-        NULL,
-        '自定文本选择色',
-        '介绍：'
-    );
-    $form->addInput($CustomColorSelection);    
-    //自定义颜色end
-
      // 自定义css和js
     $CustomCSS = new Typecho_Widget_Helper_Form_Element_Textarea(
         'CustomCSS',
@@ -445,6 +396,56 @@ function themeConfig($form) {
         '介绍：网页底部的信息，如备案号等等(可使用html)'
     );
     $form->addInput($Customfooter);
+    
+    //自定义颜色    
+    $EnableCustomColor = new Typecho_Widget_Helper_Form_Element_Select('EnableCustomColor',
+    array(
+        "false" => '关闭（默认）',
+        'true' => '开启'
+        ),
+        'false',
+        '开启主题自定义颜色(实验性功能)',
+        '介绍：需要开启此选项下面的自定义颜色才能生效，且下面关于颜色的必填'
+    );
+    $form->addInput($EnableCustomColor->multiMode());
+ 
+    $CustomColorMain = new Typecho_Widget_Helper_Form_Element_Text(
+        'CustomColorMain',
+        NULL,
+        _t('#49b1f5'),
+        '自定主题主要颜色',
+        '介绍：使用hex格式或者颜色英文，如#fff、white'
+    );
+    $form->addInput($CustomColorMain);
+    
+    $CustomColorButtonBG = new Typecho_Widget_Helper_Form_Element_Text(
+        'CustomColorButtonBG',
+        NULL,
+        _t('#49b1f5'),
+        '自定按钮颜色',
+        '介绍：同上'
+    );
+    $form->addInput($CustomColorButtonBG);        
+    
+    $CustomColorButtonHover = new Typecho_Widget_Helper_Form_Element_Text(
+        'CustomColorButtonHover',
+        NULL,
+        _t('#ff7242'),
+        '自定按钮悬停色',
+        '介绍：同上'
+    );
+    $form->addInput($CustomColorButtonHover);
+    
+    $CustomColorSelection = new Typecho_Widget_Helper_Form_Element_Text(
+        'CustomColorSelection',
+        NULL,
+        _t('#00c4b6'),
+        '自定文本选择色',
+        '介绍：同上'
+    );
+    $form->addInput($CustomColorSelection);    
+    //自定义颜色end
+    
     
 $db = Typecho_Db::get();
 $sjdq=$db->fetchRow($db->select()->from ('table.options')->where ('name = ?', 'theme:butterfly'));
@@ -1475,7 +1476,7 @@ class editor
 {
   public static function reset()
     {
-        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.3.3' . "'></script>";
+        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.4.3' . "'></script>";
         echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css?v1.1.3' . "'>";
     }
 

@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.4.0'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.4.2'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.4.3'); ?>">
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.4.0'); ?>">
     <?php endif; ?>
@@ -284,10 +284,16 @@ var GLOBAL_CONFIG_SITE = {
 <!--额外的-->
 <?php if ($this->options->EnableCustomColor === 'true'): ?>
 <style>
+::-webkit-scrollbar-thumb {
+    background-color: <?php $this->options->CustomColorMain()?>!important;
+}
 :root {
     --btn-hover-color: <?php $this->options->CustomColorButtonHover()?>;
     --btn-bg: <?php $this->options->CustomColorButtonBG()?>;
     --text-bg-hover: <?php $this->options->CustomColorButtonBG()?>;
+    --hr-before-color: <?php $this->options->CustomColorButtonBG()?>;
+    --text-bg-hover: <?php $this->options->CustomColorMain()?>;
+    --hr-border: <?php $this->options->CustomColorMain()?>;
 } 
 ::selection,#aside-content #card-toc .toc-content .toc-link.active {
     background: <?php $this->options->CustomColorSelection()?>;

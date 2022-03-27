@@ -79,27 +79,7 @@
     });
 </script>
 <div class="js-pjax">
-<?php $this->header('commentReply=1&description=0&keywords=0&generator=0&template=0&pingback=0&xmlrpc=0&wlw=0&rss2=0&rss1=0&antiSpam=0&atom'); ?>  
-<script>
-            (function() {
-                var a = document.addEventListener ? {
-                    add: "addEventListener",
-                    focus: "focus",
-                    load: "DOMContentLoaded"
-                } : {
-                    add: "attachEvent",
-                    focus: "onfocus",
-                    load: "onload"
-                };
-                var c, d, e, f, b = document.getElementById("<?PHP $this->respondId() ?>");
-                null != b && (c = b.getElementsByTagName("form"), c.length > 0 && (d = c[0], e = d.getElementsByTagName("textarea")[0], f = !1, null != e && "text" == e.name && e[a.add](a.focus, function() {
-                    if (!f) {
-                        var a = document.createElement("input");
-                        a.type = "hidden", a.name = "_", d.appendChild(a), f = !0, a.value = <?PHP echo Typecho_Common::shuffleScriptVar($this->security->getToken(preg_replace('/\??&?_pjax=[^&]+/i', '', $this->request->getRequestUrl()))) ?>
-                    }
-                })))
-            });
-        </script>
+<?php $this->header('commentReply=1&description=0&keywords=0&generator=0&template=0&pingback=0&xmlrpc=0&wlw=0&rss2=0&rss1=0&antiSpam=0&atom'); ?>
 <?php if ($this->options->NewTabLink == 'on'): ?>
 <script>$(document).ready(function(){var a=document.getElementsByTagName("a");for(let i=0;i<a.length;i++){let domain=document.domain;let url=a[i].href;if(typeof(url)!="undefined"&&url.length!=0&&url.match(domain)==null&&url!="javascript:void(0);"){a[i].setAttribute("target","_BLANK")}}});</script>
 <?php endif; ?>        

@@ -35,11 +35,13 @@
                 <textarea placeholder="你可以畅所欲言" rows="8" cols="50" name="text" id="textarea" class="textarea" required ><?php $this->remember('text'); ?></textarea>
                   </div>
                   <?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
-                   <div class="submit" style="float:left;margin-top: 24px;" id="comment_keys"><i class="fas fa-key"></i></div>
+                   <p style="float:left" id="comment_keys">
+                       <b class="submit"><i class="fas fa-key"></i></b>
+                   </p>
                   <?php endif; ?>
     		    <p style=" text-align: right;">
-                <button class="submit" type="submit" ><?php _e('评论'); ?></button>
-            </p>
+                   <button class="submit" type="submit" ><?php _e('评论'); ?></button>
+                </p>
     	</form>
 <?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
 <div id="comment_login" style="display:none">
