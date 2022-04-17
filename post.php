@@ -2,8 +2,7 @@
 <?php $this->need('post_header.php'); ?>
 <main class="layout" id="content-inner">
 <div id="post" >
-<?php if (is_array($this->options->beautifyBlock) && in_array('PostShowTopimg',$this->options->beautifyBlock)): ?>  
-<?php else: ?>
+<?php if (is_array($this->options->beautifyBlock) && !in_array('PostShowTopimg',$this->options->beautifyBlock)): ?>  
     <div id="post-info">
   <h1 class="post-title"><?php $this->title() ?>
   <?php if($this->user->hasLogin()):?>
@@ -13,17 +12,18 @@
       <span class="post-meta-date">
         <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
         <span class="post-meta-label">发表于</span>
-        <time class="post-meta-date-created" title="发表于<?php $this->date(); ?>"><?php $this->date(); ?></time>
+        <!--<time class="post-meta-date-created" title="发表于<?php $this->date(); ?>"></time>-->
         <?php $this->date(); ?>
         <span class="post-meta-separator">|</span>
         <i class="fas fa-history fa-fw post-meta-icon"></i>
         <span class="post-meta-label">更新于</span>
-        <time class="post-meta-date-updated" title="更新于<?php echo date('Y-m-d' , $this->modified);?>"><?php echo date('Y-m-d' , $this->modified);?><?php echo date('Y-m-d' , $this->modified);?></time><?php echo date('Y-m-d' , $this->modified);?>
+        <!--<time class="post-meta-date-updated" title="更新于<?php echo date('Y-m-d' , $this->modified);?>"></time>-->
+        <?php echo date('Y-m-d' , $this->modified);?>
         </span>
       <span class="post-meta-categories">
         <span class="post-meta-separator">|</span>
         <i class="fas fa-inbox fa-fw post-meta-icon"></i>
-        <a class="post-meta-categories" data-pjax-state=""><?php printTag($this); ?></a>
+        <a class="post-meta-categories"><?php printTag($this); ?></a>
     </div>
     <div class="meta-secondline">
       <span class="post-meta-separator">|</span>
@@ -180,11 +180,11 @@
     <?php $this->need('comments.php'); ?>
 </div>
 <?php $this->need('post_sidebar.php'); ?>
-<script src="<?php $this->options->themeUrl('js/comjs.js'); ?>"></script>
+<script src="<?php $this->options->themeUrl('js/comjs.js?v1.4.3'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.0'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/clipboard.min.js'); ?>"></script>
 <script>
-$(document).ready(function(){var tocState = $(".toc").html();if(tocState.length == "1") {
+$(document).ready(function(){if($(".toc").html().length == "14") {
 $("#card-toc,#mobile-toc-button").remove();}});
 </script>
 <?php if (!empty($this->options->beautifyBlock) && in_array('showLineNumber',
@@ -204,47 +204,4 @@ $("#card-toc,#mobile-toc-button").remove();}});
 <?php endif?>
 </main>
 <!-- end #main-->
-
 <?php $this->need('footer.php'); ?>
-  
-<?php if($this->options->EnablePjax === 'on') : ?>
-<!--pjax-->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jerryc127/CDN@m2/js/nprogress.min.css">
-<script src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@m2/js/nprogress.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
-<script>
-let pjaxSelectors = ["title", "#config-diff", "#body-wrap", "#rightside-config-hide", "#rightside-config-show", ".js-pjax"];
-var pjax = new Pjax({
-    elements: 'a:not([target="_blank"])',
-    selectors: pjaxSelectors,
-    cacheBust: !1,
-    analytics: !1,
-    scrollRestoration: !1});
-document.addEventListener("pjax:send", (function() {
-// if (window.removeEventListener("scroll", window.tocScrollFn), window.removeEventListener("scroll", scrollCollect), "object" == typeof preloader && preloader.initLoading(), window.aplayers)
-// for (let e = 0; e < window.aplayers.length; e++) window.aplayers[e].options.fixed || window.aplayers[e].destroy();"object" == typeof typed && typed.destroy();
-const e = document.body.classList;
-e.contains("read-mode") && e.remove("read-mode")
-})),
-
-document.addEventListener("pjax:complete", 
-(function() {
-    window.refreshFn(), 
-    document.querySelectorAll("script[data-pjax]").forEach(e => {
-        const t = document.createElement("script"),
-        o = e.text || e.textContent || e.innerHTML || "";
-        Array.from(e.attributes).forEach(e => t.setAttribute(e.name, e.value)), t.appendChild(document.createTextNode(o)), e.parentNode.replaceChild(t, e)
-        
-    }),
-    GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update(), "function" == typeof chatBtnFn && chatBtnFn(), "function" == typeof panguInit && panguInit(), "function" == typeof gtag && gtag("config", "", 
-    {page_path: window.location.pathname}), 
-    "object" == typeof _hmt && _hmt.push(["_trackPageview", window.location.pathname]), 
-    "function" == typeof loadMeting && document.getElementsByClassName("aplayer").length && loadMeting(),
-    "object" == typeof Prism && Prism.highlightAll(), "object" == typeof preloader && preloader.endLoading()
-})), 
-document.addEventListener("pjax:error", e => {
-    404 === e.request.status && pjax.loadUrl("/404.html")
-})
-</script>
- <!--pjax end-->
-<?php endif?>

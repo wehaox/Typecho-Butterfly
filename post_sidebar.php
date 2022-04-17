@@ -64,8 +64,10 @@
     <div class="card-widget" id="card-toc">
   <div class="item-headline">
     <i class="fas fa-stream"></i>
-    <span>目录</span></div>
-  <div class="toc-content" progress-percentage="">
+    <span>目录</span>
+    <span class="toc-percentage"></span>
+    </div>
+  <div class="toc-content">
     <ol class="toc">
          <?php getCatalog(); ?>
     </ol>
@@ -108,22 +110,8 @@
            </div></div>
     <div class="webinfo-item">
       <div class="item-name">已运行时间 :</div>
-      <div class="item-count" id="runtimeshow" data-publishdate="">
-<script language=javascript>
-function show_date_time(){
-window.setTimeout("show_date_time()", 10);
-BirthDay=new Date("<?php $this->options->buildtime() ?>");//建站日期
-today=new Date();
-timeold=(today.getTime()-BirthDay.getTime());
-sectimeold=timeold/1000
-secondsold=Math.floor(sectimeold);
-msPerDay=24*60*60*1000
-e_daysold=timeold/msPerDay
-daysold=Math.floor(e_daysold);
-runtimeshow.innerHTML=daysold+"天" ;
-}
-show_date_time();
-</script>
+      <div class="item-count" id="runtimeshows" data-publishdate="">
+          <?php echo RunTime()?>          
      </div></div>
     <div class="webinfo-item">
       <div class="item-name">本站总字数 :</div>

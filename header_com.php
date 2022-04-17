@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.4.0'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.4.3'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.4.4'); ?>">
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.4.0'); ?>">
     <?php endif; ?>
@@ -370,28 +370,31 @@ var GLOBAL_CONFIG_SITE = {
       <?php $this->widget('Widget_Contents_Page_List')->to($pages); ?> <?php while($pages->next()): ?>
         <div class="menus_item">
                <a<?php if($this->is('page', $pages->slug)): ?><?php endif; ?> class="site-page" href="<?php $pages->permalink(); ?>">
-                        <?php if($this->is($pages->title == "友链")){
-                            echo"<i class='fa-fw fas fa-link'></i>";
-                        }
-                        elseif($this->is($pages->title == "关于")){
-                             echo"<li class='fa-fw fas fa-user' style='width: 15%;text-align: left;'></li>";
-                        }
-                        elseif($this->is($pages->title=="留言")){
-                             echo"<i class='fa-fw fas fa-comment-dots'></i>";
-                        }
-                        elseif($this->is($pages->title=="归档")){
-                             echo"<i class='fa-fw fas fa-archive'></i>";
-                        }
-                        elseif($this->is($pages->title=="标签")){
-                             echo"<i class='fa-fw fas fa-tags'></i>";
-                        }elseif($this->is($pages->title=="分类")){
-                             echo"<i class='fa-fw fas fa-folder-open'></i>";
-                        }elseif($this->is($pages->title=="留言板")){
-                             echo"<i class='fa-fw fa fa-comment-dots'></i>";
-                        }else{
-                            echo"<i class='fa-fw fa fa-coffee'></i>";
-                        }                        
-                        ?>
+                            <?php switch ($pages->title){
+                                case "友链":
+                                    echo"<i class='fa-fw fas fa-link'></i>";
+                                    break;  
+                                case "关于":
+                                    echo"<li class='fa-fw fas fa-user' style='width: 15%;text-align: left;'></li>";
+                                    break;
+                                case "留言":
+                                   echo"<i class='fa-fw fas fa-comment-dots'></i>";
+                                    break;
+                                case "归档":
+                                   echo"<i class='fa-fw fas fa-archive'></i>";
+                                    break;
+                                case "标签":
+                                    echo"<i class='fa-fw fas fa-tags'></i>";
+                                    break;
+                                case "分类":
+                                   echo"<i class='fa-fw fas fa-folder-open'></i>";
+                                    break;
+                                case "留言板":
+                                   echo"<i class='fa-fw fa fa-comment-dots'></i>";
+                                    break;                                   
+                                default:
+                                    echo"<i class='fa-fw fa fa-coffee'></i>";    
+                            }?>
                          <span><?php $pages->title(); ?></span>
                     </a>
               </div>

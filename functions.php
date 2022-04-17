@@ -332,7 +332,7 @@ function themeConfig($form) {
         NULL,
         NULL,
         '自定义导航栏链接',
-        '介绍：目前使用html写法'
+        '介绍：目前使用html写法 <b style="color:red">完全自定义链接记得关闭上方选项</b>'
     );
     $form->addInput($CustomHeaderLink);        
     
@@ -584,7 +584,7 @@ function get_ArticleThumbnail($widget){
   }
 //   $random =  $rand_url . $rand . '.jpg'; // 随机缩略图路径
   $random =  'https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg';
-  $attach = $widget->attachments(1)->attachment;
+//   $attach = $widget->attachments(1)->attachment;
   $pattern = '/\<img.*?src\=\"(.*?)\"[^>]*>/i';
 
   //如果有自定义缩略图
@@ -592,9 +592,7 @@ function get_ArticleThumbnail($widget){
     return $widget->fields->thumb;
   }else if (preg_match_all($pattern, $widget->content, $thumbUrl) && strlen($thumbUrl[1][0]) > 7) {
       return $thumbUrl[1][0];
-  } else if ($attach->isImage) {
-      return $attach->url;
-  } else {
+  }else {
       return $random;
   }
 };
@@ -657,7 +655,7 @@ function charactersNum($archive) {
 
 // 全站字数统计
 function allOfCharacters() {
-        $showPrivate = intval($pluginOpts->showPrivate);
+        $showPrivate = 0;
         $chars = 0;
         $db = Typecho_Db::get();
         if($showPrivate == 0){
@@ -1045,49 +1043,39 @@ function getBrowser($agent)
         $outputer = '<i class="fab fa-internet-explorer"></i>&nbsp;&nbsp;Internet Explore';
     } else if (preg_match('/FireFox\/([^\s]+)/i', $agent, $regs)) {
       $str1 = explode('Firefox/', $regs[0]);
-$FireFox_vern = explode('.', $str1[1]);
         $outputer = '<i class="fab fa-firefox-browser"></i>&nbsp;&nbsp;FireFox';
     } else if (preg_match('/Maxthon([\d]*)\/([^\s]+)/i', $agent, $regs)) {
       $str1 = explode('Maxthon/', $agent);
-$Maxthon_vern = explode('.', $str1[1]);
         $outputer = '<i class="iconfont icon-maxthon"></i>&nbsp遨游';
     } else if (preg_match('#360([a-zA-Z0-9.]+)#i', $agent, $regs)) {
 $outputer = '<i class="iconfont icon-chrome"></i>&nbsp;360极速浏览器';
     } else if (preg_match('/Edg([\d]*)\/([^\s]+)/i', $agent, $regs)) {
         $str1 = explode('Edge/', $regs[0]);
-$Edge_vern = explode('.', $str1[1]);
         $outputer = '<i class="fab fa-edge"></i>&nbsp;&nbsp;MicroSoft Edge';
     } else if (preg_match('/UC/i', $agent)) {
               $str1 = explode('rowser/',  $agent);
-$UCBrowser_vern = explode('.', $str1[1]);
         $outputer = '<i class="iconfont icon-UCliulanqi"></i>&nbsp;UC浏览器';
     }  else if (preg_match('/QQ/i', $agent, $regs)||preg_match('/QQBrowser\/([^\s]+)/i', $agent, $regs)) {
                   $str1 = explode('rowser/',  $agent);
-$QQ_vern = explode('.', $str1[1]);
         $outputer = '<i class="iconfont icon-QQliulanqi"></i>&nbsp;QQ浏览器';
     } else if (preg_match('/UBrowser/i', $agent, $regs)) {
               $str1 = explode('rowser/',  $agent);
-$UCBrowser_vern = explode('.', $str1[1]);
         $outputer = '<i class="iconfont icon-UCliulanqi"></i>&nbsp;UC浏览器';
     }  else if (preg_match('/Opera[\s|\/]([^\s]+)|OPR/i', $agent, $regs)) {
         $outputer = '<i class="fab fa-opera"></i>&nbsp;&nbsp;Opera';
     } else if (preg_match('/YaBrowser/i', $agent, $regs)) {
          $str1 = explode('Version/',  $agent);
-$yandex_brower = explode('.', $str1[1]);
         $outputer = '<i class="fab fa-yandex-international"></i>&nbsp;&nbsp;Yandex';
     }else if (preg_match('/Quark/i', $agent, $regs)) {
          $str1 = explode('Version/',  $agent);
-$quark_brower = explode('.', $str1[1]);
         $outputer = '<i class="iconfont icon-quark"></i>&nbsp;Quark';
     }else if (preg_match('/XiaoMi/i', $agent, $regs)) {
 $outputer = '<i class="iconfont icon-XiaoMi"></i>&nbsp;小米浏览器';}
     else if (preg_match('/Chrome([\d]*)\/([^\s]+)/i', $agent, $regs)) {
 $str1 = explode('Chrome/', $agent);
-$chrome_vern = explode('.', $str1[1]);
         $outputer = '<i class="fab fa-chrome""></i>&nbsp;&nbsp;Google Chrome';
     } else if (preg_match('/safari\/([^\s]+)/i', $agent, $regs)) {
          $str1 = explode('Version/',  $agent);
-$safari_vern = explode('.', $str1[1]);
         $outputer = '<i class="fab fa-safari"></i>&nbsp;&nbsp;Safari';
     } 
     else{
@@ -1172,6 +1160,9 @@ function commentRank($widget, $email = NULL)
 {      
     if (empty($email)) return;      
     $txt = Helper::options()->CustomAuthenticated;
+    if($txt == ""){
+        $txt = 'x||x';
+    }
     $string_arr = explode("\r\n", $txt);
     $long = count($string_arr);
     for ($i = 0; $i < $long; $i++) {
@@ -1501,8 +1492,6 @@ function isMobile()
     }
     return false;
 }
-
-
 // 说明：获取完整URL
 function curPageURL() 
 {
@@ -1523,4 +1512,18 @@ function curPageURL()
     $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
   }
   return $pageURL;
+}
+
+function RunTime(){
+    $site_create_time = strtotime(Helper::options()->buildtime);
+    $time = time() - $site_create_time;
+    if(is_numeric($time)){
+        if($time >= 86400){
+            $days = floor($time/86400);
+            $time = ($time%86400);
+        }
+        echo $days.'天';
+    }else{
+        echo '';
+    }
 }
