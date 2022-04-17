@@ -64,7 +64,9 @@
 .comment-reply a{
     color: var(--btn-color);
 }
-
+.commentsFormArea{
+    margin-top: 10px;
+}
 #cancel-comment-reply-link{
     position: absolute;
     margin-top: 5px;
@@ -528,7 +530,7 @@ code[class*="language-"], pre[class*="language-"] {
 }
 /*懒加载结束*/
 .iconfont{font-size: 14px!important;}
-
+.g-recaptcha {transform:scale(0.77);transform-origin:0 0;margin-top:10px}
 
 /*已移除内容*/
 /*#article-container.post-content ul>li:not(.tab):before {*/
