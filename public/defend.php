@@ -1,11 +1,11 @@
 <?php
-if ( isset($_POST['pwd']) ){
+if (isset($_POST['pwd'])){
 	if (trim($_POST['pwd']) == $this->options->ThemePassword){
 		setcookie("ThemePassword",trim($_POST['pwd']),time()+3600*24*3);
 		exit ('{"status": "200","info":"密码正确,芝麻开门！"}'); 
 	}
 }
-if($_COOKIE["ThemePassword"]!==$this->options->ThemePassword && $this->options->Defend === 'on' || $_COOKIE["ThemePassword"]==""&& $this->options->Defend === 'on' ){
+if(isset($_COOKIE["ThemePassword"])!==$this->options->ThemePassword && $this->options->Defend === 'on' || isset($_COOKIE["ThemePassword"])==""&& $this->options->Defend === 'on' ){
 ?>
 
 <html data-theme="light">
