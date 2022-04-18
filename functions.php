@@ -627,15 +627,15 @@ function GetRandomThumbnail($widget)
 // 文章封面缩略图
 function GetRandomThumbnailPost($widget)
 {
-    if (Helper::options()->Jmos) {
-        $moszu = explode("\r\n", Helper::options()->Jmos);
-        $random = $moszu[array_rand($moszu, 1)] . "?jrandom=" . mt_rand(0, 1000000);
-    }
+    // if (Helper::options()->Jmos) {
+    //     $moszu = explode("\r\n", Helper::options()->Jmos);
+    //     $random = $moszu[array_rand($moszu, 1)] . "?jrandom=" . mt_rand(0, 1000000);
+    // }
     $pattern = '/\<img.*?src\=\"(.*?)\"[^>]*>/i';
     $patternMD = '/\!\[.*?\]\((http(s)?:\/\/.*?(jpg|jpeg|gif|png|webp))/i';
     $patternMDfoot = '/\[.*?\]:\s*(http(s)?:\/\/.*?(jpg|jpeg|gif|png|webp))/i';
     $t = preg_match_all($pattern, $widget->content, $thumbUrl);
-    $img = $random;
+    // $img = $random;
     if ($widget->fields->thumb) {
         $img = $widget->fields->thumb;
     }

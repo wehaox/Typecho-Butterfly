@@ -42,7 +42,6 @@
     		    <div class="commentsFormArea" style="text-align: right;">
                    <button class="submit" type="submit" ><?php _e('评论'); ?></button>
                 </div>
-                <?php reCAPTCHA_Plugin::output(); ?>
     	</form>
 <?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
 <div id="comment_login" style="display:none">
