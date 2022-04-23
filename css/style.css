@@ -529,9 +529,10 @@ code[class*="language-"], pre[class*="language-"] {
     margin-bottom: 10px;
 }
 /*懒加载结束*/
-.iconfont{font-size: 14px!important;}
-.g-recaptcha {transform:scale(0.77);transform-origin:0 0;margin-top:10px}
-
+.comment-ua .iconfont{font-size: 14px!important;}
+.g-recaptcha {transform:scale(0.77);transform-origin:0 0;margin-top:10px;}
+.OwO-logo{border:none!important;background:none!important}
+.OwO-logo span .iconfont{font-size:25px}
 /*已移除内容*/
 /*#article-container.post-content ul>li:not(.tab):before {*/
 /*    top: 0.78em;*/
