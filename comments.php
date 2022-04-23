@@ -1,4 +1,6 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<link rel="stylesheet" href="https://gcore.jsdelivr.net/gh/DIYgod/OwO@master/dist/OwO.min.css">
+<script src="https://gcore.jsdelivr.net/gh/DIYgod/OwO@master/dist/OwO.min.js"></script>
 <div id="comments">
     <?php $this->comments()->to($comments); ?>
     <?php if($this->allow('comment') && $this->options->CloseComments == 'off'): ?>
@@ -33,6 +35,7 @@
             </div>
                 <label for="textarea" class="required"></label>
                 <textarea placeholder="你可以畅所欲言" rows="8" cols="50" name="text" id="textarea" class="textarea" required ><?php $this->remember('text'); ?></textarea>
+                <div title="OwO" class="OwO"></div>
                   </div>
                   <?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
                    <div class="commentsFormArea" style="float:left" id="comment_keys">
@@ -42,7 +45,8 @@
     		    <div class="commentsFormArea" style="text-align: right;">
                    <button class="submit" type="submit" ><?php _e('评论'); ?></button>
                 </div>
-    	</form>
+                <?php if($this->options->siteKey !== "" && $this->options->siteKey !== ""){output();?><script>$(document).ready(function(){if($("#comment_keys").length == 0){$(".g-recaptcha").css({"position":"relative","top":"-40px"})}})</script> <?php }?>   
+                </form>
 <?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
 <div id="comment_login" style="display:none">
 <form action="<?php $this->options->loginAction()?>" method="post" name="login" rold="form">
@@ -71,3 +75,14 @@
     <?php $comments->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>', 1, '...', array('wrapTag' => 'ol', 'wrapClass' => 'page-navigator', 'itemTag' => '', 'prevClass' => 'prev', 'nextClass' => 'next', 'currentClass' => 'current' )); ?>
     <?php endif; ?>
 </div>
+<script>
+var OwO_demo = new OwO({
+    logo: '<i class="iconfont icon-face"></i>',
+    container: document.getElementsByClassName('OwO')[0],
+    target: document.getElementsByClassName('textarea')[0],
+    api: '<?php $this->options->themeUrl('OwO.json'); ?>',
+    position: 'down',
+    width: '100%',
+    maxHeight: '350px'
+});
+</script>

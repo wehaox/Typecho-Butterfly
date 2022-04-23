@@ -446,6 +446,18 @@ function themeConfig($form) {
     $form->addInput($CustomColorSelection);    
     //自定义颜色end
     
+    $siteKey = new Typecho_Widget_Helper_Form_Element_Text('siteKey', 
+    NULL, 
+    null,
+    '评论区谷歌验证码 <br> Site Key for reCAPTCHAv2:',
+    '<a href="https://www.google.com/recaptcha/admin/create">点击获取密钥</a>'
+    );
+    
+    $secretKey = new Typecho_Widget_Helper_Form_Element_Text('secretKey', NULL, null, _t('Serect Key for reCAPTCHAv2:'), _t('填写两处密钥评论区自动开启谷歌验证码'));
+	$form->addInput($siteKey);
+	$form->addInput($secretKey);    
+    
+    
     
 $db = Typecho_Db::get();
 $sjdq=$db->fetchRow($db->select()->from ('table.options')->where ('name = ?', 'theme:butterfly'));
@@ -957,12 +969,18 @@ function PostImage($text)
     }, $text);
     return $text;
 }
+
 function themeInit($archive) {
+    if(Helper::options()->EnablePjax == "on"){
     Helper::options()->commentsAntiSpam = false;
+    }
     if ($archive->is('single')) {
         $archive->content = createCatalog($archive->content);
         $archive->content = ParseCode($archive->content);
     }
+if(Helper::options()->siteKey !== "" && Helper::options()->secretKey !==""){
+   comments_filter($archive); 
+}
 }
 
 /**
@@ -1024,7 +1042,7 @@ if($dbk == NULL){
    $geturl = 'https://ptlogin2.qq.com/getface?&imgtype=1&uin='.$qquser;
    $qqurl = file_get_contents($geturl);
    $str1 = explode('sdk&k=', $qqurl);
-   $str2 = explode('&t=', $str1[1]);
+   $str2 = explode('&t=', isset($str1[1]));
    $k = $str2[0];
    $db->query($db->update('table.comments')->rows(array('qqk'=>$k))->where('mail=?',$email));
    $url = 'https://q1.qlogo.cn/headimg_dl?dst_uin='.$qquser.'&spec=100';
@@ -1526,4 +1544,49 @@ function RunTime(){
     }else{
         echo '';
     }
+}
+function output() {
+		$siteKey = Helper::options()->siteKey;
+		$secretKey = Helper::options()->secretKey;
+		if ($siteKey != "" && $secretKey != "") {
+		    echo '<script src="https://recaptcha.net/recaptcha/api.js" async defer data-no-instant></script>
+                              <div class="g-recaptcha" data-sitekey=' . $siteKey . '></div>';
+      	} else {
+			throw new Typecho_Widget_Exception(_t('No reCAPTCHA Site/Secret Keys! Please set it/them!'));
+		}		
+}
+function comments_filter($comment) {
+    if (isset($_REQUEST['text']) != null) {
+        if($_POST['g-recaptcha-response'] == null) {
+            throw new Typecho_Widget_Exception(_t('验证码接受异常,评论失败,或许你的网络不支持此验证码'));
+        }else {
+		$siteKey = Helper::options()->siteKey;
+		$secretKey = Helper::options()->secretKey;
+			function getCaptcha($recaptcha_response, $secretKey) {
+				$response = file_get_contents("https://recaptcha.net/recaptcha/api/siteverify?secret=".$secretKey."&response=".$recaptcha_response);
+				$response = json_decode($response);
+				return $response;
+			}
+			$resp = getCaptcha($_POST['g-recaptcha-response'], $secretKey);
+			
+			if ($resp->success == true) {
+				return $comments;
+			} else {
+            switch ($resp->error-codes) {
+			case '{[0] => "timeout-or-duplicate"}':
+				throw new Typecho_Widget_Exception(_t('验证时间超过2分钟或连续重复发言！'));
+				break;
+			case '{[0] => "invalid-input-secret"}':
+				throw new Typecho_Widget_Exception(_t('博主填了无效的siteKey或者secretKey...'));
+				break;
+                        case '{[0] => "bad-request"}':
+                                throw new Typecho_Widget_Exception(_t('请求错误！请检查网络'));
+                                break;
+			default:
+				throw new Typecho_Widget_Exception(_t('很遗憾，您被当成了机器人...'));
+			}
+			}
+        }
+    }
+    return $comment;
 }

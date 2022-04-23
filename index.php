@@ -8,7 +8,7 @@
  * <a href="https://blog.wehaox.com/archives/blogtheme.html#cl-9">主题更新日志</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.4.4
+ * @version 1.5.0-rc1
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -36,7 +36,7 @@ if($sticky && $this->is('index') || $this->is('front')){
         $order .= " when $cid then $i";
         $select2->where('table.contents.cid != ?', $cid); //避免重复
     }
-    if ($order) $select1->order(null,"(case cid$order end)"); //置顶文章的顺序 按 $sticky 中 文章ID顺序
+    if ($order) $select1->order('',"(case cid$order end)"); //置顶文章的顺序 按 $sticky 中 文章ID顺序
     if ($this->_currentPage == 1) foreach($db->fetchAll($select1) as $sticky_post){ //首页第一页才显示
         $sticky_post['sticky'] = $sticky_html;
         $this->push($sticky_post); //压入列队
@@ -116,7 +116,7 @@ function ver() {console.log(`
     #    # #    #   #     #   #      #   #  #      #        #    
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                           1.4.4
+                           1.5.0-rc1
 ===================================================================
 `);}
 </script>

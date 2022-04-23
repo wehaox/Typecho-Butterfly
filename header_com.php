@@ -21,13 +21,13 @@
     <link rel="preconnect" href="//cdn.jsdelivr.net" />    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.4.0'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.4.4'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.5.0'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.4.6'); ?>">
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.4.0'); ?>">
     <?php endif; ?>
-    <link href="https://at.alicdn.com/t/font_3159629_ym9tau0j4d.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">    
+    <link href="https://at.alicdn.com/t/font_3159629_5bvsat8p5l.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
     <?php if($this->options->StaticFile == 'CDN'): ?>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css" />
     <?php else: ?>
