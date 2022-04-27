@@ -1,4 +1,4 @@
-      <nav id="nav" class="show" >
+<nav id="nav" class="show" >
          <span id="blog_name">
             <a id="site-name" href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a>
        </span>
