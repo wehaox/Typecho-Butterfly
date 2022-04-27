@@ -533,6 +533,18 @@ code[class*="language-"], pre[class*="language-"] {
 .g-recaptcha {transform:scale(0.77);transform-origin:0 0;margin-top:10px;}
 .OwO-logo{border:none!important;background:none!important}
 .OwO-logo span .iconfont{font-size:25px}
+
+/*下面是owo自定义样式，注释下面代码使用原版样式*/
+.OwO .OwO-body .OwO-items .OwO-item,.OwO .OwO-body .OwO-bar{background:none!important}
+.OwO .OwO-body{
+    position: unset!important;
+    background:none!important;
+    border: none!important;
+}
+.OwO .OwO-body .OwO-items{
+    overflow: auto!important;
+}
+.OwO .OwO-body .OwO-bar{border:none!important}
 /*已移除内容*/
 /*#article-container.post-content ul>li:not(.tab):before {*/
 /*    top: 0.78em;*/

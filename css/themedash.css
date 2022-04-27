@@ -7,7 +7,7 @@
     height: 80px;
     width: 100%;
     box-shadow: 0px -6px 11px -10px rgb(133 133 133 / 60%);
-    z-index: 99;
+    z-index: 9;
 }
 
 .typecho-option-submit li {
@@ -42,4 +42,10 @@
 }
 .protected {
     margin-top: 10px;
+}
+
+@media screen and (max-width: 575px){
+    .typecho-option-submit {
+        top: 82%;
+    }
 }

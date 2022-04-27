@@ -889,13 +889,13 @@ details {
 	padding: 16px;
 	margin: .5rem 0;
 	border-radius: 4px;
-	font-size: .7375rem;
+	/*font-size: .7375rem;*/
 	transition: all .28s ease;
 	-moz-transition: all .28s ease;
 	-webkit-transition: all .28s ease;
 	-o-transition: all .28s ease;
 	border: 1px solid #f6f6f6;
-	line-height: 1.3
+	/*line-height: 1.3*/
 }
 
 details summary {
