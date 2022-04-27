@@ -3,7 +3,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 function themeConfig($form) {
     ?>
     <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wehaox/CDN@0.2/css/themedash.css">-->
-    <link rel="stylesheet" href="<?php Helper::options()->themeUrl('css/themedash.css'); ?>">
+    <link rel="stylesheet" href="<?php Helper::options()->themeUrl('css/themedash.css?v1.5.0'); ?>">
     <div class='set_toc' >
     <div class='mtoc'>
     <a href='#themeBackup'>主题备份与还原</a>
@@ -923,8 +923,7 @@ function Hide_Block($text)
 function Hide_Toggle($text)
 {
     $text = preg_replace_callback('/\[hide-toggle name=\"(.*?)\".*?\](.*?)\[\/hide-toggle\]/ism', function ($text) {
-        return '<div class="hide-toggle"><div class="hide-button toggle-title"><i class="fas fa-caret-right fa-fw"></i>
-               <span>' . $text[1] . ' </span></div><div class="hide-content">' . $text[2] . '</div></div>';
+        return '<details class="toggle"><summary class="toggle-button">' . $text[1] . '</summary><div class="toggle-content">' . $text[2] . '</div></details>';
     }, $text);
     return $text;
 }
@@ -965,7 +964,7 @@ function Bf_Mark($text)
 function PostImage($text)
 {
     $text = preg_replace_callback('/<img src=\"(.*?)\".*?alt\=\"(.*?)\".*?>/ism', function ($text) {
-        return '<a href="'.$text[1].'" data-fancybox="gallery" /><img class="LazyLoad" alt="'.$text[2].'" data-lazy-src="'.$text[1].'" src="'.GetLazyLoad().'" /></a>';
+        return '<img class="" alt="'.$text[2].'" data-lazy-src="'.$text[1].'" src="'.GetLazyLoad().'" />';
     }, $text);
     return $text;
 }
@@ -1030,26 +1029,23 @@ if (empty($vai['1']['0'])) {
         $url .= ' />';
     }
 }else{
-$qquser = $vai['1']['0'];
-
-$db=Typecho_Db::get();    
-if (!array_key_exists('qqk', $db->fetchRow($db->select()->from('table.comments')))) {
-    $db->query('ALTER TABLE `'.$db->getPrefix().'comments` ADD `qqk` varchar(64) DEFAULT NULL;');
-}
-
-$dbk = $db->fetchRow($db->select('qqk')->from('table.comments')->where('mail=?',$email))['qqk'];
-if($dbk == NULL){
-   $geturl = 'https://ptlogin2.qq.com/getface?&imgtype=1&uin='.$qquser;
-   $qqurl = file_get_contents($geturl);
-   $str1 = explode('sdk&k=', $qqurl);
-   $str2 = explode('&t=', isset($str1[1]));
-   $k = $str2[0];
-   $db->query($db->update('table.comments')->rows(array('qqk'=>$k))->where('mail=?',$email));
-   $url = 'https://q1.qlogo.cn/headimg_dl?dst_uin='.$qquser.'&spec=100';
-}else{
-    $url = 'https://q1.qlogo.cn/g?b=qq&k='.$dbk.'&s=100';
-}
-
+    $qquser = $vai['1']['0'];
+    $db=Typecho_Db::get();    
+    if (!array_key_exists('qqk', $db->fetchRow($db->select()->from('table.comments')))) {
+        $db->query('ALTER TABLE `'.$db->getPrefix().'comments` ADD `qqk` varchar(64) DEFAULT NULL;');
+    }
+    $dbk = $db->fetchRow($db->select('qqk')->from('table.comments')->where('mail=?',$email))['qqk'];
+    if($dbk == NULL){
+        $geturl = 'https://ptlogin2.qq.com/getface?&imgtype=1&uin='.$qquser;
+        $qqurl = file_get_contents($geturl);
+        $str1 = explode('sdk&k=', $qqurl);
+        $str2 = explode('&t=', $str1[1]);
+        $k = $str2[0];
+        $db->query($db->update('table.comments')->rows(array('qqk' => $k))->where('mail=?',$email));
+        $url = 'https://q1.qlogo.cn/headimg_dl?dst_uin='.$qquser.'&spec=100';
+    }else{
+        $url = 'https://q1.qlogo.cn/g?b=qq&k='.$dbk.'&s=100';
+    }
 }
 return  $url;
 }
@@ -1510,28 +1506,6 @@ function isMobile()
     }
     return false;
 }
-// 说明：获取完整URL
-function curPageURL() 
-{
-  $pageURL = 'http';
- 
-  if ($_SERVER["HTTPS"] == "on") 
-  {
-    $pageURL .= "s";
-  }
-  $pageURL .= "://";
- 
-  if ($_SERVER["SERVER_PORT"] != "80") 
-  {
-    $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
-  } 
-  else
-  {
-    $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
-  }
-  return $pageURL;
-}
-
 function RunTime(){
     $site_create_time = strtotime(Helper::options()->buildtime);
     $time = time() - $site_create_time;

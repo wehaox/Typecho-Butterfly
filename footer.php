@@ -72,12 +72,6 @@
 </div>
 </div>
 <!--搜索end  -->
-<script type="text/javascript">
-    $(document).ready(function () {
-        $( ".fancybox").fancybox();
-        $.fancybox.defaults.hash = false;
-    });
-</script>
 <div class="js-pjax">
 <?php $this->header('commentReply=1&description=0&keywords=0&generator=0&template=0&pingback=0&xmlrpc=0&wlw=0&rss2=0&rss1=0&antiSpam=0&atom'); ?>
 <?php if ($this->options->NewTabLink == 'on'): ?>
@@ -171,10 +165,9 @@ new Typed("#subtitle",{
 </div>
 <!--pjax-->
 <?php if($this->options->EnablePjax === 'on') : ?>
-
 <?php if($this->options->StaticFile == 'CDN'): ?>
-<link rel="stylesheet" href="https://unpkg.com/nprogress@0.2.0/nprogress.css">
-<script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rstacruz/nprogress@master/nprogress.css">
+<script src="https://cdn.jsdelivr.net/gh/rstacruz/nprogress@master/nprogress.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
 <?php else: ?>
 <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/nprogress.css'); ?>">

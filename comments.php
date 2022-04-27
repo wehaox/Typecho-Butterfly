@@ -1,6 +1,4 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<link rel="stylesheet" href="https://gcore.jsdelivr.net/gh/DIYgod/OwO@master/dist/OwO.min.css">
-<script src="https://gcore.jsdelivr.net/gh/DIYgod/OwO@master/dist/OwO.min.js"></script>
 <div id="comments">
     <?php $this->comments()->to($comments); ?>
     <?php if($this->allow('comment') && $this->options->CloseComments == 'off'): ?>
@@ -49,12 +47,26 @@
                 </form>
 <?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
 <div id="comment_login" style="display:none">
-<form action="<?php $this->options->loginAction()?>" method="post" name="login" rold="form">
-<input type="hidden" name="referer" value="<?php echo curPageURL() ?>">
+<form onsubmit="return false" style="margin-top: 10px;">
 <input type="text" class="text" name="name" autocomplete="username" placeholder="请输入用户名" required/>
 <input type="password" class="text" name="password" autocomplete="current-password" placeholder="请输入密码" required/>
-<button class="submit" type="submit">登录</button>
+<button class="submit" type="submit" id="web-login">登录</button>
 </form>
+<script>
+$("#web-login").click(function(){
+    $.post("<?php $this->options->loginAction()?>",
+    {"name":$("input[name=name]").val(),"password":$("input[name=password]").val()},
+    function(data){
+         if(data.search("GLOBAL_CONFIG")!= -1){
+            Dreamer.warning("登录失败，请检查账号密码",2000);
+         }else{
+             Dreamer.success("登录成功，等待跳转...",function () {
+                 location.reload();       
+             });
+         }
+    })
+});
+</script>
 </div>
 <?php endif; ?>	
     </div>

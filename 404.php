@@ -3,59 +3,7 @@
 <div id="web_bg"></div>
 <div class="error404" id="body-wrap">
      <header class="not-top-img" id="page-header">
-      <nav id="nav" class="show" >
-         <span id="blog_name">
-            <a id="site-name" href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a>
-       </span>
-            <div id="menus">
-                  <div id="search-button">
-                      <a class="site-page social-icon search">
-                      <i class="fas fa-search fa-fw"></i>
-                      <span> 搜索</span></a>
-                      </div>
-                 <div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div>
-              <div class="menus_items">
-                    <div class="menus_item">
-                        <a class="site-page" href="<?php $this->options->siteUrl(); ?>">
-                            <li class="fa-fw fas fa-home"></li><?php _e('首页'); ?></a>
-                    </div>
-                    <?php if($this->options->EnableAutoHeaderLink === 'on') : ?>
-                        <?php $this->widget('Widget_Contents_Page_List')->to($pages); ?>
-                        <?php while($pages->next()): ?>
-                        <div class="menus_item">
-                            <a class="site-page" href="<?php $pages->permalink(); ?>" title="<?php $pages->title(); ?>">
-                            <?php if($this->is($pages->title == "友链")){
-                                echo"<i class='fa-fw fas fa-link'></i>";
-                            }
-                            elseif($this->is($pages->title == "关于")){
-                                 echo"<li class='fa-fw fas fa-user'></li>";
-                            }
-                            elseif($this->is($pages->title=="留言")){
-                                 echo"<i class='fa-fw fas fa-comment-dots'></i>";
-                            }
-                            elseif($this->is($pages->title=="归档")){
-                                 echo"<i class='fa-fw fas fa-archive'></i>";
-                            }
-                            elseif($this->is($pages->title=="标签")){
-                                 echo"<i class='fa-fw fas fa-tags'></i>";
-                            }
-                            elseif($this->is($pages->title=="分类")){
-                                 echo"<i class='fa-fw fas fa-folder-open'></i>";
-                            }elseif($this->is($pages->title=="留言板")){
-                                 echo"<i class='fa-fw fa fa-comment-dots'></i>";
-                            }else{
-                                echo"<i class='fa-fw fa fa-coffee'></i>";
-                            }
-                            ?>  
-                            <span><?php $pages->title(); ?></span>
-                            </a>
-                       </div>
-                    <?php endwhile; ?>
-                    <?php endif; ?>
-                    <?php $this->options->CustomHeaderLink() ?>
-                </div>
-            </div>
-    </nav>
+     <?php  $this->need('public/nav.php'); ?>
 </header>
     <div id="error-wrap"><div class="error-content"><div class="error-img"><img src="https://i.loli.net/2020/05/19/aKOcLiyPl2JQdFD.png" alt="Page not found" class="entered"></div><div class="error-info"><h1 class="error_title">404</h1><div class="error_subtitle">頁面沒有找到</div></div></div></div></div>
 <div id="rightside">
@@ -190,8 +138,8 @@ new Typed("#subtitle",{
 <?php if($this->options->EnablePjax === 'on') : ?>
 
 <?php if($this->options->StaticFile == 'CDN'): ?>
-<link rel="stylesheet" href="https://unpkg.com/nprogress@0.2.0/nprogress.css">
-<script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rstacruz/nprogress@master/nprogress.css">
+<script src="https://cdn.jsdelivr.net/gh/rstacruz/nprogress@master/nprogress.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
 <?php else: ?>
 <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/nprogress.css'); ?>">

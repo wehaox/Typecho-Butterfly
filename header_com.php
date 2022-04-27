@@ -22,16 +22,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.5.0'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.4.6'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.4.8'); ?>">
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.4.0'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.5.0'); ?>">
     <?php endif; ?>
     <link href="https://at.alicdn.com/t/font_3159629_5bvsat8p5l.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
     <?php if($this->options->StaticFile == 'CDN'): ?>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" />
+    <link rel="stylesheet" href="https://gcore.jsdelivr.net/gh/DIYgod/OwO@master/dist/OwO.min.css">
     <?php else: ?>
     <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/jquery.fancybox.min.css'); ?>" />
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/OwO.min.css'); ?>" />
     <?php endif; ?>
     <?php if (!empty($this->options->beautifyBlock) && in_array('showSnackbar',$this->options->beautifyBlock)): ?>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'">
@@ -91,7 +93,7 @@
             month: ""
         },
         copyright: undefined,
-        lightbox: "",
+        lightbox: "fancybox",
         Snackbar: {
             "chs_to_cht": "你已切换为繁体",
             "cht_to_chs": "你已切换为简体",
@@ -315,21 +317,24 @@ var GLOBAL_CONFIG_SITE = {
 <body>
 <script src="<?php $this->options->themeUrl('/js/local-search.js'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/tw_cn.js'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/main.js?v1.4.0'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/utils.js?v1.4.0'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/js/main.js?v1.5.0'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/js/utils.js?v1.5.0'); ?>"> </script>
 <?php if($this->options->StaticFile == 'CDN'): ?>
 <script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"> </script>
 <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"> </script>
 <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script>
-<script src="https://cdn.staticfile.org/fancybox/3.5.2/jquery.fancybox.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script>
+<script src="https://gcore.jsdelivr.net/gh/DIYgod/OwO@master/dist/OwO.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/iGaoWei/Dream-Msg/lib/dream-msg.min.js"></script>
 <?php else: ?>
 <script src="<?php $this->options->themeUrl('static/js/jquery.min.js'); ?>"></script>
 <script src="<?php $this->options->themeUrl('static/js/instantpage.min.js'); ?>" type="module"> </script>
 <script src="<?php $this->options->themeUrl('static/js/medium-zoom.min.js'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('static/js/lazyload.iife.min.js'); ?>"></script>
 <script src="<?php $this->options->themeUrl('static/js/jquery.fancybox.min.js'); ?>"></script>
+<script src="<?php $this->options->themeUrl('static/js/OwO.min.js'); ?>"></script>
 <?php endif; ?>
 <!--[if lt IE 8]>
     <div class="browsehappy" role="dialog"><?php _e('当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>'); ?>.</div>

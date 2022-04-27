@@ -8,7 +8,7 @@
  * <a href="https://blog.wehaox.com/archives/blogtheme.html#cl-9">主题更新日志</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.5.0-rc1
+ * @version 1.5.0
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -78,7 +78,7 @@ $uid = $this->user->uid; //登录时，显示用户各自的私密文章
     </span>
     <span class="article-meta">
         <span class="article-meta-separator">|</span>
-        <i class="fas fa-inbox"></i>
+        <i class="fa-solid fa-pen-nib"></i>
         <?php _e('作者: '); ?><a itemprop="name" href="<?php $this->author->permalink(); ?>" rel="author"><?php $this->author(); ?></a>
     </span>
     <span class="article-meta">
@@ -116,7 +116,7 @@ function ver() {console.log(`
     #    # #    #   #     #   #      #   #  #      #        #    
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                           1.5.0-rc1
+                           1.5.0
 ===================================================================
 `);}
 </script>
