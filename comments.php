@@ -33,7 +33,7 @@
             </div>
                 <label for="textarea" class="required"></label>
                 <textarea placeholder="你可以畅所欲言" rows="8" cols="50" name="text" id="textarea" class="textarea" required ><?php $this->remember('text'); ?></textarea>
-                <?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
+                <?php if($this->allow('comment') && $this->options->CloseComments == 'off'): ?>
                     <div title="OwO" class="OwO"></div>
                 <?php endif; ?>
                   </div>
@@ -89,7 +89,7 @@ $("#web-login").click(function(){
     <?php $comments->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>', 1, '...', array('wrapTag' => 'ol', 'wrapClass' => 'page-navigator', 'itemTag' => '', 'prevClass' => 'prev', 'nextClass' => 'next', 'currentClass' => 'current' )); ?>
     <?php endif; ?>
 </div>
-<?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
+<?php if($this->allow('comment') && $this->options->CloseComments == 'off'): ?>
     <script>
     var OwO_demo = new OwO({
         logo: '<i class="iconfont icon-face"></i>',
