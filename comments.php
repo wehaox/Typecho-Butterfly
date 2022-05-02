@@ -33,7 +33,9 @@
             </div>
                 <label for="textarea" class="required"></label>
                 <textarea placeholder="你可以畅所欲言" rows="8" cols="50" name="text" id="textarea" class="textarea" required ><?php $this->remember('text'); ?></textarea>
-                <div title="OwO" class="OwO"></div>
+                <?php if($this->allow('comment') && $this->options->CloseComments == 'off'): ?>
+                    <div title="OwO" class="OwO"></div>
+                <?php endif; ?>
                   </div>
                   <?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
                    <div class="commentsFormArea" style="float:left" id="comment_keys">
@@ -87,14 +89,16 @@ $("#web-login").click(function(){
     <?php $comments->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>', 1, '...', array('wrapTag' => 'ol', 'wrapClass' => 'page-navigator', 'itemTag' => '', 'prevClass' => 'prev', 'nextClass' => 'next', 'currentClass' => 'current' )); ?>
     <?php endif; ?>
 </div>
-<script>
-var OwO_demo = new OwO({
-    logo: '<i class="iconfont icon-face"></i>',
-    container: document.getElementsByClassName('OwO')[0],
-    target: document.getElementsByClassName('textarea')[0],
-    api: '<?php $this->options->themeUrl('OwO.json'); ?>',
-    position: 'down',
-    width: '100%',
-    maxHeight: '350px'
-});
-</script>
+<?php if($this->allow('comment') && $this->options->CloseComments == 'off'): ?>
+    <script>
+    var OwO_demo = new OwO({
+        logo: '<i class="iconfont icon-face"></i>',
+        container: document.getElementsByClassName('OwO')[0],
+        target: document.getElementsByClassName('textarea')[0],
+        api: '<?php $this->options->themeUrl('OwO.json'); ?>',
+        position: 'down',
+        width: '100%',
+        maxHeight: '350px'
+    });
+    </script>
+<?php endif; ?>
