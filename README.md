@@ -38,8 +38,6 @@ Demo：[WeHao‘s Blog](https://blog.wehaox.com/)
 
 [使用文档](https://blog.wehaox.com/archives/typecho-butterfly.html)
 
-# 求打赏
+# 请作者喝瓶快乐水
 
-![微信](https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/wechat.jpg)
-
-![支付宝](https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/alipay.jpg)
+<img src="https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/wechat.jpg" alt="微信" width="300px"><img src="https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/alipay.jpg" alt="支付宝" width="300px">
