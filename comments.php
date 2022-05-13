@@ -95,7 +95,7 @@ $("#web-login").click(function(){
         logo: '<i class="iconfont icon-face"></i>',
         container: document.getElementsByClassName('OwO')[0],
         target: document.getElementsByClassName('textarea')[0],
-        api: '<?php $this->options->themeUrl('OwO.json'); ?>',
+        api: '<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/OwO.json<?php else : ?><?php $this->options->themeUrl('OwO.json'); ?><?php endif; ?>',
         position: 'down',
         width: '100%',
         maxHeight: '350px'

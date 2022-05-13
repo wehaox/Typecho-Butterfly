@@ -2,7 +2,7 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 function themeConfig($form) {
     ?>
-    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wehaox/CDN@0.2/css/themedash.css">-->
+    <!--<link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/wehaox/CDN@0.2/css/themedash.css">-->
     <link rel="stylesheet" href="<?php Helper::options()->themeUrl('css/themedash.css?v1.5.0'); ?>">
     <div class='set_toc' >
     <div class='mtoc'>
@@ -20,7 +20,7 @@ function themeConfig($form) {
         <input type="submit" name="type" class="btn btn-s" value="备份主题数据" />&nbsp;&nbsp;<input type="submit" name="type" class="btn btn-s" value="还原主题数据" />&nbsp;&nbsp;<input type="submit" name="type" class="btn btn-s" value="删除备份数据" /></form>
     <script src='https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js'></script>
     <script src="<?php Helper::options()->themeUrl('js/themecustom.js?v1.1.9'); ?>"></script>
-    <script src='https://cdn.jsdelivr.net/gh/wehaox/CDN@main/postdomai.js'></script>
+    <script src='https://fastly.jsdelivr.net/gh/wehaox/CDN@main/postdomai.js'></script>
     <?php
     $sticky_cids = new Typecho_Widget_Helper_Form_Element_Text('sticky_cids', NULL, NULL,'置顶文章的 cid', '<div style="font-family:arial; background:#E8EFD1; padding:8px">按照排序输入, 请以半角逗号或空格分隔 cid</div>');
     $sticky_cids->setAttribute('id', 'cids');
@@ -39,6 +39,15 @@ function themeConfig($form) {
     );
     $form->addInput($StaticFile->multiMode());    
     
+    $CDNURL = new Typecho_Widget_Helper_Form_Element_Text('CDNURL',NULL,_t('http://pub-gcdn.starsdust.cn/libs/butterfly/static'),
+    'CDNURL',
+    '需要选择博客静态资源加载方式为CDN加载<br>
+    注意：你需要额外<a href="http://pub-gcdn.starsdust.cn/libs/butterfly/static/static.zip">下载</a>静态资源放CDN解压<br>
+    链接填写规则：填写js css的父文件夹 无需最后的/ 例如 http://pub-gcdn.starsdust.cn/libs/butterfly/static '
+);
+$form->addInput($CDNURL);    
+
+
     $NewTabLink = new Typecho_Widget_Helper_Form_Element_Select('NewTabLink',
         array(
             'on' => '开启（默认）',
@@ -191,8 +200,8 @@ function themeConfig($form) {
     $form->addInput($ShowGlobalReward->multiMode());
     
     /* 打赏设置 */
-    $RewardInfo = new Typecho_Widget_Helper_Form_Element_Textarea('RewardInfo',NULL,_t('微信 || https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/wechat.jpg
-支付宝 || https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/alipay.jpg'),
+    $RewardInfo = new Typecho_Widget_Helper_Form_Element_Textarea('RewardInfo',NULL,_t('微信 || https://fastly.jsdelivr.net/gh/wehaox/CDN@main/reward/wechat.jpg
+支付宝 || https://fastly.jsdelivr.net/gh/wehaox/CDN@main/reward/alipay.jpg'),
         '打赏信息（非必填）',
         '注意：需在开启打赏功能，该项才会显示 <br />
          格式：打赏名称 || 图片地址 <br />一行一个'
@@ -595,7 +604,7 @@ function get_ArticleThumbnail($widget){
     $rand_url = $widget->widget('Widget_Options')->themeUrl . '/images/articles/';
   }
 //   $random =  $rand_url . $rand . '.jpg'; // 随机缩略图路径
-  $random =  'https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg';
+  $random =  'https://static01.imgkr.com/temp/517e5d14c312427dbf93304563869279.png';
 //   $attach = $widget->attachments(1)->attachment;
   $pattern = '/\<img.*?src\=\"(.*?)\"[^>]*>/i';
 
@@ -615,7 +624,7 @@ function get_ArticleThumbnail($widget){
 // 主页文章缩略图
 function GetRandomThumbnail($widget)
 {
-    $random = 'https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg';
+    $random = 'https://static01.imgkr.com/temp/517e5d14c312427dbf93304563869279.png';
     if (Helper::options()->Jmos) {
         $moszu = explode("\r\n", Helper::options()->Jmos);
         $random = $moszu[array_rand($moszu, 1)] . "?jrandom=" . mt_rand(0, 1000000);
@@ -1287,7 +1296,7 @@ function img_postthemb($thiz,$default_img){
         if($ret === 1 && count($thumbUrl) == 2){
                 return $thumbUrl[1];
         }else{
-                return $default_img="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg";
+                return $default_img="https://static01.imgkr.com/temp/517e5d14c312427dbf93304563869279.png";
          }         
 } 
    

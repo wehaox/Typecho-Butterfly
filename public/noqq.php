@@ -16,17 +16,23 @@
     <meta http-equiv="Expires" content="0" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="//unpkg.com/element-plus/dist/index.css" />
-    <script src="https://unpkg.com/vue@next"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/element-plus"></script>
-    <script src="https://cdn.jsdelivr.net/gh/Inndy/vue-clipboard2@master/dist/vue-clipboard.min.js"></script>
+    <link rel="stylesheet" href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/element-plus/2.0.4/index.css" />
+    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-y/vue/3.2.31/vue.global.js"></script>
+    <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-y/axios/0.26.0/axios.min.js"></script>
+    <script src="https://lib.baomitu.com/element-plus/2.1.4/index.full.js"></script>
+    <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-y/vue-clipboard2/0.2.0/vue-clipboard.min.js"></script>
     <title>请到浏览器访问      👉</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.2.0'); ?>">
+    <?php if ($this->options->StaticFile == 'CDN') : ?> 
+        <link rel="stylesheet" href="<?php $this->options->CDNURL() ?>/static/css/index.css?v1.2.0">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl(''); ?><?php $this->options->CDNURL() ?>/static/css/style.css?v1.2.9">
+    <?php else : ?> 
+        <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.2.0'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.2.9'); ?>">
+     <?php endif; ?>
+   
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.2.0'); ?>">
+    <link rel="stylesheet" href="<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/css/custom.css?v1.2.0<?php else : ?><?php $this->options->themeUrl('css/custom.css?v1.2.0'); ?><?php endif; ?>">
     <?php endif; ?>    
 </head>
 <body>
@@ -40,7 +46,7 @@
 <div id="error-wrap">
   <div class="error-content">
     <div class="error-img">
-                <img src="https://i.loli.net/2021/10/11/rVR97X3zmoEj2WA.png" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" alt="到浏览器访问" class="entered">
+                <img src="<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/img/1d.png<?php else : ?><?php $this->options->themeUrl() ?>img/1d.png<?php endif; ?>" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" alt="到浏览器访问" class="entered">
     </div>
     <div class="error-info">
       <b class="title">{{ title }}</b>

@@ -18,17 +18,17 @@ if(isset($_COOKIE["ThemePassword"])!==$this->options->ThemePassword && $this->op
     <?php endif; ?>     
     </head>
 <body _c_t_common="1">
-    <link rel="stylesheet" href="//unpkg.com/element-plus/dist/index.css" />
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.23/dist/vue.global.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="//unpkg.com/element-plus"></script>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/element-plus/2.2.0/index.css" />
+    <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue/3.2.31/vue.global.js"></script>
+    <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.min.js"></script>
+    <script src="https://cdn.staticfile.org/element-plus/2.2.0/index.full.js"></script>
     <div id="web_bg"></div>
 
 <div class="error404" id="body-wrap">
 <div id="error-wrap">
   <div class="error-content">
     <div class="error-img">
-        <img src="https://i.loli.net/2021/10/09/oPZA9nBlTDevy3S.png" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" alt="403" class="entered">
+        <img src="<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/img/403.png<?php else : ?><?php $this->options->themeUrl() ?>img/403.png<?php endif; ?>" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" alt="403" class="entered">
     </div>
     <div class="error-info">
       <h1 class="error_title">403</h1>

@@ -7,11 +7,11 @@
 }
 
 body {
-	cursor: url(https://cdn.jsdelivr.net/npm/kang-static/Hexo/img/default.cur),default
+	cursor: url(https://fastly.jsdelivr.net/npm/kang-static/Hexo/img/default.cur),default
 }
 
 a,button,img {
-	cursor: url(https://cdn.jsdelivr.net/npm/kang-static/Hexo/img/pointer.cur),default
+	cursor: url(https://fastly.jsdelivr.net/npm/kang-static/Hexo/img/pointer.cur),default
 }
 
 video {
@@ -1761,7 +1761,7 @@ div.snote.danger:before,div.snote.error:before {
 }
 
 @font-face {
-	font-family:MyFont;src:url(https://cdn.jsdelivr.net/npm/kang-static/Hexo/font/woff2/JetBrainsMono-Medium.woff2)
+	font-family:MyFont;src:url(https://fastly.jsdelivr.net/npm/kang-static/Hexo/font/woff2/JetBrainsMono-Medium.woff2)
 }
 
 #article-container code,#article-container pre {
