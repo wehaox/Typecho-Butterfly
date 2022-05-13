@@ -32,18 +32,15 @@ function themeConfig($form) {
             'local' => '开启（本地加载）',
         ),
         'CDN',
-        '博客静态资源加载方式(实验性功能,预计下个版本完善)',
-        '介绍：无网络服务器或者CDN炸了可开启此项<br>
-         将博客静态资源，如js、css、图片从服务器加载(会稍微增加服务器流量消耗)<br>
-         注意：你需要额外<a href="https://github.do/https://raw.githubusercontent.com/wehaox/CDN/main/static.zip">下载</a>静态资源放进主题根目录解压'
+        '博客静态资源加载方式',
     );
     $form->addInput($StaticFile->multiMode());    
     
-    $CDNURL = new Typecho_Widget_Helper_Form_Element_Text('CDNURL',NULL,_t('http://pub-gcdn.starsdust.cn/libs/butterfly/static'),
+    $CDNURL = new Typecho_Widget_Helper_Form_Element_Text('CDNURL',NULL,_t('http://pub-gcdn.starsdust.cn/libs/butterfly'),
     'CDNURL',
-    '需要选择博客静态资源加载方式为CDN加载<br>
+    '需要选择博客静态资源加载方式为CDN加载 此项才会生效<br>
     注意：你需要额外<a href="http://pub-gcdn.starsdust.cn/libs/butterfly/static/static.zip">下载</a>静态资源放CDN解压<br>
-    链接填写规则：填写js css的父文件夹 无需最后的/ 例如 http://pub-gcdn.starsdust.cn/libs/butterfly/static '
+    链接填写规则：填写static文件夹的父文件夹 无需最后的/ 例如 http://pub-gcdn.starsdust.cn/libs/butterfly '
 );
 $form->addInput($CDNURL);    
 
