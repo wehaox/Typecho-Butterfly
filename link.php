@@ -17,7 +17,7 @@ $this->need('page_header.php');
                 <?php if ($this->options->Friends) : ?>
                 <?php
                 if (strpos($this->options->Friends, '||') !== false) {
-                   $errorimg="'https://cdn.jsdelivr.net/npm/hexo-butterfly@1.0.0/themes/butterfly/source/img/friend_404.gif'";
+                   $errorimg="'<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/img/friend_404.gif<?php else : ?><?php $this->options->themeUrl() ?>img/friend_404.gif<?php endif; ?>'";
                    $list = "";
                    $txt = $this->options->Friends;
                    $string_arr = explode("\r\n", $txt);
