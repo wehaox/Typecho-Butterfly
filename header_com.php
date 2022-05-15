@@ -336,6 +336,7 @@ var GLOBAL_CONFIG_SITE = {
 <?php else: ?>
 <script src="<?php $this->options->themeUrl('js/fancybox.umd.js'); ?>"></script>
 <script src="<?php $this->options->themeUrl('js/OwO.min.js'); ?>"></script>
+<script src="<?php $this->options->themeUrl('js/dream-msg.min.js'); ?>"></script>
 <script src="<?php $this->options->themeUrl('js/local-search.js'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('js/tw_cn.js'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('js/main.js?v1.5.0'); ?>"> </script>
