@@ -91,7 +91,7 @@
 <script>$(document).ready(function(){var a=document.getElementsByTagName("a");for(let i=0;i<a.length;i++){let domain=document.domain;let url=a[i].href;if(typeof(url)!="undefined"&&url.length!=0&&url.match(domain)==null&&url!="javascript:void(0);"){a[i].setAttribute("target","_BLANK")}}});</script>
 <?php endif; ?>        
 <?php if($this->is('index')): ?>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/wehao.js?v1.4.0'); ?>"></script>
+<script type="text/javascript" src="<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/js/wehao.js?v1.4.0<?php else : ?><?php $this->options->themeUrl('js/wehao.js?v1.4.0'); ?><?php endif; ?>"></script>
 <!--打字-->
 <?php if (is_array($this->options->beautifyBlock) && in_array('ShowTopimg',$this->options->beautifyBlock)): ?>
    <?php if(!empty($this->options->CustomSubtitle)): ?>
@@ -183,7 +183,7 @@ new Typed("#subtitle",{
 <?php if($this->options->StaticFile == 'CDN'): ?>
 <script src="<?php $this->options->CDNURL() ?>/static/js/pjax.min.js"></script>
 <?php else: ?>
-<script src="<?php $this->options->themeUrl('static/js/pjax.min.js'); ?>"></script>
+<script src="<?php $this->options->themeUrl('js/pjax.min.js'); ?>"></script>
 <?php endif; ?>
 <script>
 let pjaxSelectors = ["title", "#body-wrap", "#rightside-config-hide", "#rightside-config-show", ".js-pjax"];
