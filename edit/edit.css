@@ -1,0 +1,32 @@
+.wmd-button.custom {
+	width:20px;
+	height:20px;
+	line-height:20px;
+	text-align:center;
+}
+.wmd-button.custom svg {
+	width:15px;
+	height:15px;
+	vertical-align:middle;
+}
+body.fullscreen {
+	overflow-x:hidden;
+}
+.wmd-button-row {
+	height:auto;
+}
+#custom-field .typecho-list-table tbody textarea {
+	width:100%;
+	height:100px;
+}
+#custom-field .typecho-list-table tbody input[type="text"] {
+	width:100%;
+}
+select {
+    margin-bottom: 5px;
+    width: 145px;
+}
+textarea {
+    margin-bottom: 10px;
+    width: 25.7em;
+}
