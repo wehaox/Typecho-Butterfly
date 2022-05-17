@@ -148,7 +148,7 @@ $("#b-wmd-md-link").on("click",function() {
 $(".btn-ok").click(function(){
     let title = $('input[name="link-title"]').val();
     let link = $('input[name="link-link"]').val();
-    insertAtCursor('['+title+']('+link+' "'+ title+'")');
+    insertAtCursor('['+title+']('+link+')');
 });
 });
 
@@ -167,7 +167,7 @@ $("#b-wmd-md-img").on("click",function() {
 $(".btn-ok").click(function(){
     let title = $('input[name="img-title"]').val();
     let link = $('input[name="img-link"]').val();
-    insertAtCursor('!['+title+']('+link+' "'+ title+'")');
+    insertAtCursor('!['+title+']('+link+')');
 });
 });
 // 行内代码
