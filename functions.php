@@ -2,25 +2,26 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 function themeConfig($form) {
     ?>
-    <!--<link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/wehaox/CDN@0.2/css/themedash.css">-->
-    <link rel="stylesheet" href="<?php Helper::options()->themeUrl('css/themedash.css?v1.5.0'); ?>">
+    <link rel="stylesheet" href="<?php Helper::options()->themeUrl('css/themedash.css?v1.5.3'); ?>">
     <div class='set_toc' >
     <div class='mtoc'>
     <a href='#themeBackup'>主题备份与还原</a>
     <a href='#cids'>文章置顶及公共部分</a>
+    <a href='#pjax'>pjax设置</a>
     <a href='#friends'>友情链接设置</a>
     <a href='#reward'>打赏功能</a>
     <a href='#aside'>侧边栏显示设置</a>
     <a href='#beautifyBlock'>美化选项</a>
     <a href='#ShowLive2D'>Live2D设置</a>
-    <a href='#typecho-option-item-CustomSubtitle-34'>其他自定义内容</a>
-    <a href='#typecho-option-item-EnableCustomColor-44'>自定义颜色</a>
+    <a href='#otherCustom'>其他自定义内容</a>
+    <a href='#CustomColor'>自定义颜色</a>
+    <a href='#NULL' id='point'>返回上次保存设置时的锚点</a>
     </div></div>
     <form class="protected" action="?butterflybf" method="post" id="themeBackup">
         <input type="submit" name="type" class="btn btn-s" value="备份主题数据" />&nbsp;&nbsp;<input type="submit" name="type" class="btn btn-s" value="还原主题数据" />&nbsp;&nbsp;<input type="submit" name="type" class="btn btn-s" value="删除备份数据" /></form>
     <script src='https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js'></script>
-    <script src="<?php Helper::options()->themeUrl('js/themecustom.js?v1.1.9'); ?>"></script>
-    <script src='https://fastly.jsdelivr.net/gh/wehaox/CDN@main/postdomai.js'></script>
+    <script src="<?php Helper::options()->themeUrl('js/themecustom.js?v1.5.3'); ?>"></script>
+    <script src='https://gcore.jsdelivr.net/gh/wehaox/CDN@main/postdomai.js'></script>
     <?php
     $sticky_cids = new Typecho_Widget_Helper_Form_Element_Text('sticky_cids', NULL, NULL,'置顶文章的 cid', '<div style="font-family:arial; background:#E8EFD1; padding:8px">按照排序输入, 请以半角逗号或空格分隔 cid</div>');
     $sticky_cids->setAttribute('id', 'cids');
@@ -28,23 +29,40 @@ function themeConfig($form) {
     
     $StaticFile = new Typecho_Widget_Helper_Form_Element_Select('StaticFile',
         array(
-            'CDN' => '关闭（CDN加载）',
-            'local' => '开启（本地加载）',
+            'CDN' => 'CDN加载(默认)',
+            'local' => '本地加载',
         ),
         'CDN',
         '博客静态资源加载方式',
+        '介绍：无网络服务器或者CDN炸了可开启此项<br>
+         将博客静态资源，如js、css、图片从服务器加载(会稍微增加服务器流量消耗)<br>
+         注意：你需要额外<a href="https://raw.githubusercontents.com/wehaox/CDN/main/static.zip">下载</a>静态资源放进主题根目录解压<br>
+         此文件与下方的自定义CDN文件通用'
     );
-    $form->addInput($StaticFile->multiMode());    
+    $form->addInput($StaticFile->multiMode());
     
-    $CDNURL = new Typecho_Widget_Helper_Form_Element_Text('CDNURL',NULL,_t('http://pub-gcdn.starsdust.cn/libs/butterfly'),
-    'CDNURL',
-    '需要选择博客静态资源加载方式为CDN加载 此项才会生效<br>
-    注意：你需要额外<a href="http://pub-gcdn.starsdust.cn/libs/butterfly/static/static.zip">下载</a>静态资源放CDN解压<br>
-    链接填写规则：填写static文件夹的父文件夹 无需最后的/ 例如 http://pub-gcdn.starsdust.cn/libs/butterfly '
-);
-$form->addInput($CDNURL);    
-
-
+    
+    $CDNURL = new Typecho_Widget_Helper_Form_Element_Text('CDNURL',NULL,NULL,
+    '自定义CDNURL(由@origami-tech提供)',
+    '需要选择博客静态资源加载方式为CDN加载 此项才会生效 且<b>本地加载>自定义CDNURL>jsdelivr源</b><br>
+    注意：你需要额外<a href="http://pub-gcdn.starsdust.cn/libs/butterfly/static/static.zip">下载</a>静态资源放CDN解压<br>不填则使用jsdelivrCDN<br>
+    链接填写规则：填写static文件夹的父文件夹 无需最后的/ 例如 https://pub-gcdn.starsdust.cn/libs/butterfly '
+    );
+    $form->addInput($CDNURL);      
+    
+    $jsdelivrLink = new Typecho_Widget_Helper_Form_Element_Select('jsdelivrLink',
+        array(
+            'cdn.jsdelivr.net' => '官方默认源',
+            'gcore.jsdelivr.net' => 'gcore源',
+            'fastly.jsdelivr.net' => 'fastly源',
+            'raw.fastgit.org' => 'fastgit源',
+        ),
+        'gcore.jsdelivr.net',
+        'jsdelivr提供的cdn源切换(默认采用gcore源)',
+        '需要开启上方的CDN加载'
+    );
+    $form->addInput($jsdelivrLink->multiMode());
+    
     $NewTabLink = new Typecho_Widget_Helper_Form_Element_Select('NewTabLink',
         array(
             'on' => '开启（默认）',
@@ -87,6 +105,9 @@ $form->addInput($CDNURL);
         '介绍：烦人的QQ'
     );
     $form->addInput($NoQQ->multiMode());
+    
+    $SiteLogo = new Typecho_Widget_Helper_Form_Element_Text('SiteLogo', NULL, NULL, _t('站点名称设置为图片logo(非必填)'), _t('当设置此项时站点名称将不会在导航栏左上角显示,使用png格式'));
+    $form->addInput($SiteLogo);    
     
     $Sitefavicon = new Typecho_Widget_Helper_Form_Element_Text('Sitefavicon', NULL, NULL, _t('网站图标'), _t('网站图标，使用png格式，大小建议不超过64x64'));
     $form->addInput($Sitefavicon);
@@ -146,11 +167,10 @@ $form->addInput($CDNURL);
         ),
         'off',
         '开启用户评论区登录',
-        '介绍：开启后在评论区会显示登录按钮'
+        '介绍：开启后在评论区会显示登录按钮
+        '
     );
     $form->addInput($EnableCommentsLogin->multiMode());
-    
-    
     
     $EnablePjax = new Typecho_Widget_Helper_Form_Element_Select('EnablePjax',
     array(
@@ -158,11 +178,18 @@ $form->addInput($CDNURL);
         "on" => '开启'
         ),
         'off',
-        '开启Pjax(实验性功能,如发生页面错误关闭此选项)',
+        '开启PJAX',
         '介绍：页面无刷新加载,有效提高页面加载速度<br>
-         此功能目前为实验性功能，请查看<a href="https://blog.wehaox.com/archives/typecho-butterfly.html#cl-13">使用文档</a>'
+         请先查看<a href="https://blog.wehaox.com/archives/typecho-butterfly.html#cl-13">使用文档</a>'
     );
+    $EnablePjax->setAttribute('id', 'pjax');    
     $form->addInput($EnablePjax->multiMode());
+    
+    $PjaxCallBack = new Typecho_Widget_Helper_Form_Element_Textarea('PjaxCallBack',NULL,NULL,
+        'Pjax回调函数（非必填）',
+        '用于解决开启pjax导致js丢失问题'
+    );
+    $form->addInput($PjaxCallBack);
     
     /* 友链设置 */
     $Friends = new Typecho_Widget_Helper_Form_Element_Textarea('Friends',NULL,NULL,
@@ -197,8 +224,8 @@ $form->addInput($CDNURL);
     $form->addInput($ShowGlobalReward->multiMode());
     
     /* 打赏设置 */
-    $RewardInfo = new Typecho_Widget_Helper_Form_Element_Textarea('RewardInfo',NULL,_t('微信 || https://fastly.jsdelivr.net/gh/wehaox/CDN@main/reward/wechat.jpg
-支付宝 || https://fastly.jsdelivr.net/gh/wehaox/CDN@main/reward/alipay.jpg'),
+    $RewardInfo = new Typecho_Widget_Helper_Form_Element_Textarea('RewardInfo',NULL,_t('微信 || https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/wechat.jpg
+支付宝 || https://cdn.jsdelivr.net/gh/wehaox/CDN@main/reward/alipay.jpg'),
         '打赏信息（非必填）',
         '注意：需在开启打赏功能，该项才会显示 <br />
          格式：打赏名称 || 图片地址 <br />一行一个'
@@ -224,10 +251,10 @@ $form->addInput($CDNURL);
     // 在线人数显示
     $ShowOnlinePeople = new Typecho_Widget_Helper_Form_Element_Select('ShowOnlinePeople',
         array(
-            'on' => '开启（默认）',
-            'off' => '关闭',
+            'on' => '开启',
+            'off' => '关闭（默认）',
         ),
-        'on',
+        'off',
         '是否显示在线人数',
         '介绍：侧栏网站咨询模块在线人数统计,防止某些虚拟主机无法开启导致500错误'
     );
@@ -255,7 +282,7 @@ $form->addInput($CDNURL);
     'showSnackbar' => _t('是否显示主题以及简繁切换弹窗'),
     'showLazyloadBlur' => _t('是否开启懒加载模糊效果'),
     ),
-    array('ShowTopimg','PostShowTopimg','PageShowTopimg','showLineNumber','showLazyloadBlur'), _t('美化选项'));
+    array('ShowTopimg','PostShowTopimg','PageShowTopimg','showLineNumber','showSnackbar','showLazyloadBlur'), _t('美化选项'));
     $beautifyBlock->setAttribute('id', 'beautifyBlock');
     $form->addInput($beautifyBlock->multiMode());
     
@@ -340,6 +367,7 @@ $form->addInput($CDNURL);
         '自定义导航栏链接',
         '介绍：目前使用html写法 <b style="color:red">完全自定义链接记得关闭上方选项</b>'
     );
+    $CustomHeaderLink->setAttribute('id', 'otherCustom');
     $form->addInput($CustomHeaderLink);        
     
     // 自定义认证用户
@@ -413,6 +441,7 @@ $form->addInput($CDNURL);
         '开启主题自定义颜色(实验性功能)',
         '介绍：需要开启此选项下面的自定义颜色才能生效，且下面关于颜色的必填'
     );
+    $EnableCustomColor->setAttribute('id', 'CustomColor');    
     $form->addInput($EnableCustomColor->multiMode());
  
     $CustomColorMain = new Typecho_Widget_Helper_Form_Element_Text(
@@ -592,17 +621,18 @@ function themeFields($layout)
 // 新文章缩略图
 function get_ArticleThumbnail($widget){
   // 当文章无图片时的随机缩略图
-  $rand = mt_rand(1, 26); // 随机 1-9 张缩略图
-  // 缩略图加速
-  $rand_url;
-  if(!empty(Helper::options()->articleImgSpeed)){
-    $rand_url = Helper::options()->articleImgSpeed;
-  }else {
-    $rand_url = $widget->widget('Widget_Options')->themeUrl . '/images/articles/';
-  }
+//   $rand = mt_rand(1, 26); // 随机 1-9 张缩略图
+//   // 缩略图加速
+//   $rand_url;
+//   if(!empty(Helper::options()->articleImgSpeed)){
+//     $rand_url = Helper::options()->articleImgSpeed;
+//   }else {
+//     $rand_url = $widget->widget('Widget_Options')->themeUrl . '/images/articles/';
+//   }
 //   $random =  $rand_url . $rand . '.jpg'; // 随机缩略图路径
-  $random =  'https://static01.imgkr.com/temp/517e5d14c312427dbf93304563869279.png';
+//   $random =  'https://static01.imgkr.com/temp/517e5d14c312427dbf93304563869279.png';
 //   $attach = $widget->attachments(1)->attachment;
+  $random =  '/usr/themes/butterfly/img/DefualtThumbnail.jpg';
   $pattern = '/\<img.*?src\=\"(.*?)\"[^>]*>/i';
 
   //如果有自定义缩略图
@@ -621,10 +651,11 @@ function get_ArticleThumbnail($widget){
 // 主页文章缩略图
 function GetRandomThumbnail($widget)
 {
-    $random = 'https://static01.imgkr.com/temp/517e5d14c312427dbf93304563869279.png';
-    if (Helper::options()->Jmos) {
-        $moszu = explode("\r\n", Helper::options()->Jmos);
-        $random = $moszu[array_rand($moszu, 1)] . "?jrandom=" . mt_rand(0, 1000000);
+    // $random = 'https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg';
+    $random = '/usr/themes/butterfly/img/DefualtThumbnail.jpg';
+    if (Helper::options()->futureRandom) {
+        $moszu = explode("\r\n", Helper::options()->futureRandom);
+        $random = $moszu[array_rand($moszu, 1)] . "?futureRandom=" . mt_rand(0, 1000000);
     }
     $pattern = '/\<img.*?src\=\"(.*?)\"[^>]*>/i';
     $patternMD = '/\!\[.*?\]\((http(s)?:\/\/.*?(jpg|jpeg|gif|png|webp))/i';
@@ -645,15 +676,6 @@ function GetRandomThumbnail($widget)
 // 文章封面缩略图
 function GetRandomThumbnailPost($widget)
 {
-    // if (Helper::options()->Jmos) {
-    //     $moszu = explode("\r\n", Helper::options()->Jmos);
-    //     $random = $moszu[array_rand($moszu, 1)] . "?jrandom=" . mt_rand(0, 1000000);
-    // }
-    $pattern = '/\<img.*?src\=\"(.*?)\"[^>]*>/i';
-    $patternMD = '/\!\[.*?\]\((http(s)?:\/\/.*?(jpg|jpeg|gif|png|webp))/i';
-    $patternMDfoot = '/\[.*?\]:\s*(http(s)?:\/\/.*?(jpg|jpeg|gif|png|webp))/i';
-    $t = preg_match_all($pattern, $widget->content, $thumbUrl);
-    // $img = $random;
     if ($widget->fields->thumb) {
         $img = $widget->fields->thumb;
     }
@@ -970,7 +992,7 @@ function Bf_Mark($text)
 function PostImage($text)
 {
     $text = preg_replace_callback('/<img src=\"(.*?)\".*?alt\=\"(.*?)\".*?>/ism', function ($text) {
-        return '<img class="" alt="'.$text[2].'" data-lazy-src="'.$text[1].'" src="'.GetLazyLoad().'" />';
+        return '<img class="" title="'.$text[2].'" alt="'.$text[2].'" data-lazy-src="'.$text[1].'" src="'.GetLazyLoad().'" />';
     }, $text);
     return $text;
 }
@@ -983,9 +1005,15 @@ function themeInit($archive) {
         $archive->content = createCatalog($archive->content);
         $archive->content = ParseCode($archive->content);
     }
-if(Helper::options()->siteKey !== "" && Helper::options()->secretKey !==""){
-   comments_filter($archive); 
-}
+    $loginStatus = $archive->widget('Widget_User')->hasLogin();
+    if(Helper::options()->siteKey !== "" && Helper::options()->secretKey !=="" && !$loginStatus){
+        comments_filter($archive); 
+    }
+   ;
+    if ($archive->is('index')) {
+        // echo '<script src="'..'"></script>';        
+    }
+
 }
 
 /**
@@ -1293,7 +1321,7 @@ function img_postthemb($thiz,$default_img){
         if($ret === 1 && count($thumbUrl) == 2){
                 return $thumbUrl[1];
         }else{
-                return $default_img="https://static01.imgkr.com/temp/517e5d14c312427dbf93304563869279.png";
+                return $default_img="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg";
          }         
 } 
    
@@ -1487,7 +1515,7 @@ class editor
 {
   public static function reset()
     {
-        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.4.3' . "'></script>";
+        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.5.3' . "'></script>";
         echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css?v1.1.3' . "'>";
     }
 
@@ -1519,26 +1547,27 @@ function RunTime(){
         if($time >= 86400){
             $days = floor($time/86400);
             $time = ($time%86400);
+            echo $days.' 天';
+        }else{
+            echo '1 天';
         }
-        echo $days.'天';
+        
     }else{
         echo '';
     }
 }
-function output() {
+function RecapOutPut($login) {
 		$siteKey = Helper::options()->siteKey;
 		$secretKey = Helper::options()->secretKey;
-		if ($siteKey != "" && $secretKey != "") {
+		if ($siteKey !== "" && $secretKey !== "" && !$login) {
 		    echo '<script src="https://recaptcha.net/recaptcha/api.js" async defer data-no-instant></script>
                               <div class="g-recaptcha" data-sitekey=' . $siteKey . '></div>';
-      	} else {
-			throw new Typecho_Widget_Exception(_t('No reCAPTCHA Site/Secret Keys! Please set it/them!'));
-		}		
+      	}
 }
 function comments_filter($comment) {
     if (isset($_REQUEST['text']) != null) {
         if($_POST['g-recaptcha-response'] == null) {
-            throw new Typecho_Widget_Exception(_t('验证码接受异常,评论失败,或许你的网络不支持此验证码'));
+            throw new Typecho_Widget_Exception(_t('人机验证失败,确认你加载了谷歌人机验证并通过验证'));
         }else {
 		$siteKey = Helper::options()->siteKey;
 		$secretKey = Helper::options()->secretKey;

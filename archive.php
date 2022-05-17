@@ -64,7 +64,9 @@
                 <h2 class="post-title"><?php _e('没有找到内容'); ?></h2>
             </article>
         <?php endif; ?>
-        <?php $this->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>', 1, '...', array('wrapTag' => 'nav', 'wrapClass' => 'page-nav', 'itemTag' => '', 'prevClass' => 'extend prev', 'nextClass' => 'extend next', 'currentClass' => 'page-number current' )); ?>
+<nav id="pagination">
+ <?php $this->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>', 1, '...', array('wrapTag' => 'div', 'wrapClass' => 'pagination', 'itemTag' => '', 'prevClass' => 'extend prev', 'nextClass' => 'extend next', 'currentClass' => 'page-number current' )); ?>
+</nav>
     </div><!-- end #main -->
 	<?php $this->need('sidebar.php'); ?>
 	</main>

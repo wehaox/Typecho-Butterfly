@@ -8,7 +8,7 @@
  * <a href="https://blog.wehaox.com/archives/blogtheme.html#cl-9">主题更新日志</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.5.0
+ * @version 1.5.3
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -99,7 +99,7 @@ $uid = $this->user->uid; //登录时，显示用户各自的私密文章
 	<?php endwhile; ?>
 <nav id="pagination">
  <?php $this->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>', 1, '...', array('wrapTag' => 'div', 'wrapClass' => 'pagination', 'itemTag' => '', 'prevClass' => 'extend prev', 'nextClass' => 'extend next', 'currentClass' => 'page-number current' )); ?>
-</nav>	 
+</nav>
 </div>
 <?php $this->need('sidebar.php'); ?>
 </main>
@@ -116,7 +116,7 @@ function ver() {console.log(`
     #    # #    #   #     #   #      #   #  #      #        #    
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                           1.5.0
+                            1.5.3
 ===================================================================
 `);}
 </script>

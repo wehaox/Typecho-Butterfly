@@ -2,10 +2,9 @@
 <div class="aside-content" id="aside-content" role="complementary">
    <div class="card-widget card-info">
 	<div class="card-info-avatar is-center">
-	    <div class="avatar-img">
-     <img  class="avatar-img" data-lazy-src="<?php $this->options->logoUrl() ?>" onerror="this.onerror=null;this.src='<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/img/friend_404.gif<?php else : ?><?php $this->options->themeUrl() ?>img/friend_404.gif<?php endif; ?>'" 
-           src="<?php echo GetLazyLoad() ?>" alt="avatar">
-           </div>
+	     <div class="avatar-img">
+	         <img data-lazy-src="<?php $this->options->logoUrl() ?>" onerror="this.onerror=null;this.src='/usr/themes/butterfly/img/friend_404.gif'" src="<?php echo GetLazyLoad() ?>" alt="avatar">
+	      </div>
 		<div class="author-info__name">
 			<?php $this->author(); ?>
 		</div>
@@ -14,27 +13,17 @@
 		</div>
 	</div>
 	<div class="card-info-data">
-		<div class="card-info-data-item is-center">
+		<div class="card-info-data site-data is-center">
 			<a href="<?php $this->options->archivelink() ?>">
-				<div class="headline">
-					文章
-				</div>
+				<div class="headline">文章</div>
 				<div class="length-num">
 				<?php Typecho_Widget::widget('Widget_Stat')->to($stat); ?><?php $stat->publishedPostsNum() ?>
 				</div>
 			</a>
-		</div>
-		<div class="card-info-data-item is-center">
 			<a href="<?php $this->options->tagslink() ?>">
-				<div class="headline">
-					标签
-				</div>
-				<div class="length-num">
-			<?php echo tagsNum(); ?>
-				</div>
+				<div class="headline">标签</div>
+				<div class="length-num"><?php echo tagsNum(); ?></div>
 			</a>
-		</div>
-		<div class="card-info-data-item is-center">
 			<a href="<?php $this->options->categorylink() ?>">
 				<div class="headline">
 					分类

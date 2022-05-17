@@ -7,7 +7,6 @@
     */  
 $this->need('page_header.php');
 ?>
-<style>#to_comment{display: none!important;}</style>
 <main class="layout" id="content-inner">
     <div id="archive">
         <section class="page-title">
@@ -51,6 +50,6 @@ $this->need('page_header.php');
     </div>
      </div>
     <?php $this->need('sidebar.php'); ?>
-    <style>.card-recent-post{display:none}</style>
+    <style>.card-recent-post{display:none}#to_comment{display: none!important;}</style>
 </main>
 <?php $this -> need('footer.php'); ?>

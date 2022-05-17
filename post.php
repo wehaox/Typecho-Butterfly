@@ -180,19 +180,10 @@
     <?php $this->need('comments.php'); ?>
 </div>
 <?php $this->need('post_sidebar.php'); ?>
-
-<?php if ($this->options->StaticFile == 'CDN') : ?> 
-  <script src="<?php $this->options->CDNURL() ?>/static/js/comjs.js?v1.4.3"></script>
-<script type="text/javascript" src="<?php $this->options->CDNURL() ?>/static/js/prism.js?v1.0"></script>
-<script type="text/javascript" src="<?php $this->options->CDNURL() ?>/static/js/clipboard.min.js"></script>
-    <?php else : ?> 
-      <script src="<?php $this->options->themeUrl('js/comjs.js?v1.4.3'); ?>"></script>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.0'); ?>"></script>
+<link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
+<script src="<?php $this->options->themeUrl('js/comjs.js?v1.4.3'); ?>"></script>
+<script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.5.3'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/clipboard.min.js'); ?>"></script>
-     <?php endif; ?>
-
-
-
 <script>
 $(document).ready(function(){if($(".toc").html().length == "14") {
 $("#card-toc,#mobile-toc-button").remove();}});

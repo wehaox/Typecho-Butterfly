@@ -33,9 +33,7 @@
             </div>
                 <label for="textarea" class="required"></label>
                 <textarea placeholder="你可以畅所欲言" rows="8" cols="50" name="text" id="textarea" class="textarea" required ><?php $this->remember('text'); ?></textarea>
-                <?php if($this->allow('comment') && $this->options->CloseComments == 'off'): ?>
-                    <div title="OwO" class="OwO"></div>
-                <?php endif; ?>
+                <div title="OwO" class="OwO"></div>
                   </div>
                   <?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
                    <div class="commentsFormArea" style="float:left" id="comment_keys">
@@ -45,7 +43,7 @@
     		    <div class="commentsFormArea" style="text-align: right;">
                    <button class="submit" type="submit" ><?php _e('评论'); ?></button>
                 </div>
-                <?php if($this->options->siteKey !== "" && $this->options->siteKey !== ""){output();?><script>$(document).ready(function(){if($("#comment_keys").length == 0){$(".g-recaptcha").css({"position":"relative","top":"-40px"})}})</script> <?php }?>   
+                <?php if($this->options->siteKey !== "" && $this->options->siteKey !== ""){RecapOutPut($this->user->hasLogin()) ;?><script>$(document).ready(function(){if($("#comment_keys").length == 0){$(".g-recaptcha").css({"position":"relative","top":"-40px"})}})</script> <?php }?>   
                 </form>
 <?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
 <div id="comment_login" style="display:none">
@@ -78,6 +76,16 @@ $("#web-login").click(function(){
         $('#comment_login').slideToggle("fast");
     });
     </script>
+    <script>
+    var OwO_demo = new OwO({
+        logo: '<i class="iconfont icon-face"></i>',
+        container: document.getElementsByClassName('OwO')[0],
+        target: document.getElementsByClassName('textarea')[0],
+        api: '<?php $this->options->themeUrl('OwO.json'); ?>',
+        position: 'down',
+        width: '100%',
+        maxHeight: '350px'});
+    </script>
     <?php elseif(!$this->allow('comment')&&$this->is('post')): ?>
     <hr></hr>
     <h3><?php _e('评论已关闭'); ?></h3>
@@ -89,16 +97,3 @@ $("#web-login").click(function(){
     <?php $comments->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>', 1, '...', array('wrapTag' => 'ol', 'wrapClass' => 'page-navigator', 'itemTag' => '', 'prevClass' => 'prev', 'nextClass' => 'next', 'currentClass' => 'current' )); ?>
     <?php endif; ?>
 </div>
-<?php if($this->allow('comment') && $this->options->CloseComments == 'off'): ?>
-    <script>
-    var OwO_demo = new OwO({
-        logo: '<i class="iconfont icon-face"></i>',
-        container: document.getElementsByClassName('OwO')[0],
-        target: document.getElementsByClassName('textarea')[0],
-        api: '<?php $this->options->themeUrl('OwO.json'); ?>',
-        position: 'down',
-        width: '100%',
-        maxHeight: '350px'
-    });
-    </script>
-<?php endif; ?>

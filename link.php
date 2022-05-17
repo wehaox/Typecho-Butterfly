@@ -17,7 +17,7 @@ $this->need('page_header.php');
                 <?php if ($this->options->Friends) : ?>
                 <?php
                 if (strpos($this->options->Friends, '||') !== false) {
-                   $errorimg="'<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/img/friend_404.gif<?php else : ?><?php $this->options->themeUrl() ?>img/friend_404.gif<?php endif; ?>'";
+                   $errorimg="'/usr/themes/butterfly/img/friend_404.gif'";
                    $list = "";
                    $txt = $this->options->Friends;
                    $string_arr = explode("\r\n", $txt);
