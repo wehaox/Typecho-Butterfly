@@ -37,15 +37,28 @@
 <style>.framework-info{display:none}</style>
 <?php endif; ?>
 <?php if ($this->options->CursorEffects !== 'off' &&$this->options->CursorEffects == 'heart') : ?>
-<script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="false"></script>
+  <?php if ($this->options->StaticFile == 'CDN') : ?>
+    <script id="click-heart" src="<?php $this->options->CDNURL() ?>/static/js/click-heart.min.js" async="async" mobile="false"></script>
+   <?php else : ?> 
+    <script id="click-heart" src="<?php $this->options->themeUrl('js/click-heart.min.js'); ?>" async="async" mobile="false"></script>
+       <?php endif; ?>
 <?php elseif ($this->options->CursorEffects !== 'off' &&$this->options->CursorEffects == 'fireworks') : ?>
-<canvas class="fireworks"></canvas>
-<script id="fireworks" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.0/dist/fireworks.min.js" async="async" mobile="false"></script>
+  <?php if ($this->options->StaticFile == 'CDN') : ?>
+    <canvas class="fireworks"></canvas>
+<script id="fireworks" src="<?php $this->options->CDNURL() ?>/static/js/fireworks.min.js" async="async" mobile="false"></script>
+   <?php else : ?> 
+    <canvas class="fireworks"></canvas>
+<script id="fireworks" src="<?php $this->options->themeUrl('js/fireworks.min.js'); ?>" async="async" mobile="false"></script>
+       <?php endif; ?>
 <?php endif; ?>
 <?php if ($this->options->ShowLive2D !== 'off' && !isMobile()) : ?>
-    <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+  <?php if ($this->options->StaticFile == 'CDN') : ?>
+    <script src="<?php $this->options->CDNURL() ?>/static/js/autoload.js"></script>
+   <?php else : ?> 
+    <script src="<?php $this->options->themeUrl('js/autoload.js'); ?>"></script>
+       <?php endif; ?>
 <?php endif; ?>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.main.js'); ?>"></script>
+<script type="text/javascript" src="<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/js/custom.main.js<?php else : ?><?php $this->options->themeUrl('js/custom.main.js'); ?><?php endif; ?>"></script>
 <script><?php $this->options->CustomScript() ?></script>
  <?php $this->options->CustomBodyEnd() ?>
 <!--搜索  -->
@@ -78,7 +91,7 @@
 <script>$(document).ready(function(){var a=document.getElementsByTagName("a");for(let i=0;i<a.length;i++){let domain=document.domain;let url=a[i].href;if(typeof(url)!="undefined"&&url.length!=0&&url.match(domain)==null&&url!="javascript:void(0);"){a[i].setAttribute("target","_BLANK")}}});</script>
 <?php endif; ?>        
 <?php if($this->is('index')): ?>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/wehao.js?v1.4.0'); ?>"></script>
+<script type="text/javascript" src="<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/js/wehao.js?v1.4.0<?php else : ?><?php $this->options->themeUrl('js/wehao.js?v1.4.0'); ?><?php endif; ?>"></script>
 <!--打字-->
 <?php if (is_array($this->options->beautifyBlock) && in_array('ShowTopimg',$this->options->beautifyBlock)): ?>
    <?php if(!empty($this->options->CustomSubtitle)): ?>
@@ -94,7 +107,7 @@ backSpeed: 50
 })
 }
 }
-"function"==typeof Typed?subtitleType():getScript("https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js")
+"function"==typeof Typed?subtitleType():getScript("https://cdn.staticfile.org/typed.js/2.0.12/typed.min.js")
 .then(subtitleType)
 </script>
    <?php else: ?>
@@ -112,7 +125,7 @@ new Typed("#subtitle",{
       }
   )}
 )}
-"function"==typeof Typed?subtitleType():getScript("https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js")
+"function"==typeof Typed?subtitleType():getScript("https://cdn.staticfile.org/typed.js/2.0.12/typed.min.js")
 .then(subtitleType)
 </script>
     <?php endif ?>
@@ -165,14 +178,12 @@ new Typed("#subtitle",{
 </div>
 <!--pjax-->
 <?php if($this->options->EnablePjax === 'on') : ?>
+<link rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.css">
+<script src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.js"></script>
 <?php if($this->options->StaticFile == 'CDN'): ?>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rstacruz/nprogress@master/nprogress.css">
-<script src="https://cdn.jsdelivr.net/gh/rstacruz/nprogress@master/nprogress.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
+<script src="<?php $this->options->CDNURL() ?>/static/js/pjax.min.js"></script>
 <?php else: ?>
-<link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/nprogress.css'); ?>">
-<script src="<?php $this->options->themeUrl('static/js/nprogress.js'); ?>"></script>
-<script src="<?php $this->options->themeUrl('static/js/pjax.min.js'); ?>"></script>
+<script src="<?php $this->options->themeUrl('js/pjax.min.js'); ?>"></script>
 <?php endif; ?>
 <script>
 let pjaxSelectors = ["title", "#body-wrap", "#rightside-config-hide", "#rightside-config-show", ".js-pjax"];

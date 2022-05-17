@@ -18,25 +18,29 @@
             'author'    =>  _t('%s 发布的文章')
         ), '', ' - '); ?><?php $this->options->title(); ?></title>
     <!-- 使用url函数转换相关路径 -->
-    <link rel="preconnect" href="//cdn.jsdelivr.net" />    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
+    <link rel="preconnect" href="<?php $this->options->CDNURL() ?>" />    
+    <link rel="stylesheet" href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/justifiedGallery/3.8.1/css/justifiedGallery.min.css">
+    <link href="https://at.alicdn.com/t/font_3159629_5bvsat8p5l.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.css">
+    <?php if($this->options->StaticFile == 'CDN'): ?>
+      <link rel="stylesheet" href="<?php $this->options->CDNURL() ?>/static/css/fancybox.css'); ?>">
+      <link rel="stylesheet" href="<?php $this->options->CDNURL() ?>/static/css/GrayMac.css'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->CDNURL() ?>/static/css/index.css?v1.5.0'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->CDNURL() ?>/static/css/style.css?v1.4.8'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->CDNURL() ?>/static/css/OwO.min.css">
+    <?php else: ?>
+      <link rel="stylesheet" href="<?php $this->options->themeUrl('css/fancybox.css'); ?>">
+      <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.5.0'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.4.8'); ?>">
-    <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.5.0'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/OwO.min.css'); ?>">
     <?php endif; ?>
-    <link href="https://at.alicdn.com/t/font_3159629_5bvsat8p5l.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
-    <?php if($this->options->StaticFile == 'CDN'): ?>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" />
-    <link rel="stylesheet" href="https://gcore.jsdelivr.net/gh/DIYgod/OwO@master/dist/OwO.min.css">
-    <?php else: ?>
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/jquery.fancybox.min.css'); ?>" />
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/OwO.min.css'); ?>" />
+
+    <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?> 
+    <link rel="stylesheet" href="<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/css/custom.css?v1.2.0<?php else : ?><?php $this->options->themeUrl('css/custom.css?v1.2.0'); ?><?php endif; ?>">
     <?php endif; ?>
     <?php if (!empty($this->options->beautifyBlock) && in_array('showSnackbar',$this->options->beautifyBlock)): ?>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'">
     <?php endif; ?>
     <?php if (!empty($this->options->beautifyBlock) && in_array('showLazyloadBlur',$this->options->beautifyBlock)): ?>
     <style>
@@ -105,8 +109,8 @@
         },
         source: {
             justifiedGallery: {
-                js: "https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js",
-                css: "https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css"
+                js: "<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/js/fjGallery.min.js<?php else : ?><?php $this->options->themeUrl() ?>js/fjGallery.min.js<?php endif; ?>",
+                css: "<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/css/fjGallery.css<?php else : ?><?php $this->options->themeUrl() ?>css/fjGallery.css<?php endif; ?>"
             }
         },
         isPhotoFigcaption: !1,
@@ -315,26 +319,28 @@ var GLOBAL_CONFIG_SITE = {
     <?php $this->options->CustomHead() ?>
 </head>
 <body>
-<script src="<?php $this->options->themeUrl('/js/local-search.js'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/tw_cn.js'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/main.js?v1.5.0'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/utils.js?v1.5.0'); ?>"> </script>
+<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-y/instant.page/5.1.0/instantpage.min.js" type="module"> </script>
+<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-y/medium-zoom/1.0.6/medium-zoom.min.js"> </script>
+<script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-y/vanilla-lazyload/17.3.1/lazyload.iife.min.js"></script>
+<script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-y/node-snackbar/0.1.16/snackbar.min.js"></script>
+
 <?php if($this->options->StaticFile == 'CDN'): ?>
-<script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"> </script>
-<script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"> </script>
-<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script>
-<script src="https://gcore.jsdelivr.net/gh/DIYgod/OwO@master/dist/OwO.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/iGaoWei/Dream-Msg/lib/dream-msg.min.js"></script>
+<script src="<?php $this->options->CDNURL() ?>/static/js/fancybox.umd.js"></script>
+<script src="<?php $this->options->CDNURL() ?>/static/js/OwO.min.js"></script>
+<script src="<?php $this->options->CDNURL() ?>/static/js/dream-msg.min.js"></script>
+<script src="<?php $this->options->CDNURL() ?>/static/js/local-search.js"> </script>
+<script src="<?php $this->options->CDNURL() ?>/static/js/tw_cn.js"> </script>
+<script src="<?php $this->options->CDNURL() ?>/static/js/main.js?v1.5.0"> </script>
+<script src="<?php $this->options->CDNURL() ?>/static/js/utils.js?v1.5.0"> </script>
 <?php else: ?>
-<script src="<?php $this->options->themeUrl('static/js/jquery.min.js'); ?>"></script>
-<script src="<?php $this->options->themeUrl('static/js/instantpage.min.js'); ?>" type="module"> </script>
-<script src="<?php $this->options->themeUrl('static/js/medium-zoom.min.js'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('static/js/lazyload.iife.min.js'); ?>"></script>
-<script src="<?php $this->options->themeUrl('static/js/jquery.fancybox.min.js'); ?>"></script>
-<script src="<?php $this->options->themeUrl('static/js/OwO.min.js'); ?>"></script>
+<script src="<?php $this->options->themeUrl('js/fancybox.umd.js'); ?>"></script>
+<script src="<?php $this->options->themeUrl('js/OwO.min.js'); ?>"></script>
+<script src="<?php $this->options->themeUrl('js/dream-msg.min.js'); ?>"></script>
+<script src="<?php $this->options->themeUrl('js/local-search.js'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('js/tw_cn.js'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('js/main.js?v1.5.0'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('js/utils.js?v1.5.0'); ?>"> </script>
 <?php endif; ?>
 <!--[if lt IE 8]>
     <div class="browsehappy" role="dialog"><?php _e('当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>'); ?>.</div>
@@ -345,7 +351,7 @@ var GLOBAL_CONFIG_SITE = {
     <div id="sidebar-menus" class="">
       <div class="avatar-img is-center">
           <img src="<?php $this->options->logoUrl() ?>"
-          onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/hexo-butterfly@1.0.0/themes/butterfly/source/img/friend_404.gif'" alt="avatar"></div>
+          onerror="this.onerror=null;this.src='<?php if ($this->options->StaticFile == 'CDN') : ?><?php $this->options->CDNURL() ?>/static/img/friend_404.gif<?php else : ?><?php $this->options->themeUrl() ?>img/friend_404.gif<?php endif; ?>'" alt="avatar"></div>
       <div class="site-data">
         <div class="data-item is-center">
           <div class="data-item-link"><a href="<?php $this->options->archivelink() ?>">

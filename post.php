@@ -92,9 +92,9 @@
 	<div class="social-share share-component"
 		data-image="https://tva4.sinaimg.cn/large/007X0Rdygy1ghm2u8yvhdj30sg0g0gp1.jpg"
 		data-sites="facebook,twitter,wechat,weibo,qq">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="all"
+	<link rel="stylesheet" href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/social-share.js/1.0.16/css/share.min.css" media="all"
 		onload="this.media='all'">
-	<script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer=""></script>
+	<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/social-share.js/1.0.16/js/social-share.min.js" defer=""></script>
 </div>
    </div>
    </div>
@@ -180,9 +180,19 @@
     <?php $this->need('comments.php'); ?>
 </div>
 <?php $this->need('post_sidebar.php'); ?>
-<script src="<?php $this->options->themeUrl('js/comjs.js?v1.4.3'); ?>"></script>
+
+<?php if ($this->options->StaticFile == 'CDN') : ?> 
+  <script src="<?php $this->options->CDNURL() ?>/static/js/comjs.js?v1.4.3"></script>
+<script type="text/javascript" src="<?php $this->options->CDNURL() ?>/static/js/prism.js?v1.0"></script>
+<script type="text/javascript" src="<?php $this->options->CDNURL() ?>/static/js/clipboard.min.js"></script>
+    <?php else : ?> 
+      <script src="<?php $this->options->themeUrl('js/comjs.js?v1.4.3'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.0'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/clipboard.min.js'); ?>"></script>
+     <?php endif; ?>
+
+
+
 <script>
 $(document).ready(function(){if($(".toc").html().length == "14") {
 $("#card-toc,#mobile-toc-button").remove();}});
