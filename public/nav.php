@@ -1,6 +1,12 @@
 <nav id="nav" class="show" >
          <span id="blog_name">
-            <a id="site-name" href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a>
+            <a id="site-name" href="<?php $this->options->siteUrl(); ?>">
+                <?php if($this->options->SiteLogo !== '') : ?>
+                <img src="<?php $this->options->SiteLogo() ?>" border="0" width="95px" />
+                <?php else :?>
+                <?php $this->options->title() ?>
+                <?php endif ?>
+            </a>
        </span>
             <div id="menus">
                   <div id="search-button">
