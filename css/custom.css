@@ -7,11 +7,11 @@
 }
 
 body {
-	cursor: url(https://cdn.jsdelivr.net/npm/kang-static/Hexo/img/default.cur),default
+	cursor: url(/usr/themes/butterfly/img/default.cur),default
 }
 
 a,button,img {
-	cursor: url(https://cdn.jsdelivr.net/npm/kang-static/Hexo/img/pointer.cur),default
+	cursor: url(/usr/themes/butterfly/img/pointer.cur),default
 }
 
 video {
