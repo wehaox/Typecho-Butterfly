@@ -9,7 +9,7 @@
 
 原主题：[hexo-butterfly](https://github.com/jerryc127/hexo-theme-butterfly)
 
-Demo：[WeHao‘s Blog](https://blog.wehaox.com/)  
+Demo：[WeHao‘s Blog](https://blog.wehaox.com/)(仅限中国ip访问/Only Chinese IP access)  
 
 使用文档：[使用文档](https://blog.wehaox.com/archives/typecho-butterfly.html)
 
