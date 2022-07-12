@@ -20,12 +20,12 @@
     <!-- 使用url函数转换相关路径 -->
     <link rel="preconnect" href="//<?php $this->options->jsdelivrLink() ?>" />
     <link rel="preconnect" href="//cdn.staticfile.org" />
-    <link rel="stylesheet" href="https://<?php $this->options->jsdelivrLink() ?>/npm/justifiedGallery/dist/css/justifiedGallery.min.css">
+    <!--<link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">-->
     <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.5.3'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.4.8'); ?>">
     <!--魔改美化-->
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?>
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.5.3'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.6.0'); ?>">
     <?php endif; ?>
     <!--图标库-->
     <link href="https://at.alicdn.com/t/font_3159629_5bvsat8p5l.css" rel="stylesheet" />
@@ -38,7 +38,7 @@
     <link rel="stylesheet" href="<?php $this->options->CDNURL() ?>/static/css/fancybox.css">
     <link rel="stylesheet" href="<?php $this->options->CDNURL() ?>/static/css/OwO.min.css">
     <?php else: ?>
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/jquery.fancybox.min.css'); ?>" />
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/fancybox.css'); ?>" />
     <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/OwO.min.css'); ?>" />
     <?php endif; ?>
     <?php if (!empty($this->options->beautifyBlock) && in_array('showSnackbar',$this->options->beautifyBlock)): ?>
@@ -322,7 +322,8 @@ var GLOBAL_CONFIG_SITE = {
     <?php $this->options->CustomHead() ?>
 </head>
 <body>
-<script src="<?php $this->options->themeUrl('/js/main.js?v1.5.0'); ?>"> </script>
+
+<script src="<?php $this->options->themeUrl('/js/main.js?v1.6.0'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/utils.js?v1.5.0'); ?>"> </script>
 <?php if($this->options->StaticFile == 'CDN' && $this->options->CDNURL == ''): ?>
 <script src="https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
@@ -334,6 +335,7 @@ var GLOBAL_CONFIG_SITE = {
 <script src="https://<?php $this->options->jsdelivrLink() ?>/gh/DIYgod/OwO@master/dist/OwO.min.js"></script>
 <script src="https://<?php $this->options->jsdelivrLink() ?>/gh/wehaox/Typecho-Butterfly@latest/js/local-search.js"> </script>
 <script src="https://<?php $this->options->jsdelivrLink() ?>/gh/wehaox/Typecho-Butterfly@latest/js/tw_cn.js"> </script>
+<script src="https://<?php $this->options->jsdelivrLink() ?>/npm/artplayer/dist/artplayer.js"></script>
 <?php elseif($this->options->StaticFile == 'CDN' && $this->options->CDNURL !== ''): ?>
 <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-y/instant.page/5.1.0/instantpage.min.js" type="module"> </script>
@@ -344,6 +346,7 @@ var GLOBAL_CONFIG_SITE = {
 <script src="<?php $this->options->CDNURL() ?>/static/js/OwO.min.js"></script>
 <script src="<?php $this->options->CDNURL() ?>/static/js/local-search.js"> </script>
 <script src="<?php $this->options->CDNURL() ?>/static/js/tw_cn.js"> </script>
+<script src="<?php $this->options->CDNURL() ?>/static/js/artplayer.js"> </script>
 <?php else: ?>
 <script src="<?php $this->options->themeUrl('/static/js/jquery.min.js'); ?>"></script>
 <script src="<?php $this->options->themeUrl('/static/js/instantpage.min.js'); ?>" type="module"> </script>
@@ -354,6 +357,7 @@ var GLOBAL_CONFIG_SITE = {
 <script src="<?php $this->options->themeUrl('/static/js/OwO.min.js'); ?>"></script>
 <script src="<?php $this->options->themeUrl('/js/local-search.js'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/tw_cn.js'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/static/js/artplayer.js'); ?>"> </script>
 <?php endif; ?>
 <!--[if lt IE 8]>
     <div class="browsehappy" role="dialog"><?php _e('当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>'); ?>.</div>

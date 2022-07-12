@@ -114,7 +114,7 @@ backSpeed: 50
 })
 }
 }
-"function"==typeof Typed?subtitleType():getScript("https://<?php $this->options->jsdelivrLink() ?>/npm/typed.js/lib/typed.min.js")
+"function"==typeof Typed?subtitleType():getScript("/usr/themes/butterfly/js/typed.min.js")
 .then(subtitleType)
 </script>
    <?php else: ?>
@@ -132,7 +132,7 @@ new Typed("#subtitle",{
       }
   )}
 )}
-"function"==typeof Typed?subtitleType():getScript("https://<?php $this->options->jsdelivrLink() ?>/npm/typed.js/lib/typed.min.js")
+"function"==typeof Typed?subtitleType():getScript("/usr/themes/butterfly/js/typed.min.js")
 .then(subtitleType)
 </script>
     <?php endif ?>
@@ -143,6 +143,8 @@ new Typed("#subtitle",{
 </div>
 <div id="rightside">
 	<div id="rightside-config-hide" class="">
+	    <button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button>	    
+	    <button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button>	    
 	    <?php if ($this->is('post')): ?>
 	    <button id="readmode" type="button" title="阅读模式">
 	        <i class="fas fa-book-open"></i>

@@ -74,13 +74,19 @@
         </div>
         <div class="post-copyright__type">
             <span class="post-copyright-meta">文章链接: </span>
-            <span class="post-copyright-info"><a href="<?php echo 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];?>"><?php echo 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];?></a></span>
+            <span class="post-copyright-info"><a href="<?php $this -> permalink() ?>">
+                <?php $this -> permalink() ?></a></span>
                 </div>
        <div class="post-copyright__notice">
            <span class="post-copyright-meta">版权声明: </span>
-           <span class="post-copyright-info">本博客所有文章除特别声明外，均采用 
-           <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 
-           许可协议。转载请注明来自<a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a> ！
+           <span class="post-copyright-info">
+            <?php if($this->fields->CopyRight == 'off') :?>
+           <b style="color:red">本文严禁转载</b>，引用或转载文章前请先联系博主！            
+           <?php else: ?>
+            本博客所有文章除特别声明外，均采用 
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 
+            许可协议。转载请注明来自<a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a> ！
+           <?php endif?>
            </span>
       </div>
 </div>

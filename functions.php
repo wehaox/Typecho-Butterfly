@@ -615,7 +615,16 @@ function themeFields($layout)
     );
     $layout->addItem($ShowToc);
     
-    
+    $CopyRight = new Typecho_Widget_Helper_Form_Element_Select('CopyRight',
+        array(
+            'on' => ' CC BY-NC-SA 4.0（默认）',
+            'off' => '禁止转载',
+        ),
+        'on',
+        '文章版权说明',
+        '介绍：默认为CC BY-NC-SA 4.0'
+    );
+    $layout->addItem($CopyRight);    
     
 }
 // 新文章缩略图
@@ -868,6 +877,7 @@ function ParseCode($text)
     $text = inline_Tag($text);
     $text = Bf_Radio($text);
     $text = Bf_Mark($text);
+    $text = ArtPlayer($text);    
     $text = PostImage($text);
     return $text;
 }
@@ -979,6 +989,7 @@ function Bf_Radio($text)
     }, $text);
     return $text;
 }
+
 function Bf_Mark($text)
 {
     $text = preg_replace_callback('/\[label color=\"(.*?)\".*?\](.*?)\[\/label\]/ism', function ($text) {
@@ -987,6 +998,85 @@ function Bf_Mark($text)
     return $text;
 }
 
+function ArtPlayer($text)
+{
+    $text = preg_replace_callback('/\[video title=\"(.*?)"\ url=\"(.*?)"\ container=\"(.*?)"\ subtitle=\"(.*?)"\](.*?)\[\/video\]/ism', function ($text) {
+            $t = explode("<br>", $text[5]);
+            for($i=0;$i<count($t);$i++){
+	        $a[] =  explode("|", $t[$i]);
+            }
+            for($i=0;$i<count($a);$i++){
+	        $c[$i]['time']=$a[$i][0];
+	        $c[$i]['text']=$a[$i][1];
+	        unset($c[$i][0]);
+	        unset($c[$i][1]);
+        }
+        $subtitle = json_encode($c,JSON_NUMERIC_CHECK); 
+        return '
+    <div class="iframe_video artplayer artplayer-'.$text[3].'"></div>
+    <script>
+        var '.$text[3].' = new Artplayer({
+            container: ".artplayer-'.$text[3].'",
+            url: "'.$text[2].'",
+            title: "'.$text[1].'",
+            subtitle: {
+                url: "'.$text[4].'",
+                encoding: "utf-8",
+            },            
+            volume: 0.5,
+            isLive: false,
+            muted: false,
+            autoplay: false,
+            pip: true,
+            autoSize: true,
+            autoMini: false,
+            screenshot: true,
+            setting: true,
+            loop: true,
+            flip: true,
+            playbackRate: true,
+            aspectRatio: true,
+            fullscreen: true,
+            fullscreenWeb: true,
+            subtitleOffset: true,
+            miniProgressBar: true,
+            mutex: true,
+            backdrop: true,
+            playsInline: true,
+            autoPlayback: true,
+            theme: "#23ade5",
+            lang: navigator.language.toLowerCase(),
+            whitelist: ["*"],
+            moreVideoAttr: {
+                crossOrigin: "anonymous",
+            },
+            settings: [{
+                width: 200,
+                html: "字幕",
+                tooltip: "默认字幕",
+                selector: [{
+                    html: "Display",
+                    tooltip: "Show",
+                    switch: true,
+                    onSwitch: function(item) {
+                        item.tooltip = item.switch ? "Hide" : "Show";
+                        art.subtitle.show = !item.switch;
+                        return !item.switch;
+                    },
+                }, ],
+                onSelect: function(item) {
+                    art.subtitle.switch(item.url, {
+                        name: item.html,
+                    });
+                    return item.html;
+                },
+            }, ],
+            highlight: '.$subtitle.',
+        });
+    </script>';
+    }, $text);
+    return $text;
+}
 
 // 重写文章图片加载
 function PostImage($text)
