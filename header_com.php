@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.4.8'); ?>">
     <!--魔改美化-->
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?>
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.6.0'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.5.8'); ?>">
     <?php endif; ?>
     <!--图标库-->
     <link href="https://at.alicdn.com/t/font_3159629_5bvsat8p5l.css" rel="stylesheet" />
