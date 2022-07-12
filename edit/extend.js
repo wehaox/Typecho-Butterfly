@@ -123,6 +123,9 @@ $("#wmd-button-row #wmd-fullscreen-button").before(`
 <li class="wmd-button custom" id="b-wmd-mark" title="文字高亮">
   <svg t="1630842990651" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2341" width="64" height="64"><path d="M1024 510.293333l-66.645333-69.333333-196.693334 167.893333-284.16-297.984 162.261334-200.576L571.562667 42.666667 181.418667 524.586667l59.008 61.909333L0 829.482667 355.157333 981.333333l131.157334-139.264 66.133333 69.333334L1024 510.293333zM413.098667 389.973333l271.018666 284.202667-111.445333 95.146667-251.904-265.344 92.330667-114.048z" p-id="2342" fill="#707070"></path></svg>
 </li>
+<li class="wmd-button custom" id="b-wmd-video" title="插入视频">
+  <svg t="1657445029879" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7626" width="200" height="200"><path d="M374.6 636.5c4.4 0 8.5-1.2 12.1-3.3l171.7-100c8-3.6 13.6-11.9 13.6-21.5 0-8.8-4.8-16.6-11.9-20.7l-167.8-97.8c-4.3-5-10.7-8.1-17.7-8.1-13.1 0-23.6 10.7-23.6 23.8v1.3l-0.3 0.2 0.4 199.8c-0.1 0.8-0.1 1.6-0.1 2.5 0 13.2 10.6 23.8 23.6 23.8z" fill="#707070" p-id="7627"></path><path d="M64.7 586.3a32.2 32.1 0 1 0 64.4 0 32.2 32.1 0 1 0-64.4 0Z" fill="#707070" p-id="7628"></path><path d="M960 398.3c0.1-1.6 0.2-3.2 0.2-4.8 0-35-28.5-63.3-63.6-63.3-11.7 0-22.7 3.2-32.2 8.7l-0.5-0.3-31.5 18.2v-64.7c-0.1-73.1-59.9-133-133.1-133H197.4c-73.1 0-133 59.8-133 133v165.8h0.2c0 17.7 14.4 32.1 32.2 32.1s32.2-14.4 32.2-32.1h0.2V287c0-35.2 28.8-64 64-64h510.2c35.2 0 64 28.8 64 64v448.9c0 35.2-28.8 64-64 64H193.3c-35.2 0-64-28.8-64-64v-21.4c0-17.7-14.4-32.1-32.2-32.1-17.8 0-32.2 14.4-32.2 32.1h-0.4v15.3c0 73.2 59.9 133 133 133h501.9c73.2 0 133-59.8 133-133v-64.1l33.1 19.1 0.1-0.1c9.2 5.1 19.8 8 31 8 35.1 0 63.6-28.4 63.6-63.3 0-1.6-0.1-3.2-0.2-4.8V398.3z m-63.6 205.1c-0.3 7.8-6.9 14.1-15 14.1-2.7 0-5.3-0.7-7.5-2l-41.5-23.7V430.1l40.9-23.2c2.3-1.5 5.1-2.3 8.1-2.3 8.3 0 15 6.6 15 14.6v184.2z" fill="#707070" p-id="7629"></path></svg>
+</li>
 <li class="wmd-spacer wmd-spacer4" id="wmd-spacer4"></li>
 <li class="wmd-button custom" id="b-wmd-md-draft" title="保存草稿">
   <svg t="1630841483224" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10796" width="64" height="64"><path d="M363.175 705.746l241.359-241.358c16.594-16.594 16.594-43.747 0-60.34s-43.747-16.594-60.34 0L302.835 645.407c-16.592 16.594-16.592 43.747 0 60.339 16.594 16.593 43.747 16.593 60.34 0z" p-id="10797" fill="#707070"></path><path d="M981.333 922.848H387.434l442.898-442.899 46.99-46.988 90.964-90.965c33.188-33.186 33.188-87.491 0-120.679L787.266 40.298c-33.186-33.188-87.493-33.188-120.679 0l-90.965 90.964-60.34 60.34L43.075 663.808l-30.168 30.17 0.036 0.036C5.21 701.747 0.408 712.415 0.408 724.148v237.354C0.28 962.843 0 964.141 0 965.515c0 11.837 4.903 22.569 12.757 30.319 7.75 7.854 18.481 12.759 30.318 12.759 1.385 0 2.694-0.281 4.047-0.411h934.212c23.467 0 42.667-19.2 42.667-42.667-0.001-23.466-19.201-42.667-42.668-42.667zM85.741 827.154l95.694 95.694H85.741v-95.694z m611.016-696.348c16.592-16.592 43.747-16.592 60.339 0l120.681 120.681c16.594 16.594 16.592 43.747 0 60.339l-60.795 60.795-181.02-181.019 60.795-60.796zM133.585 693.978l442.036-442.036L756.64 432.961 314.604 874.997l-30.17 30.17-30.17-30.17-120.679-120.678-30.17-30.17 30.17-30.171z" p-id="10798" fill="#707070"></path></svg>
@@ -457,7 +460,39 @@ $(".btn-ok").click(function(){
     insertAtCursor(' [label color="'+color+'"]'+contents+'[/label] ');
 });
 });
-$("#b-wmd-linecode,#b-wmd-code,#b-wmd-reply,#b-wmd-nhtml,#b-wmd-wcheakbox,#b-wmd-inline-tag,#b-wmd-radio,#b-wmd-md-link,#b-wmd-md-img,#b-wmd-mark,#b-wmd-btn,#b-wmd-note,#b-wmd-hide-block,#b-wmd-hide-inline,#b-wmd-hide-toggle,#b-wmd-note-ico,#b-wmd-md-explain,#b-wmd-title").click(function(){
+// 插入视频
+$("#b-wmd-video").on("click",function() {
+$("#ui-datepicker-div").after(`
+    <div class="wmd-prompt-dialog">
+    <div><p><b>插入视频</b></p></div>
+<form>
+<p>视频标题：
+    <input type="text" name="artplayer-title">
+    视频URL链接：
+    <input type="text" name="url">
+    字幕链接(推荐srt格式)：
+    <input type="text" name="subtitle">    
+    视频分段(格式: 时间(s)|描述 如: 15|彩蛋)一行一个：    
+    <textarea type="text" name="highlight"></textarea>
+</p>
+    <input type="text" style="display:none;">
+    <button type="button" class="btn btn-s primary btn-ok">确定</button>
+    <button type="button" class="btn btn-s btn-cancel">取消</button>
+</form>
+</div>
+`);
+$(".btn-ok").click(function(){
+    // let color = $('#select-color option:selected').val();
+    let title = $('input[name="artplayer-title"]').val();
+    let url = $('input[name="url"]').val();
+    let highlight = $('textarea[name="highlight"]').val();
+    let subtitle = $('input[name="subtitle"]').val();
+    let artplayer = Math.random().toString(36).substr(2);
+    insertAtCursor('[video title="'+title+' " url="'+url+' " container="'+artplayer+' " subtitle="'+subtitle+' "]'+highlight+' [/video]\n');
+});
+});
+// 需要调用dialog样式的容器
+$("#b-wmd-linecode,#b-wmd-code,#b-wmd-reply,#b-wmd-nhtml,#b-wmd-wcheakbox,#b-wmd-inline-tag,#b-wmd-radio,#b-wmd-md-link,#b-wmd-md-img,#b-wmd-mark,#b-wmd-btn,#b-wmd-note,#b-wmd-hide-block,#b-wmd-hide-inline,#b-wmd-hide-toggle,#b-wmd-note-ico,#b-wmd-md-explain,#b-wmd-title,#b-wmd-video").click(function(){
 var y = document.createElement("div");
 let height = document.body.scrollHeight;
 z = y.style;
