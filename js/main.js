@@ -506,7 +506,27 @@ document.addEventListener('DOMContentLoaded', function () {
     runMobileToc: () => {
       if (window.getComputedStyle(document.getElementById('card-toc')).getPropertyValue('opacity') === '0') window.mobileToc.open()
       else window.mobileToc.close()
-    }
+    },
+    
+    adjustFontSize: (plus) => {
+      const fontSizeVal = parseInt(window.getComputedStyle(document.documentElement).getPropertyValue('--global-font-size'))
+      let newValue = ''
+      detectFontSizeChange = true
+      if (plus) {
+        if (fontSizeVal >= 20) return
+        newValue = fontSizeVal + 1
+        document.documentElement.style.setProperty('--global-font-size', newValue + 'px')
+        !document.getElementById('nav').classList.contains('hide-menu') && adjustMenu()
+      } else {
+        if (fontSizeVal <= 10) return
+        newValue = fontSizeVal - 1
+        document.documentElement.style.setProperty('--global-font-size', newValue + 'px')
+        document.getElementById('nav').classList.contains('hide-menu') && adjustMenu()
+      }
+
+      saveToLocal.set('global-font-size', newValue, 2)
+      // document.getElementById('font-text').innerText = newValue
+    }    
   }
 
   document.getElementById('rightside').addEventListener('click', function (e) {
@@ -530,6 +550,12 @@ document.addEventListener('DOMContentLoaded', function () {
       case 'hide-aside-btn':
         rightSideFn.hideAsideBtn()
         break
+      case 'font-plus':
+        rightSideFn.adjustFontSize(true)
+        break
+      case 'font-minus':
+        rightSideFn.adjustFontSize()
+        break        
       default:
         break
     }
