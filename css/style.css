@@ -317,6 +317,9 @@
     .iframe_video {
         height: 40em;
     }
+    .artplayer{
+        height: 30em!important;
+    }
 }
 
 @media screen and (max-width: 520px){
