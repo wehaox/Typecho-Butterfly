@@ -9,7 +9,7 @@
 
 原主题：[hexo-butterfly](https://github.com/jerryc127/hexo-theme-butterfly)
 
-Demo：[WeHao‘s Blog](https://blog.wehaox.com/)(仅限中国ip访问/Only Chinese IP access)  
+Demo：[WeHao‘s Blog](https://blog.wehaox.com/)
 
 使用文档：[使用文档](https://blog.wehaox.com/archives/typecho-butterfly.html)
 
@@ -59,7 +59,7 @@ Demo：[WeHao‘s Blog](https://blog.wehaox.com/)(仅限中国ip访问/Only Chin
 - [ ] Mathjax 和 Katex
 - [x] 内置404页面
 - [x] 显示字数统计
-- [ ] 显示相关文章
+- [x] 显示相关文章
 - [x] 过期文章提醒
 - [ ] 多种在线聊天（Chatra/Tidio/Daovoice/Gitter/Crisp）
 - [ ] 多种分析系统
