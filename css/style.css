@@ -25,8 +25,11 @@
 .vimg{
     float: left;
     margin: 8px 10px 0px 0px;
+    width: 45px;
+    height: 45px;
     transition: filter 375ms ease-in .2s,transform .3s;
 }
+
 
 .vimg:hover {
     -webkit-transform: rotate(360deg);
@@ -450,12 +453,6 @@ code[class*="language-"], pre[class*="language-"] {
 .last{
     padding: .1rem .5rem 0;
 }
-@media screen and (max-width: 900px){
-    #card-toc {
-    background-color: #fff!important;
-}
-}
-
 #footer:before {
     content: none;
 }

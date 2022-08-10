@@ -180,10 +180,30 @@
         <div class="next_info"><?php $prev->title();?></div>
         </div>
       </a>
-      </div>    
+      </div>
 <?php endif; ?>
 </nav>
-    <?php $this->need('comments.php'); ?>
+<?php if($this->options->ShowRelatedPosts) :?>
+<div class="relatedPosts">
+<div class="headline">
+<i class="fas fa-thumbs-up fa-fw"></i>
+<span>相关推荐</span>
+</div>
+<div class="relatedPosts-list">
+<?php $this->related($this->options->RelatedPostsNum)->to($relatedPosts); ?>
+<?php while ($relatedPosts->next()): ?><div><a href="<?php $relatedPosts->permalink(); ?>" title="<?php $relatedPosts->title(); ?>"><img class="cover" data-lazy-src="<?php echo get_ArticleThumbnail($relatedPosts);?>" src="<?php echo GetLazyLoad() ?>" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> <?php $relatedPosts->date('Y-m-d'); ?></div><div class="title"><?php $relatedPosts->title(); ?></div></div></a></div><?php endwhile; ?>
+</div>
+</div>
+<script>
+$(document).ready(function(){
+    const related = document.querySelector(".relatedPosts-list").innerHTML
+    if(related == '\n'){
+        $(".relatedPosts").remove()
+    }
+})
+</script>
+<?php endif?>
+<?php $this->need('comments.php'); ?>
 </div>
 <?php $this->need('post_sidebar.php'); ?>
 <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">

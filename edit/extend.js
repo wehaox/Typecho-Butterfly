@@ -463,16 +463,18 @@ $(".btn-ok").click(function(){
 // 插入视频
 $("#b-wmd-video").on("click",function() {
 $("#ui-datepicker-div").after(`
-    <div class="wmd-prompt-dialog">
+    <div class="wmd-prompt-dialog artplayer-dialog">
     <div><p><b>插入视频</b></p></div>
 <form>
 <p>视频标题：
     <input type="text" name="artplayer-title">
+    视频封面(jpg,png等格式，可留空)：
+    <input type="text" name="artplayer-poster">    
     视频URL链接：
     <input type="text" name="url">
-    字幕链接(推荐srt格式)：
+    字幕链接(推荐srt格式,可留空)：
     <input type="text" name="subtitle">    
-    视频分段(格式: 时间(s)|描述 如: 15|彩蛋)一行一个：    
+    视频分段(格式: 时间(s)|描述 如: 15|彩蛋一行一个,可留空)：    
     <textarea type="text" name="highlight"></textarea>
 </p>
     <input type="text" style="display:none;">
@@ -482,13 +484,13 @@ $("#ui-datepicker-div").after(`
 </div>
 `);
 $(".btn-ok").click(function(){
-    // let color = $('#select-color option:selected').val();
     let title = $('input[name="artplayer-title"]').val();
+    let poster = $('input[name="artplayer-poster"]').val();
     let url = $('input[name="url"]').val();
     let highlight = $('textarea[name="highlight"]').val();
     let subtitle = $('input[name="subtitle"]').val();
-    let artplayer = Math.random().toString(36).substr(2);
-    insertAtCursor('[video title="'+title+' " url="'+url+' " container="'+artplayer+' " subtitle="'+subtitle+' "]'+highlight+' [/video]\n');
+    let artplayer = Math.random().toString(36).substr(3);
+    insertAtCursor('[video title="'+title+' " url="'+url+' " container="b'+artplayer+'" subtitle="'+subtitle+' " poster="'+poster+' "]'+highlight+' [/video]\n');
 });
 });
 // 需要调用dialog样式的容器

@@ -1,5 +1,4 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-
 <div class="aside-content" id="aside-content">
    <div class="card-widget card-info">
 	 <div class="card-info-avatar is-center">
@@ -88,7 +87,7 @@
         <?php while($comments->next()): ?>
             <div class="aside-list-item">
                 <a href="<?php $comments->permalink(); ?>" class="thumbnail">
-                    <?php $email=$comments->mail; $imgUrl = getGravatar($email);echo '<img src="'.GetLazyLoad().'" data-lazy-src="'.$imgUrl.'" >'; ?>
+                    <?php $email=$comments->mail;$name=$comments->author; echo getGravatar($email,$name,null);?>
                 </a>
                 <div class="content">
                 <a class="comment" href="<?php $comments->permalink(); ?>">

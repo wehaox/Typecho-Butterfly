@@ -3,12 +3,12 @@
  * <span><script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>主题最新版本：<span id="latest">获取中...</span><script>$(document).ready(function() {$.get("https://typecho.wehao.ml", function(data) { $("#latest").text(data.ver);});});</script></span>
  * 这是 Typecho 版本的 butterfly 主题
  * 主题为移植至Typecho，你可以替换原butterfly主题的index.css文件
+ * 当前适配hexo-butterfly 4.2.0
  * <a href="https://www.wehaox.com">个人网站</a>
- * <a href="https://blog.wehaox.com/archives/typecho-butterfly.html">主题详细使用说明</a>
- * <a href="https://blog.wehaox.com/archives/blogtheme.html#cl-9">主题更新日志</a>
+ * <a href="https://blog.wehaox.com/archives/typecho-butterfly.html">主题文档</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.5.3
+ * @version 1.6.0
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -51,7 +51,7 @@ $uid = $this->user->uid; //登录时，显示用户各自的私密文章
 <?php  $this->need('header.php'); ?>
 <main class="layout" id="content-inner">
 <div class="recent-posts" id="recent-posts">
-	<?php while($this->next()): ?>
+    <?php while($this->next()): ?>
         <div class="recent-post-item" >
            <wehao class="post_cover">
                <a  class="article-title" href="<?php $this->permalink() ?>"><img class="post_bg" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" src="<?php echo GetLazyLoad() ?>" onerror="this.onerror=null;this.src='https://tva1.sinaimg.cn/large/007X0Rdyly1gpaaf55n1rj30ic09u0sw.jpg'"></a>
@@ -116,7 +116,7 @@ function ver() {console.log(`
     #    # #    #   #     #   #      #   #  #      #        #    
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                            1.5.3
+                            1.6.0
 ===================================================================
 `);}
 </script>

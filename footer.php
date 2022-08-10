@@ -93,12 +93,49 @@
 </div>
 <!--搜索end  -->
 <div class="js-pjax">
+<?php if (!empty($this->options->beautifyBlock) && in_array('showButterflyClock',$this->options->beautifyBlock)): ?>
+<script>
+function butterfly_clock_injector_config(){
+var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="https://<?php $this->options->jsdelivrLink() ?>/gh/tzy13755126023/BLOG_SOURCE/theme_f/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+var elist = 'null'.split(',');
+var cpage = location.pathname;
+var epage = 'all';
+var flag = 0;
+for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+}
+if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_injector_config();
+}
+else if (epage === cpage){
+    butterfly_clock_injector_config();
+} 
+</script>
+<script src="https://pv.sohu.com/cityjson"></script>
+<?php if($this->options->StaticFile == 'CDN' && $this->options->CDNURL == ''): ?>
+<link rel="stylesheet" href="https://<?php $this->options->jsdelivrLink() ?>/npm/hexo-butterfly-clock/lib/clock.min.css">
+<script src="https://<?php $this->options->jsdelivrLink() ?>/npm/hexo-butterfly-clock/lib/clock.min.js"></script>
+<?php elseif($this->options->StaticFile == 'CDN' && $this->options->CDNURL !== ''): ?>
+<link rel="stylesheet" href="<?php $this->options->CDNURL() ?>/static/css/clock.min.css">
+<script src="<?php $this->options->CDNURL() ?>/static/js/clock.min.js"></script>
+<?php else: ?>
+<link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/clock.min.css'); ?>">
+<script src="<?php $this->options->themeUrl('static/js/clock.min.js'); ?>"></script>
+<?php endif; ?>
+<?php endif ?>
 <?php $this->header('commentReply=1&description=0&keywords=0&generator=0&template=0&pingback=0&xmlrpc=0&wlw=0&rss2=0&rss1=0&antiSpam=0&atom'); ?>
 <?php if ($this->options->NewTabLink == 'on'): ?>
 <script>$(document).ready(function(){var a=document.getElementsByTagName("a");for(let i=0;i<a.length;i++){let domain=document.domain;let url=a[i].href;if(typeof(url)!="undefined"&&url.length!=0&&url.match(domain)==null&&url!="javascript:void(0);"){a[i].setAttribute("target","_BLANK")}}});</script>
 <?php endif; ?>        
 <?php if($this->is('index')): ?>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/wehao.js?v1.4.0'); ?>"></script>
+<script type="text/javascript" src="<?php $this->options->themeUrl('/js/letterAvatar.js?v1.6.0'); ?>"></script>
 <!--打字-->
 <?php if (is_array($this->options->beautifyBlock) && in_array('ShowTopimg',$this->options->beautifyBlock)): ?>
    <?php if(!empty($this->options->CustomSubtitle)): ?>

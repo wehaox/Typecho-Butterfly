@@ -8,8 +8,11 @@
     width: 100%;
     box-shadow: 0px -6px 11px -10px rgb(133 133 133 / 60%);
     z-index: 9;
+    transition-duration: .5s;
 }
-
+.typecho-option-submit:hover{
+    backdrop-filter: blur(.3px);
+}
 .typecho-option-submit li {
     display: flex;
     justify-content: center;

@@ -22,10 +22,10 @@
     <link rel="preconnect" href="//cdn.staticfile.org" />
     <!--<link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">-->
     <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.5.3'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.4.8'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.6.1'); ?>">
     <!--魔改美化-->
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?>
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.5.8'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.5.9'); ?>">
     <?php endif; ?>
     <!--图标库-->
     <link href="https://at.alicdn.com/t/font_3159629_5bvsat8p5l.css" rel="stylesheet" />
@@ -70,7 +70,7 @@
             }
         },
         translate: {
-            defaultEncoding: 1,
+            defaultEncoding: <?php $this->options->DefaultEncoding() ?>,
             translateDelay: 0,
             msgToTraditionalChinese: "繁",
             msgToSimplifiedChinese: "简"
@@ -322,7 +322,6 @@ var GLOBAL_CONFIG_SITE = {
     <?php $this->options->CustomHead() ?>
 </head>
 <body>
-
 <script src="<?php $this->options->themeUrl('/js/main.js?v1.6.0'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/utils.js?v1.5.0'); ?>"> </script>
 <?php if($this->options->StaticFile == 'CDN' && $this->options->CDNURL == ''): ?>

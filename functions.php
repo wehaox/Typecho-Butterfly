@@ -36,7 +36,7 @@ function themeConfig($form) {
         '博客静态资源加载方式',
         '介绍：无网络服务器或者CDN炸了可开启此项<br>
          将博客静态资源，如js、css、图片从服务器加载(会稍微增加服务器流量消耗)<br>
-         注意：你需要额外<a href="https://raw.githubusercontents.com/wehaox/CDN/main/static.zip">下载</a>静态资源放进主题根目录解压<br>
+         注意：你需要额外<a href="https://github.com/wehaox/Typecho-Butterfly/releases">下载</a>对应版本的静态资源放进主题根目录直接解压即可<br>
          此文件与下方的自定义CDN文件通用'
     );
     $form->addInput($StaticFile->multiMode());
@@ -45,7 +45,7 @@ function themeConfig($form) {
     $CDNURL = new Typecho_Widget_Helper_Form_Element_Text('CDNURL',NULL,NULL,
     '自定义CDNURL(由@origami-tech提供)',
     '需要选择博客静态资源加载方式为CDN加载 此项才会生效 且<b>本地加载>自定义CDNURL>jsdelivr源</b><br>
-    注意：你需要额外<a href="http://pub-gcdn.starsdust.cn/libs/butterfly/static/static.zip">下载</a>静态资源放CDN解压<br>不填则使用jsdelivrCDN<br>
+    注意：你需要额外<a href="https://github.com/wehaox/Typecho-Butterfly/releases">下载</a>静态资源放CDN解压<br>
     链接填写规则：填写static文件夹的父文件夹 无需最后的/ 例如 https://pub-gcdn.starsdust.cn/libs/butterfly '
     );
     $form->addInput($CDNURL);      
@@ -90,7 +90,7 @@ function themeConfig($form) {
         array('off' => '关闭（默认）', 'on' => '开启'),
         'off',
         '是否开启网站维护或密码访问',
-        '介绍：开启后，网站所有页面将会显示维护或者输入密码访问，登录用户不受限制'
+        '介绍： 下方密码留空则显示网站维护否则显示输入密码访问，登录用户不受限制'
     );
     $form->addInput($Defend->multiMode());
     
@@ -171,6 +171,39 @@ function themeConfig($form) {
         '
     );
     $form->addInput($EnableCommentsLogin->multiMode());
+
+    $ShowRelatedPosts = new Typecho_Widget_Helper_Form_Element_Select('ShowRelatedPosts',
+        array(
+            'flase' => '关闭（默认）',
+            'true' => '开启',
+        ),
+        'off',
+        '是否显示文章内相关推荐',
+        '介绍：开启后文章结束后会显示相关的推荐文章(根据文章标签推荐，不一定每篇文章都会显示)'
+    );
+    $form->addInput($ShowRelatedPosts->multiMode());
+    
+    $RelatedPostsNum = new Typecho_Widget_Helper_Form_Element_Select('RelatedPostsNum',
+        array(
+            '3' => '3篇（默认）',
+            '6' => '6篇',
+        ),
+        '3',
+        '相关推荐显示数量',
+        '介绍：最多显示3篇或者6篇相关推荐文章'
+    );
+    $form->addInput($RelatedPostsNum->multiMode());
+    
+    $DefaultEncoding = new Typecho_Widget_Helper_Form_Element_Select('DefaultEncoding',
+        array(
+            '2' => '简体（默认）',
+            '1' => '繁体',
+        ),
+        '2',
+        '博客默认字体',
+        '介绍：如果你使用繁体写文章请选择繁体'
+    );
+    $form->addInput($DefaultEncoding->multiMode());
     
     $EnablePjax = new Typecho_Widget_Helper_Form_Element_Select('EnablePjax',
     array(
@@ -230,8 +263,7 @@ function themeConfig($form) {
         '注意：需在开启打赏功能，该项才会显示 <br />
          格式：打赏名称 || 图片地址 <br />一行一个'
     );
-    $form->addInput($RewardInfo);    
-
+    $form->addInput($RewardInfo);
 
     $sidebarBlock = new Typecho_Widget_Helper_Form_Element_Checkbox('sidebarBlock', 
     array(
@@ -281,6 +313,7 @@ function themeConfig($form) {
     'showLineNumber' => _t('是否显示代码块行号'),
     'showSnackbar' => _t('是否显示主题以及简繁切换弹窗'),
     'showLazyloadBlur' => _t('是否开启懒加载模糊效果'),
+    'showButterflyClock' => _t('是否开启侧栏显示时钟'),
     ),
     array('ShowTopimg','PostShowTopimg','PageShowTopimg','showLineNumber','showSnackbar','showLazyloadBlur'), _t('美化选项'));
     $beautifyBlock->setAttribute('id', 'beautifyBlock');
@@ -313,8 +346,7 @@ function themeConfig($form) {
         '选择其中一个,需要开启是否显示主题以及简繁切换弹窗 '
     );
     $form->addInput($SnackbarPosition->multiMode());
-    
-    
+
     $CursorEffects = new Typecho_Widget_Helper_Form_Element_Select('CursorEffects',
         array(
             'off' => '关闭（默认）',
@@ -420,8 +452,6 @@ function themeConfig($form) {
     );
     $form->addInput($CustomBodyEnd);
 
-
-    
     $Customfooter = new Typecho_Widget_Helper_Form_Element_Textarea(
         'Customfooter',
         NULL,
@@ -1000,8 +1030,8 @@ function Bf_Mark($text)
 
 function ArtPlayer($text)
 {
-    $text = preg_replace_callback('/\[video title=\"(.*?)"\ url=\"(.*?)"\ container=\"(.*?)"\ subtitle=\"(.*?)"\](.*?)\[\/video\]/ism', function ($text) {
-            $t = explode("<br>", $text[5]);
+    $text = preg_replace_callback('/\[video title=\"(.*?)"\ url=\"(.*?)"\ container=\"(.*?)"\ subtitle=\"(.*?)"\ poster=\"(.*?)"\](.*?)\[\/video\]/ism', function ($text) {
+            $t = explode("<br>", $text[6]);
             for($i=0;$i<count($t);$i++){
 	        $a[] =  explode("|", $t[$i]);
             }
@@ -1011,7 +1041,8 @@ function ArtPlayer($text)
 	        unset($c[$i][0]);
 	        unset($c[$i][1]);
         }
-        $subtitle = json_encode($c,JSON_NUMERIC_CHECK); 
+        $c[0]['text']==null ? $highlight = '[]' : $highlight = json_encode($c,JSON_NUMERIC_CHECK);
+        $text[4] == ' '?$tooltip = '无字幕' : $tooltip = '默认字幕';
         return '
     <div class="iframe_video artplayer artplayer-'.$text[3].'"></div>
     <script>
@@ -1019,12 +1050,11 @@ function ArtPlayer($text)
             container: ".artplayer-'.$text[3].'",
             url: "'.$text[2].'",
             title: "'.$text[1].'",
+            poster: "'.$text[5].'",
             subtitle: {
                 url: "'.$text[4].'",
-                encoding: "utf-8",
             },            
             volume: 0.5,
-            isLive: false,
             muted: false,
             autoplay: false,
             pip: true,
@@ -1053,17 +1083,17 @@ function ArtPlayer($text)
             settings: [{
                 width: 200,
                 html: "字幕",
-                tooltip: "默认字幕",
+                tooltip: "'.$tooltip.'",
                 selector: [{
                     html: "Display",
-                    tooltip: "Show",
+                    tooltip: "显示",
                     switch: true,
-                    onSwitch: function(item) {
-                        item.tooltip = item.switch ? "Hide" : "Show";
-                        art.subtitle.show = !item.switch;
+                    onSwitch: function (item) {
+                        item.tooltip = item.switch ? "关闭" : "显示";
+                        '.$text[3].'.subtitle.show = !item.switch;
                         return !item.switch;
                     },
-                }, ],
+                }],
                 onSelect: function(item) {
                     art.subtitle.switch(item.url, {
                         name: item.html,
@@ -1071,7 +1101,7 @@ function ArtPlayer($text)
                     return item.html;
                 },
             }, ],
-            highlight: '.$subtitle.',
+            highlight: '.$highlight.'
         });
     </script>';
     }, $text);
@@ -1138,23 +1168,24 @@ function tagsNum($display = true)
     }
 }
 
+
 //获取Gravatar头像 QQ邮箱取用qq头像
-function getGravatar($email, $s = 96, $d = 'mp', $r = 'g', $img = false, $atts = array())
+function getGravatar($email,$name, $comments_a,$s = 96, $d = 'mp', $r = 'g')
 {
 preg_match_all('/((\d)*)@qq.com/', $email, $vai);
 if (empty($vai['1']['0'])) {
-    $url = 'https://gravatar.loli.net/avatar/';
-    $url .= md5(strtolower(trim($email)));
-    $url .= "?s=$s&d=$d&r=$r";
-    if ($img) {
-        $url = '<img src="' . $url . '"';
-        foreach ($atts as $key => $val)
-            $url .= ' ' . $key . '="' . $val . '"';
-        $url .= ' />';
-    }
+    // $hasGravatar = hasGravatar($email);
+    // if($hasGravatar){
+        $url = 'https://gravatar.loli.net/avatar/';
+        $url .= md5(strtolower(trim($email)));
+        $url .= "?s=$s&d=$d&r=$r";
+        $imga = '<img '.$comments_a.' src="'.GetLazyLoad().'" data-lazy-src="'.$url.'" >';
+    // }else{
+    //     $imga = '<img avatar="'.$name.'" color '.$comments_a.'>';
+    //     }
 }else{
     $qquser = $vai['1']['0'];
-    $db=Typecho_Db::get();    
+    $db=Typecho_Db::get();
     if (!array_key_exists('qqk', $db->fetchRow($db->select()->from('table.comments')))) {
         $db->query('ALTER TABLE `'.$db->getPrefix().'comments` ADD `qqk` varchar(64) DEFAULT NULL;');
     }
@@ -1169,9 +1200,10 @@ if (empty($vai['1']['0'])) {
         $url = 'https://q1.qlogo.cn/headimg_dl?dst_uin='.$qquser.'&spec=100';
     }else{
         $url = 'https://q1.qlogo.cn/g?b=qq&k='.$dbk.'&s=100';
+        $imga = '<img '.$comments_a.' src="'.GetLazyLoad().'" data-lazy-src="'.$url.'" >';
     }
 }
-return  $url;
+return  $imga;
 }
  
 // 获取浏览器信息
@@ -1381,7 +1413,7 @@ echo $commentClass;
 ?>">
     <div id="<?php $comments->theId(); ?>">
         <div class="comment-author">
-            <?php $email=$comments->mail; $imgUrl = getGravatar($email);echo '<img class="vimg" data-lazy-src="'.$imgUrl.'" width="45px" height="45px" style="border-radius: 50%;" src="'.GetLazyLoad().'">'; ?>
+        <?php $email=$comments->mail;$name=$comments->author; $comments_a = 'class="vimg" style="border-radius: 50%;"';echo getGravatar($email,$name,$comments_a);?>
             <cite class="vnick"><?php $comments->author(); ?></cite>
             <?php commentRank($comments, $comments->mail); ?>
             
@@ -1605,8 +1637,8 @@ class editor
 {
   public static function reset()
     {
-        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.5.3' . "'></script>";
-        echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css?v1.1.3' . "'>";
+        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.6.0' . "'></script>";
+        echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css?v1.6.0' . "'>";
     }
 
 }
