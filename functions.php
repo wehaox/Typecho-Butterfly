@@ -130,6 +130,10 @@ function themeConfig($form) {
     $announcement = new Typecho_Widget_Helper_Form_Element_Textarea('announcement', NULL, _t('这里是公告<br>'), _t('公告'), _t('在这里填入公告，它会显示在右侧栏的公告上,采用html写法'));
     $form->addInput($announcement);
     
+    $AD = new Typecho_Widget_Helper_Form_Element_Textarea('AD', NULL, _t('暂无广告<br>'), _t('广告'), _t('在这里填入广告，会显示在侧栏中公告栏的下方，支持html'));
+    $form->addInput($AD);
+	
+	
     $headerimg = new Typecho_Widget_Helper_Form_Element_Text('headerimg', NULL,_t('https://tva1.sinaimg.cn/large/007X0Rdyly1ghm1qiihrdj31hc0u07jk.jpg'), _t('主页顶图(banner image)'), _t('填入主页头图链接'));
     $form->addInput($headerimg);
     
