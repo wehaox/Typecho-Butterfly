@@ -14,8 +14,8 @@ Demo：[WeHao‘s Blog](https://blog.wehaox.com/)
 使用文档：[使用文档](https://blog.wehaox.com/archives/typecho-butterfly.html)
 
 ## 💻安装
-你最好从[Release](https://github.com/wehaox/Typecho-Butterfly/releases)  页面下载，code页下载代码可能更新遗漏导致页面出错  
-放进博客usr/theme内解压即可
+你最好从[Release](https://github.com/wehaox/Typecho-Butterfly/releases)  页面下载，code页下载代码可能更新遗漏或者更新提前导致页面出错  
+下载好后放进博客usr/theme内解压即可
 
 ## ⭐帮助主题发展(加快更新)
  - 如果你发现主题bug或者建议可以去[issues](https://github.com/wehaox/Typecho-Butterfly/issues)提交反馈
