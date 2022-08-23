@@ -1194,7 +1194,7 @@ if (empty($vai['1']['0'])) {
         $geturl = 'https://ptlogin2.qq.com/getface?&imgtype=1&uin='.$qquser;
         $qqurl = file_get_contents($geturl);
         $str1 = explode('sdk&k=', $qqurl);
-        $str2 = explode('&t=', isset($str1[1]));
+        $str2 = explode('&t=', $str1[1]);
         $k = $str2[0];
         $db->query($db->update('table.comments')->rows(array('qqk' => $k))->where('mail=?',$email));
         $url = 'https://q1.qlogo.cn/headimg_dl?dst_uin='.$qquser.'&spec=100';
