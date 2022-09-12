@@ -51,6 +51,9 @@
         <i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div>
     <div class="announcement_content"><?php $this->options->announcement() ?></div></div>
     <?php endif; ?>
+	<div class="card-widget card-announcement"><div class="item-headline">
+        <i class="fas fa-bullhorn card-announcement-animation"></i><span>广告</span></div>
+    <div class="announcement_content"><?php $this->options->AD() ?></div></div>
     <div class="sticky_layout">
     <?php if (!empty($this->options->sidebarBlock) && in_array('ShowRecentPosts', $this->options->sidebarBlock)): ?>
     <div class="card-widget card-recent-post">
