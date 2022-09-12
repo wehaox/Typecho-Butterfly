@@ -49,9 +49,12 @@
     <div class="card-widget card-announcement"><div class="item-headline">
         <i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div>
     <div class="announcement_content"><?php $this->options->announcement() ?></div></div>
-	<div class="card-widget card-announcement"><div class="item-headline">
-        <i class="fas fa-bullhorn card-announcement-animation"></i><span>广告</span></div>
-    <div class="announcement_content"><?php $this->options->AD() ?></div></div>
+<?php if (!empty($this->options->AD)): ?>
+    <div class="card-widget card-announcement">
+        <div class="item-headline"><span>广告</span></div>
+    <div class="announcement_content"><?php $this->options->AD() ?></div>
+    </div>
+<?php endif; ?>    
 <div class="sticky_layout">
     <div class="card-widget" id="card-toc">
   <div class="item-headline">

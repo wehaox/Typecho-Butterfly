@@ -126,6 +126,9 @@ $("#wmd-button-row #wmd-fullscreen-button").before(`
 <li class="wmd-button custom" id="b-wmd-video" title="插入视频">
   <svg t="1657445029879" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7626" width="200" height="200"><path d="M374.6 636.5c4.4 0 8.5-1.2 12.1-3.3l171.7-100c8-3.6 13.6-11.9 13.6-21.5 0-8.8-4.8-16.6-11.9-20.7l-167.8-97.8c-4.3-5-10.7-8.1-17.7-8.1-13.1 0-23.6 10.7-23.6 23.8v1.3l-0.3 0.2 0.4 199.8c-0.1 0.8-0.1 1.6-0.1 2.5 0 13.2 10.6 23.8 23.6 23.8z" fill="#707070" p-id="7627"></path><path d="M64.7 586.3a32.2 32.1 0 1 0 64.4 0 32.2 32.1 0 1 0-64.4 0Z" fill="#707070" p-id="7628"></path><path d="M960 398.3c0.1-1.6 0.2-3.2 0.2-4.8 0-35-28.5-63.3-63.6-63.3-11.7 0-22.7 3.2-32.2 8.7l-0.5-0.3-31.5 18.2v-64.7c-0.1-73.1-59.9-133-133.1-133H197.4c-73.1 0-133 59.8-133 133v165.8h0.2c0 17.7 14.4 32.1 32.2 32.1s32.2-14.4 32.2-32.1h0.2V287c0-35.2 28.8-64 64-64h510.2c35.2 0 64 28.8 64 64v448.9c0 35.2-28.8 64-64 64H193.3c-35.2 0-64-28.8-64-64v-21.4c0-17.7-14.4-32.1-32.2-32.1-17.8 0-32.2 14.4-32.2 32.1h-0.4v15.3c0 73.2 59.9 133 133 133h501.9c73.2 0 133-59.8 133-133v-64.1l33.1 19.1 0.1-0.1c9.2 5.1 19.8 8 31 8 35.1 0 63.6-28.4 63.6-63.3 0-1.6-0.1-3.2-0.2-4.8V398.3z m-63.6 205.1c-0.3 7.8-6.9 14.1-15 14.1-2.7 0-5.3-0.7-7.5-2l-41.5-23.7V430.1l40.9-23.2c2.3-1.5 5.1-2.3 8.1-2.3 8.3 0 15 6.6 15 14.6v184.2z" fill="#707070" p-id="7629"></path></svg>
 </li>
+<li class="wmd-button custom" id="b-wmd-cfont" title="插入自定义文字">
+    <svg t="1662034634310" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3275" width="200" height="200"><path d="M840.041268 326.208527l-38.23072 5.392824c-11.082406-53.866838-20.333094-80.820724-33.871435-98.779747-18.470677-26.329668-34.516118-34.853809-122.633015-34.853809l-91.596138 0 0 555.051515c0 89.211834 8.994861 99.015108 122.397654 105.001449l0 35.32453-326.270948 0 0-35.32453c109.104907-5.986341 122.070196-14.602579 122.070196-105.001449l0-555.051515-86.039585 0c-88.168062 0-112.215758 8.524141-126.992299 33.656541-12.903891 19.156292-22.185278 50.2955-35.733852 99.977016l-37.565571 0c4.297886-66.453505 11.082406-131.177622 13.538341-194.029088l25.285896 0c17.242709 25.1324 32.019251 19.821441 64.089667 19.821441l457.878358 0c30.821983 0 37.565571 1.115404 54.849212-19.821441l27.117614 0C828.334645 190.855816 833.891198 263.960811 840.041268 326.208527z" p-id="3276" fill="#515151"></path></svg>
+</li>
 <li class="wmd-spacer wmd-spacer4" id="wmd-spacer4"></li>
 <li class="wmd-button custom" id="b-wmd-md-draft" title="保存草稿">
   <svg t="1630841483224" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10796" width="64" height="64"><path d="M363.175 705.746l241.359-241.358c16.594-16.594 16.594-43.747 0-60.34s-43.747-16.594-60.34 0L302.835 645.407c-16.592 16.594-16.592 43.747 0 60.339 16.594 16.593 43.747 16.593 60.34 0z" p-id="10797" fill="#707070"></path><path d="M981.333 922.848H387.434l442.898-442.899 46.99-46.988 90.964-90.965c33.188-33.186 33.188-87.491 0-120.679L787.266 40.298c-33.186-33.188-87.493-33.188-120.679 0l-90.965 90.964-60.34 60.34L43.075 663.808l-30.168 30.17 0.036 0.036C5.21 701.747 0.408 712.415 0.408 724.148v237.354C0.28 962.843 0 964.141 0 965.515c0 11.837 4.903 22.569 12.757 30.319 7.75 7.854 18.481 12.759 30.318 12.759 1.385 0 2.694-0.281 4.047-0.411h934.212c23.467 0 42.667-19.2 42.667-42.667-0.001-23.466-19.201-42.667-42.668-42.667zM85.741 827.154l95.694 95.694H85.741v-95.694z m611.016-696.348c16.592-16.592 43.747-16.592 60.339 0l120.681 120.681c16.594 16.594 16.592 43.747 0 60.339l-60.795 60.795-181.02-181.019 60.795-60.796zM133.585 693.978l442.036-442.036L756.64 432.961 314.604 874.997l-30.17 30.17-30.17-30.17-120.679-120.678-30.17-30.17 30.17-30.171z" p-id="10798" fill="#707070"></path></svg>
@@ -493,8 +496,36 @@ $(".btn-ok").click(function(){
     insertAtCursor('[video title="'+title+' " url="'+url+' " container="b'+artplayer+'" subtitle="'+subtitle+' " poster="'+poster+' "]'+highlight+' [/video]\n');
 });
 });
+
+//插入自定义文字
+$("#b-wmd-cfont").on("click",function() {
+$("#ui-datepicker-div").after(`
+    <div class="wmd-prompt-dialog">
+    <div><p><b>插入自定义文字</b></p></div>
+<form>
+<p>文字大小(px)：
+    <input type="text" name="font-size">
+    文字颜色(颜色值)：
+    <input type="text" name="color">    
+    输入文字：    
+    <textarea type="text" name="Text"></textarea>
+</p>
+    <input type="text" style="display:none;">
+    <button type="button" class="btn btn-s primary btn-ok">确定</button>
+    <button type="button" class="btn btn-s btn-cancel">取消</button>
+</form>
+</div>
+`);
+$(".btn-ok").click(function(){
+    let fontSize = $('input[name="font-size"]').val();
+    let color = $('input[name="color"]').val();
+    let text = $('textarea[name="Text"]').val();
+    insertAtCursor('[font size="'+fontSize+'" color="'+color+'"]'+text+'[/font]\n');
+});
+});
+
 // 需要调用dialog样式的容器
-$("#b-wmd-linecode,#b-wmd-code,#b-wmd-reply,#b-wmd-nhtml,#b-wmd-wcheakbox,#b-wmd-inline-tag,#b-wmd-radio,#b-wmd-md-link,#b-wmd-md-img,#b-wmd-mark,#b-wmd-btn,#b-wmd-note,#b-wmd-hide-block,#b-wmd-hide-inline,#b-wmd-hide-toggle,#b-wmd-note-ico,#b-wmd-md-explain,#b-wmd-title,#b-wmd-video").click(function(){
+$("#b-wmd-linecode,#b-wmd-code,#b-wmd-reply,#b-wmd-nhtml,#b-wmd-wcheakbox,#b-wmd-inline-tag,#b-wmd-radio,#b-wmd-md-link,#b-wmd-md-img,#b-wmd-mark,#b-wmd-btn,#b-wmd-note,#b-wmd-hide-block,#b-wmd-hide-inline,#b-wmd-hide-toggle,#b-wmd-note-ico,#b-wmd-md-explain,#b-wmd-title,#b-wmd-video,#b-wmd-cfont").click(function(){
 var y = document.createElement("div");
 let height = document.body.scrollHeight;
 z = y.style;

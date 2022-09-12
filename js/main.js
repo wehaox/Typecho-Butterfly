@@ -448,6 +448,7 @@ document.addEventListener('DOMContentLoaded', function () {
    */
   const rightSideFn = {
     switchReadMode: () => { // read-mode
+      $('.code-toolbar').addClass('read-fa')
       const $body = document.body
       $body.classList.add('read-mode')
       const newEle = document.createElement('button')
@@ -457,6 +458,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       function clickFn () {
         $body.classList.remove('read-mode')
+        $('.code-toolbar').removeClass('read-fa')
         newEle.remove()
         newEle.removeEventListener('click', clickFn)
       }

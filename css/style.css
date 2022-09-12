@@ -355,7 +355,8 @@ pre code {
     margin:4.4px 0.px .4px 1px;
     padding:0;
     max-height:200px;
-    padding:8px 8px 8px 42px!important;;
+    padding:8px 8px 8px 42px!important;
+    visibility:visible;
 }
 .expand-bcode{
     max-height:100%!important;
@@ -545,6 +546,13 @@ code[class*="language-"], pre[class*="language-"] {
     overflow: auto!important;
 }
 .OwO .OwO-body .OwO-bar{border:none!important}
+
+
+.read-fa {
+    visibility:hidden;
+    display: inline;
+}
+
 /*已移除内容*/
 /*#article-container.post-content ul>li:not(.tab):before {*/
 /*    top: 0.78em;*/

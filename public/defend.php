@@ -5,7 +5,8 @@ if (isset($_POST['pwd'])){
 		exit ('{"status": "200","info":"密码正确,芝麻开门！"}'); 
 	}
 }
-if(isset($_COOKIE["ThemePassword"])!==$this->options->ThemePassword && $this->options->Defend === 'on' || isset($_COOKIE["ThemePassword"])==""&& $this->options->Defend === 'on' ){
+if(isset($_COOKIE["ThemePassword"]) && $_COOKIE["ThemePassword"] !==$this->options->ThemePassword && $this->options->Defend === 'on' 
+    || empty($_COOKIE["ThemePassword"]) && $this->options->Defend === 'on' ){
 ?>
 
 <html data-theme="light">
@@ -19,7 +20,7 @@ if(isset($_COOKIE["ThemePassword"])!==$this->options->ThemePassword && $this->op
     </head>
 <body _c_t_common="1">
     <link rel="stylesheet" href="//unpkg.com/element-plus/dist/index.css" />
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.23/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.23/dist/vue.global.prod.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="//unpkg.com/element-plus"></script>
     <div id="web_bg"></div>
@@ -38,8 +39,15 @@ if(isset($_COOKIE["ThemePassword"])!==$this->options->ThemePassword && $this->op
           <input style="text-align: center" type="password" class="text" placeholder="或在此输入密码访问" v-model="pwd" autocomplete="off">
           <input type="submit" class="submit" value="提交" @click="send">
           </form>
+      <?php endif ?>
+    </div>
+  </div>
+</div>
+
+
+
 <script>
-   const passwordApp = {
+const passwordApp = {
        data() {
            return {
                pwd: ''
@@ -81,10 +89,8 @@ const app = Vue.createApp(passwordApp);
 app.use(ElementPlus);
 app.mount("#error-wrap");
 </script>
-      <?php endif ?>
-    </div>
-  </div>
-</div>
+
+
 <div>
 </div>
 </div>

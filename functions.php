@@ -130,10 +130,9 @@ function themeConfig($form) {
     $announcement = new Typecho_Widget_Helper_Form_Element_Textarea('announcement', NULL, _t('这里是公告<br>'), _t('公告'), _t('在这里填入公告，它会显示在右侧栏的公告上,采用html写法'));
     $form->addInput($announcement);
     
-    $AD = new Typecho_Widget_Helper_Form_Element_Textarea('AD', NULL, _t('暂无广告<br>'), _t('广告'), _t('在这里填入广告，会显示在侧栏中公告栏的下方，支持html'));
+    $AD = new Typecho_Widget_Helper_Form_Element_Textarea('AD', NULL, _t('暂无广告<br>'), _t('广告(由@yzl3014提供)'), _t('在这里填入广告，填入后自动显示在侧栏中公告栏的下方，支持html'));
     $form->addInput($AD);
-	
-	
+    
     $headerimg = new Typecho_Widget_Helper_Form_Element_Text('headerimg', NULL,_t('https://tva1.sinaimg.cn/large/007X0Rdyly1ghm1qiihrdj31hc0u07jk.jpg'), _t('主页顶图(banner image)'), _t('填入主页头图链接'));
     $form->addInput($headerimg);
     
@@ -911,6 +910,7 @@ function ParseCode($text)
     $text = inline_Tag($text);
     $text = Bf_Radio($text);
     $text = Bf_Mark($text);
+    $text = Font($text);
     $text = ArtPlayer($text);    
     $text = PostImage($text);
     return $text;
@@ -1028,6 +1028,14 @@ function Bf_Mark($text)
 {
     $text = preg_replace_callback('/\[label color=\"(.*?)\".*?\](.*?)\[\/label\]/ism', function ($text) {
        return '<mark class="hl-label '. $text[1] .'">'. $text[2] .'</mark>';
+    }, $text);
+    return $text;
+}
+
+function Font($text)
+{
+    $text = preg_replace_callback('/\[font size=\"(.*?)"\ color=\"(.*?)"\](.*?)\[\/font\]/ism', function ($text) {
+       return '<font style="font-size: '. $text[1] .'px;color:'. $text[2] .'">'. $text[3] .'</font>';
     }, $text);
     return $text;
 }
@@ -1198,9 +1206,11 @@ if (empty($vai['1']['0'])) {
         $geturl = 'https://ptlogin2.qq.com/getface?&imgtype=1&uin='.$qquser;
         $qqurl = file_get_contents($geturl);
         $str1 = explode('sdk&k=', $qqurl);
-        $str2 = explode('&t=', $str1[1]);
-        $k = $str2[0];
-        $db->query($db->update('table.comments')->rows(array('qqk' => $k))->where('mail=?',$email));
+        if(isset($str1[1])){
+            $str2 = explode('&t=',$str1[1]);
+            $k = $str2[0];
+            $db->query($db->update('table.comments')->rows(array('qqk' => $k))->where('mail=?',$email));
+        }
         $url = 'https://q1.qlogo.cn/headimg_dl?dst_uin='.$qquser.'&spec=100';
     }else{
         $url = 'https://q1.qlogo.cn/g?b=qq&k='.$dbk.'&s=100';
@@ -1302,7 +1312,13 @@ function getOs($agent)
         else if (preg_match('/android 11/i', $agent)) {
             $os = '&nbsp;&nbsp;<i class="fab fa-android"></i>&nbsp;&nbsp;Android 11&nbsp;/&nbsp;';
         }
-    else{
+        else if (preg_match('/android 12/i', $agent)) {
+            $os = '&nbsp;&nbsp;<i class="fab fa-android"></i>&nbsp;&nbsp;Android 12&nbsp;/&nbsp;';
+        }
+        else if (preg_match('/android 13/i', $agent)) {
+            $os = '&nbsp;&nbsp;<i class="fab fa-android"></i>&nbsp;&nbsp;Android 13&nbsp;/&nbsp;';
+        }        
+        else{
             $os = '&nbsp;&nbsp;<i class="fab fa-android"></i>&nbsp;&nbsp;Android&nbsp;/&nbsp;';
     }
     }
@@ -1467,6 +1483,9 @@ function printTag($that) { ?>
 function onlinePeople(){
    $online_log = "usr/themes/butterfly/online.dat"; //保存人数的文件到根目录,
    $timeout = 30;//30秒内没动作者,认为掉线
+   if(!file_exists($online_log) ){
+       fopen($online_log, "w");
+   }
    $entries = file($online_log);
    $temp = array();
    for ($i=0;$i<count($entries);$i++){
@@ -1614,7 +1633,7 @@ function get_last_update(){
     $create = $db->fetchRow($db->select('created')->from('table.contents')->where('table.contents.type=? and status=?',$type,$status)->order('created',Typecho_Db::SORT_DESC)->limit($num));
     $update = $db->fetchRow($db->select('modified')->from('table.contents')->where('table.contents.type=? and status=?',$type,$status)->order('modified',Typecho_Db::SORT_DESC)->limit($num));
     if($create>=$update){
-      echo Typecho_I18n::dateWord($create['created'], $now);
+      echo Typecho_I18n::dateWord(isset($create['created']), $now);
     }else{
         $lastday = floor(date($now-$update['modified'])/86400);
         if($lastday>365){$lastyear = floor(date($now-$update['modified'])/30758400);echo $lastyear . " 年前" ;
@@ -1641,8 +1660,8 @@ class editor
 {
   public static function reset()
     {
-        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.6.0' . "'></script>";
-        echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css?v1.6.0' . "'>";
+        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.6.3' . "'></script>";
+        echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css?v1.6.3' . "'>";
     }
 
 }
