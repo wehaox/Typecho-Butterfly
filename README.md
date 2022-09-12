@@ -1,6 +1,7 @@
 # Typecho-Butterfly
 ![master version](https://img.shields.io/github/v/release/wehaox/Typecho-Butterfly?sort=semver)
 ![typecho version](https://img.shields.io/badge/Tyepcho-1.2.0-green)
+![php version](https://img.shields.io/badge/PHP-7.4+-9cf)
 ![license](https://img.shields.io/github/license/wehaox/Typecho-Butterfly?color=FF5531)  
 
 这是 Typecho 版本的 butterfly 主题
