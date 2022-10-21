@@ -22,7 +22,7 @@
     <link rel="preconnect" href="//cdn.staticfile.org" />
     <!--<link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">-->
     <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.5.3'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.6.4'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.7.0'); ?>">
     <!--魔改美化-->
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?>
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.5.9'); ?>">
@@ -118,7 +118,8 @@
         },
         isPhotoFigcaption: !1,
         islazyload: !0,
-        isAnchor: !0
+        isAnchor: !0,
+        coverPosition: '<?php $this->options->coverPosition() ?>',
     }
     var saveToLocal = {
       set: function setWithExpiry(key, value, ttl) {
@@ -324,6 +325,8 @@ var GLOBAL_CONFIG_SITE = {
 <body>
 <script src="<?php $this->options->themeUrl('/js/main.js?v1.6.0'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/utils.js?v1.5.0'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/js/tw_cn.js?v1.7.0'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/js/local-search.js'); ?>"> </script>
 <?php if($this->options->StaticFile == 'CDN' && $this->options->CDNURL == ''): ?>
 <script src="https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-y/instant.page/5.1.0/instantpage.min.js" type="module"> </script>
@@ -332,8 +335,6 @@ var GLOBAL_CONFIG_SITE = {
 <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-y/vanilla-lazyload/17.3.1/lazyload.iife.min.js"></script>
 <script src="https://<?php $this->options->jsdelivrLink() ?>/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
 <script src="https://<?php $this->options->jsdelivrLink() ?>/gh/DIYgod/OwO@master/dist/OwO.min.js"></script>
-<script src="https://<?php $this->options->jsdelivrLink() ?>/gh/wehaox/Typecho-Butterfly@latest/js/local-search.js"> </script>
-<script src="https://<?php $this->options->jsdelivrLink() ?>/gh/wehaox/Typecho-Butterfly@latest/js/tw_cn.js"> </script>
 <script src="https://<?php $this->options->jsdelivrLink() ?>/npm/artplayer/dist/artplayer.js"></script>
 <?php elseif($this->options->StaticFile == 'CDN' && $this->options->CDNURL !== ''): ?>
 <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/jquery/3.6.0/jquery.min.js"></script>
@@ -343,8 +344,6 @@ var GLOBAL_CONFIG_SITE = {
 <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-y/vanilla-lazyload/17.3.1/lazyload.iife.min.js"></script>
 <script src="<?php $this->options->CDNURL() ?>/static/js/fancybox.umd.js"></script>
 <script src="<?php $this->options->CDNURL() ?>/static/js/OwO.min.js"></script>
-<script src="<?php $this->options->CDNURL() ?>/static/js/local-search.js"> </script>
-<script src="<?php $this->options->CDNURL() ?>/static/js/tw_cn.js"> </script>
 <script src="<?php $this->options->CDNURL() ?>/static/js/artplayer.js"> </script>
 <?php else: ?>
 <script src="<?php $this->options->themeUrl('/static/js/jquery.min.js'); ?>"></script>
@@ -354,8 +353,6 @@ var GLOBAL_CONFIG_SITE = {
 <script src="<?php $this->options->themeUrl('/static/js/lazyload.iife.min.js'); ?>"></script>
 <script src="<?php $this->options->themeUrl('/static/js/fancybox.umd.js'); ?>"></script>
 <script src="<?php $this->options->themeUrl('/static/js/OwO.min.js'); ?>"></script>
-<script src="<?php $this->options->themeUrl('/js/local-search.js'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/tw_cn.js'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/static/js/artplayer.js'); ?>"> </script>
 <?php endif; ?>
 <!--[if lt IE 8]>

@@ -27,6 +27,9 @@ function themeConfig($form) {
     $sticky_cids->setAttribute('id', 'cids');
     $form->addInput($sticky_cids);
     
+    $slide_cids = new Typecho_Widget_Helper_Form_Element_Text('slide_cids', NULL, NULL,'主页轮播图文章的 cid', '填入自动开启，填入方式同上，<b style="color:red">注意：填入错误cid会导致页面出错</b>');
+    $form->addInput($slide_cids);    
+    
     $StaticFile = new Typecho_Widget_Helper_Form_Element_Select('StaticFile',
         array(
             'CDN' => 'CDN加载(默认)',
@@ -48,7 +51,7 @@ function themeConfig($form) {
     注意：你需要额外<a href="https://github.com/wehaox/Typecho-Butterfly/releases">下载</a>静态资源放CDN解压<br>
     链接填写规则：填写static文件夹的父文件夹 无需最后的/ 例如 https://pub-gcdn.starsdust.cn/libs/butterfly '
     );
-    $form->addInput($CDNURL);      
+    $form->addInput($CDNURL);
     
     $jsdelivrLink = new Typecho_Widget_Helper_Form_Element_Select('jsdelivrLink',
         array(
@@ -130,7 +133,7 @@ function themeConfig($form) {
     $announcement = new Typecho_Widget_Helper_Form_Element_Textarea('announcement', NULL, _t('这里是公告<br>'), _t('公告'), _t('在这里填入公告，它会显示在右侧栏的公告上,采用html写法'));
     $form->addInput($announcement);
     
-    $AD = new Typecho_Widget_Helper_Form_Element_Textarea('AD', NULL, _t('暂无广告<br>'), _t('广告(由@yzl3014提供)'), _t('在这里填入广告，填入后自动显示在侧栏中公告栏的下方，支持html'));
+    $AD = new Typecho_Widget_Helper_Form_Element_Textarea('AD', NULL, NULL, _t('广告(由@yzl3014提供)'), _t('在这里填入广告，填入后自动显示在侧栏中公告栏的下方，支持html'));
     $form->addInput($AD);
     
     $headerimg = new Typecho_Widget_Helper_Form_Element_Text('headerimg', NULL,_t('https://tva1.sinaimg.cn/large/007X0Rdyly1ghm1qiihrdj31hc0u07jk.jpg'), _t('主页顶图(banner image)'), _t('填入主页头图链接'));
@@ -208,6 +211,21 @@ function themeConfig($form) {
     );
     $form->addInput($DefaultEncoding->multiMode());
     
+    $GravatarSelect = new Typecho_Widget_Helper_Form_Element_Select('GravatarSelect',
+    array(
+        "https://gravatar.loli.net/avatar/" => 'loli（默认）',
+        'https://gravatar.helingqi.com/wavatar/' => '禾令奇',
+        "https://sdn.geekzu.org/avatar/" => '极客族',
+        "https://cdn.sep.cc/avatar/" => '九月的风',
+        "https://gravatar.com/avatar/" => '官方源(被墙)',
+        ),
+        'loli',
+        'gravatar源选择',
+        '介绍：评论区头像gravatar源'
+    );
+    $GravatarSelect->setAttribute('id', 'gravatarlist');
+    $form->addInput($GravatarSelect->multiMode());
+    
     $EnablePjax = new Typecho_Widget_Helper_Form_Element_Select('EnablePjax',
     array(
         'off' => '关闭（默认）',
@@ -278,7 +296,8 @@ function themeConfig($form) {
     'ShowArchive' => _t('显示归档'),
     'ShowWebinfo' => _t('显示网站咨询'),
     'ShowOther' => _t('显示其它杂项'),
-    'ShowMobileSide' => _t('手机端显示侧栏')
+    'ShowMobileSide' => _t('手机端显示侧栏'),
+    'ShowWeiboHot' => _t('显示微博热搜')
     ),
     array('ShowAnnounce','ShowRecentPosts', 'ShowRecentComments', 'ShowCategory','ShowTag', 'ShowArchive', 'ShowWebinfo', 'ShowOther','ShowMobileSide'), _t('侧边栏显示'));
     $sidebarBlock->setAttribute('id', 'aside');
@@ -294,6 +313,10 @@ function themeConfig($form) {
         '介绍：侧栏网站咨询模块在线人数统计,防止某些虚拟主机无法开启导致500错误'
     );
     $form->addInput($ShowOnlinePeople->multiMode());
+    
+    $sidderArchiveNum = new Typecho_Widget_Helper_Form_Element_Text('sidderArchiveNum', NULL, _t('5'),  _t('侧栏归档显示行数'),_t('默认为5'));
+    $form->addInput($sidderArchiveNum);
+    
     // 文章侧边栏设置
     $PostSidebarBlock = new Typecho_Widget_Helper_Form_Element_Checkbox('PostSidebarBlock', 
     array(
@@ -301,7 +324,9 @@ function themeConfig($form) {
     // 'ShowAnnounce' => _t('显示公告'),
     'ShowRecentPosts' => _t('显示最新文章'),
     'ShowWebinfo' => _t('显示网站咨询'),
-    'ShowOther' => _t('显示其它杂项')),
+    'ShowOther' => _t('显示其它杂项'),
+    'ShowWeiboHot' => _t('显示微博热搜')
+    ),
     array('ShowRecentPosts', 'ShowWebinfo', 'ShowOther'), _t('文章侧边栏显示'),_t('说明:单独设置文章内侧栏'));
     $form->addInput($PostSidebarBlock->multiMode());
 
@@ -321,6 +346,24 @@ function themeConfig($form) {
     array('ShowTopimg','PostShowTopimg','PageShowTopimg','showLineNumber','showSnackbar','showLazyloadBlur'), _t('美化选项'));
     $beautifyBlock->setAttribute('id', 'beautifyBlock');
     $form->addInput($beautifyBlock->multiMode());
+    
+    // 封面位置
+    $coverPosition = new Typecho_Widget_Helper_Form_Element_Select('coverPosition',
+        array(
+            'left' => '靠左',
+            'cross' => '交叉(默认)',
+            'right' => '靠右',
+        ),
+        'cross',
+        '主页文章列表封面显示位置',
+        '个人还是还是觉得交叉好看'
+    );
+    $form->addInput($coverPosition->multiMode());    
+    
+    $qweather_key = new Typecho_Widget_Helper_Form_Element_Text('qweather_key', NULL, null,  _t('和风天气key'),_t('<a href="https://github.com/anzhiyu-c/hexo-butterfly-clock-anzhiyu/#安装">按照教程获取key</a>'));
+    $gaud_map_key = new Typecho_Widget_Helper_Form_Element_Text('gaud_map_key', NULL, null,  _t('高得地图web服务key'), _t('侧栏显示时钟用到的key，同上'));
+	$form->addInput($qweather_key);
+	$form->addInput($gaud_map_key);
     
     $ShowLive2D = new Typecho_Widget_Helper_Form_Element_Select('ShowLive2D',
     array(
@@ -523,8 +566,7 @@ function themeConfig($form) {
     
     $secretKey = new Typecho_Widget_Helper_Form_Element_Text('secretKey', NULL, null, _t('Serect Key for reCAPTCHAv2:'), _t('填写两处密钥评论区自动开启谷歌验证码'));
 	$form->addInput($siteKey);
-	$form->addInput($secretKey);    
-    
+	$form->addInput($secretKey);
     
     
 $db = Typecho_Db::get();
@@ -1188,7 +1230,8 @@ preg_match_all('/((\d)*)@qq.com/', $email, $vai);
 if (empty($vai['1']['0'])) {
     // $hasGravatar = hasGravatar($email);
     // if($hasGravatar){
-        $url = 'https://gravatar.loli.net/avatar/';
+        // $url = 'https://gravatar.loli.net/avatar/';
+        $url = Helper::options()->GravatarSelect;
         $url .= md5(strtolower(trim($email)));
         $url .= "?s=$s&d=$d&r=$r";
         $imga = '<img '.$comments_a.' src="'.GetLazyLoad().'" data-lazy-src="'.$url.'" >';
@@ -1555,26 +1598,6 @@ class myyodux {
       return $text;
     }
 }
-function ParseAvatar($mail, $re = 0, $id = 0){
-    $a = Typecho_Widget::widget('Widget_Options')->JGravatars;
-    $b = 'https://gravatar.helingqi.com/wavatar/';
-    $c = strtolower($mail);
-    $d = md5($c);
-    $f = str_replace('@qq.com', '', $c);
-    if (strstr($c, "qq.com") && is_numeric($f) && strlen($f) < 11 && strlen($f) > 4) {
-        $g = '//thirdqq.qlogo.cn/g?b=qq&nk=' . $f . '&s=100';
-        if ($id > 0) {
-            $g = Helper::options()->rootUrl . '?id=' . $id . '" data-type="qqtx';
-        }
-    } else {
-        $g = $b . $d . '?d=mm';
-    }
-    if ($re == 1) {
-        return $g;
-    } else {
-        echo $g;
-    }
-}
  
 /**
 * 显示上一篇
@@ -1743,4 +1766,54 @@ function comments_filter($comment) {
         }
     }
     return $comment;
+}
+
+// 微博热搜
+function weibohot(){
+$api = file_get_contents('https://weibo.com/ajax/side/hotSearch');
+$data = json_decode($api,true)['data']['realtime'];
+
+$jyzy = array(
+	'电影' => '影',
+	'剧集' => '剧',
+	'综艺' => '综',
+	'音乐' => '音',
+	'盛典' => '盛',
+);
+
+$hotness = array(
+    '爆' => 'weibo-boom',
+    '热' => 'weibo-hot',
+    '沸' => 'weibo-boil',
+    '新' => 'weibo-new',
+    '荐' => 'weibo-recommend',
+    '音' => 'weibo-jyzy',
+    '影' => 'weibo-jyzy',
+    '剧' => 'weibo-jyzy',
+    '综' => 'weibo-jyzy',
+    '盛' => 'weibo-jyzy',
+    );
+
+foreach($data as $item){
+	$hot = '荐';
+	if(isset($item['is_ad'])){
+		continue;
+	}
+	if(isset($item['is_boom'])){
+		$hot = '爆';
+	}
+	if(isset($item['is_hot'])){
+		$hot = '热';
+	}
+	if(isset($item['is_fei'])){
+		$hot = '沸';
+	}
+	if(isset($item['is_new'])){
+		$hot = '新';
+	}
+	if(isset($item['flag_desc'])){
+		$hot = $jyzy[$item['flag_desc']];
+	}
+	echo '<div class="weibo-list-item"><div class="weibo-hotness '.$hotness[$hot].'">'.$hot.'</div><span class="weibo-title"><a title="'.$item['note'].'" href="https://s.weibo.com/weibo?q=%23' . $item['word'] . '%23" target="_blank" rel="external nofollow noreferrer" style="color:#a08ed5">'.$item['note'].'</a></span><div class="weibo-num"><span>'.$item['num'].'</span></div></div>';
+    }
 }

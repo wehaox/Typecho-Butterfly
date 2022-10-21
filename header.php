@@ -3,7 +3,6 @@
     <div id="web_bg"></div>
 <div class="page" id="body-wrap">
 <?php if (is_array($this->options->beautifyBlock) && in_array('ShowTopimg',$this->options->beautifyBlock)): ?>
-<style>#page-header:not(.not-top-img):before {background-color: rgba(0,0,0,0)!important;}</style>    
 <header class="full_page" id="page-header"  style="background-image: url(<?php $this->options->headerimg() ?>)">
         <div id="site-info">
             <h1 id="site-title"><?php $this->options->description() ?></h1>

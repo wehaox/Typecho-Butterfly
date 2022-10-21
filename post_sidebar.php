@@ -50,9 +50,9 @@
         <i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div>
     <div class="announcement_content"><?php $this->options->announcement() ?></div></div>
 <?php if (!empty($this->options->AD)): ?>
-    <div class="card-widget card-announcement">
-        <div class="item-headline"><span>广告</span></div>
-    <div class="announcement_content"><?php $this->options->AD() ?></div>
+    <div class="card-widget">
+        <div class="item-headline"><i class="fa-solid fa-rectangle-ad"></i><span>广告</span></div>
+    <div><?php $this->options->AD() ?></div>
     </div>
 <?php endif; ?>    
 <div class="sticky_layout">
@@ -68,6 +68,23 @@
     </ol>
   </div>
 </div>
+<!--微博热搜-->
+<?php if (!empty($this->options->PostSidebarBlock) && in_array('ShowWeiboHot', $this->options->PostSidebarBlock)): ?>
+<div class="card-widget card-weibo wow animate__zoomIn" data-wow-duration="2s" data-wow-delay="200ms" data-wow-offset="30" data-wow-iteration="1" style="visibility: visible; animation-duration: 2s; animation-delay: 200ms; animation-iteration-count: 1; animation-name: zoomIn;">
+  <div class="card-content">
+    <div class="item-headline">
+      <i class="fab fa-weibo"></i>
+      <span>微博热搜</span></div>
+    <div id="weibo-container" style="width:100%;height:150px;font-size:95%">
+      <style>.weibo-new{background:#ff3852}.weibo-hot{background:#ff9406}.weibo-jyzy{background:#ffc000}.weibo-recommend{background:#00b7ee}.weibo-adrecommend{background:#febd22}.weibo-friend{background:#8fc21e}.weibo-boom{background:#bd0000}.weibo-topic{background:#ff6f49}.weibo-topic-ad{background:#4dadff}.weibo-boil{background:#f86400}#weibo-container{overflow-y:auto;-ms-overflow-style:none;scrollbar-width:none}#weibo-container::-webkit-scrollbar{display:none}.weibo-list-item{display:flex;flex-direction:row;justify-content:space-between;flex-wrap:nowrap}.weibo-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:auto}.weibo-num{float:right}.weibo-hotness{display:inline-block;padding:0 6px;transform:scale(.8) translateX(-3px);color:#fff;border-radius:8px}</style>
+      <div class="weibo-list">
+          <?php echo weibohot() ?> 
+      </div>
+    </div>
+  </div>
+</div>
+<?php endif ?>
+<!--微博热搜end-->
 <?php if (!empty($this->options->PostSidebarBlock) && in_array('ShowRecentPosts', $this->options->PostSidebarBlock)): ?>
     <div class="card-widget card-recent-post">
        <div class="item-headline">

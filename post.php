@@ -207,7 +207,6 @@ $(document).ready(function(){
 </div>
 <?php $this->need('post_sidebar.php'); ?>
 <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
-<script src="<?php $this->options->themeUrl('js/comjs.js?v1.4.3'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.5.3'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/clipboard.min.js'); ?>"></script>
 <script>
