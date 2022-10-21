@@ -52,3 +52,14 @@
         top: 84%;
     }
 }
+.SideClock li{
+    list-style: none;
+}
+.SideClock{
+    padding-left: 0px;
+}
+.SideClock p{
+    margin: 0.5em 0 0;
+    color: #999;
+    font-size: .92857em;
+}

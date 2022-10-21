@@ -553,6 +553,18 @@ code[class*="language-"], pre[class*="language-"] {
     display: inline;
 }
 
+#page-header:not(.not-top-img):before {
+    background-color: rgba(0,0,0,0);
+}
+
+#page-header.post-bg:before {
+    background-color: rgba(0,0,0,.5);
+}
+
+[data-theme=dark] #page-header:before{
+    background-color: rgba(0,0,0,.7);
+}
+
 /*已移除内容*/
 /*#article-container.post-content ul>li:not(.tab):before {*/
 /*    top: 0.78em;*/
