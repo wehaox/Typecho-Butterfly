@@ -55,6 +55,7 @@
     <div><?php $this->options->AD() ?></div>
     </div>
 <?php endif; ?>    
+<?php if ($this->is('post')): ?>
 <div class="sticky_layout">
     <div class="card-widget" id="card-toc">
   <div class="item-headline">
@@ -68,6 +69,7 @@
     </ol>
   </div>
 </div>
+<?php endif;?>
 <!--微博热搜-->
 <?php if (!empty($this->options->PostSidebarBlock) && in_array('ShowWeiboHot', $this->options->PostSidebarBlock)): ?>
 <div class="card-widget card-weibo wow animate__zoomIn" data-wow-duration="2s" data-wow-delay="200ms" data-wow-offset="30" data-wow-iteration="1" style="visibility: visible; animation-duration: 2s; animation-delay: 200ms; animation-iteration-count: 1; animation-name: zoomIn;">
