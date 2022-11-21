@@ -16,7 +16,7 @@
             <?php if($this->user->hasLogin()): ?>
             <div style="border-bottom: 1px dashed #dedede;">
     		<?php _e('登录身份:  '); ?>
-    		<a href="<?php $this->options->profileUrl(); ?>"><?php $this->user->screenName(); ?></a>. 
+    		<a href="<?php $this->options->profileUrl(); ?>"><?php $this->user->screenName(); ?><?php if($this->user->group == 'administrator'): ?> 博主 <?php elseif($this->user->group == 'editor'): ?> 编辑 <?php elseif($this->user->group == 'contributor'): ?> 贡献者 <?php elseif($this->user->group == 'subscriber'): ?> 关注者 <?php elseif($this->user->group == 'visitor'): ?> 访问者 <?php endif ?></a></a>. 
     		<a href="<?php $this->options->logoutUrl(); ?>" title="退出"><i class="fas fa-sign-out-alt"></i></a>
     		 </div>     
             <?php else: ?>
