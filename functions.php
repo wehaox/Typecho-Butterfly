@@ -180,8 +180,8 @@ function themeConfig($form) {
 
     $ShowRelatedPosts = new Typecho_Widget_Helper_Form_Element_Select('ShowRelatedPosts',
         array(
-            'flase' => '关闭（默认）',
-            'true' => '开启',
+            'off' => '关闭（默认）',
+            'on' => '开启',
         ),
         'off',
         '是否显示文章内相关推荐',
@@ -1582,7 +1582,7 @@ function theAllViews(){
         $db->query('ALTER TABLE `'.$db->getPrefix().'contents` ADD `views` INT(10) DEFAULT 0;');
     }
     $row = $db->fetchAll($db->select('SUM(views)')->from('table.contents'));
-    echo $row[0]["SUM(`views`)"];
+    echo array_values($row[0])[0];
 }
 //  回复可见       
 Typecho_Plugin::factory('Widget_Abstract_Contents')->excerptEx = array('myyodux','one');

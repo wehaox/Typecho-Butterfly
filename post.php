@@ -183,7 +183,7 @@
       </div>
 <?php endif; ?>
 </nav>
-<?php if($this->options->ShowRelatedPosts) :?>
+<?php if($this->options->ShowRelatedPosts == 'on'): ?>
 <div class="relatedPosts">
 <div class="headline">
 <i class="fas fa-thumbs-up fa-fw"></i>
@@ -210,8 +210,7 @@ $(document).ready(function(){
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.5.3'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/clipboard.min.js'); ?>"></script>
 <script>
-$(document).ready(function(){if($(".toc").html().length == "14") {
-$("#card-toc,#mobile-toc-button").remove();}});
+$(document).ready(function(){if($(".toc").html().length == "14"){$("#card-toc,#mobile-toc-button").remove()}});
 </script>
 <?php if (!empty($this->options->beautifyBlock) && in_array('showLineNumber',
     $this->options->beautifyBlock)): ?> 

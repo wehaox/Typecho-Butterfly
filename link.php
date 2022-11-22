@@ -10,10 +10,8 @@ $this->need('page_header.php');
 <main class="layout" id="content-inner">
 <div id="page">
 <div id="article-container">
-  <div class="flink">
-       <div class="flink-list">
+    <div class="flink">
         <div class="flink-list">
-            <div class="flink-list">
                 <?php if ($this->options->Friends) : ?>
                 <?php
                 if (strpos($this->options->Friends, '||') !== false) {
@@ -37,10 +35,10 @@ $this->need('page_header.php');
                    }echo $list;}?>
             <?php endif; ?>  
             </div>
-     </div>
+        <?php $this->content(); ?>
     </div>
-  </div>
 </div>
+
 <?php $this->need('comments.php'); ?>
 </div>
 <?php $this->need('post_sidebar.php'); ?>

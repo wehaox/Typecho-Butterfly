@@ -553,10 +553,6 @@ code[class*="language-"], pre[class*="language-"] {
     display: inline;
 }
 
-#page-header:not(.not-top-img):before {
-    background-color: rgba(0,0,0,0);
-}
-
 #page-header.post-bg:before {
     background-color: rgba(0,0,0,.5);
 }

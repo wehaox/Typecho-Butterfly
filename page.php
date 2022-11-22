@@ -56,8 +56,7 @@
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.0'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/clipboard.min.js'); ?>"></script>
 <script>
-$(document).ready(function(){var tocState = $(".toc").html();if(tocState.length == "1") {
-$("#card-toc,#mobile-toc-button").remove();}});
+$(document).ready(function(){if($(".toc").html().length == "14") {$("#card-toc,#mobile-toc-button").remove()}});
 </script>
 <?php if (!empty($this->options->beautifyBlock) && in_array('showLineNumber',
     $this->options->beautifyBlock)): ?> 

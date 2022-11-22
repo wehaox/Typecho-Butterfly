@@ -117,6 +117,7 @@ clock_rectangle = "112.6534116,27.96920845", clock_default_rectangle_enable = "f
 <?php endif; ?>        
 <?php if($this->is('index')): ?>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/wehao.js?v1.7.0'); ?>"></script>
+<style>#page-header:not(.not-top-img):before {background-color: rgba(0,0,0,0);}</style>
 <!--打字-->
 <?php if (is_array($this->options->beautifyBlock) && in_array('ShowTopimg',$this->options->beautifyBlock)): ?>
    <?php if(!empty($this->options->CustomSubtitle)): ?>
@@ -158,7 +159,7 @@ new Typed("#subtitle",{
 <!--打字end-->
 <!--判断主页end-->
 <?php endif?>
-<?php if(!empty($this->options->slide_cids)):?>
+<?php if(!empty($this->options->slide_cids) && $this->is('index')):?>
 <script data-pjax>
 function butterfly_swiper_injector_config() {
 var parent_div_git = document.getElementById('recent-posts');
@@ -218,7 +219,7 @@ butterfly_swiper_injector_config()}
 			</i>
 		</button>
 		<?php endif ?>
-		<?php if(!$this->is('index') && $this->allow('comment')): ?>
+		<?php if($this->is('post') && $this->allow('comment') || $this->is('page') && $this->allow('comment')): ?>
 		<a id="to_comment" href="#comments" title="直达评论">
 			<i class="fas fa-comments">
 			</i>

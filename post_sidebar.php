@@ -54,7 +54,7 @@
         <div class="item-headline"><i class="fa-solid fa-rectangle-ad"></i><span>广告</span></div>
     <div><?php $this->options->AD() ?></div>
     </div>
-<?php endif; ?>    
+<?php endif; ?>
 <div class="sticky_layout">
     <div class="card-widget" id="card-toc">
   <div class="item-headline">
