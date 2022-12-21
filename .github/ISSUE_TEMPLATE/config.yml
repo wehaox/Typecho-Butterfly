@@ -7,3 +7,7 @@ contact_links:
   - name: 主题下载
     url: https://github.com/wehaox/Typecho-Butterfly/releases
     about: 主题下载
+    
+  - name: 静态文件
+    url: https://github.com/wehaox/Typecho-Butterfly/releases/download/1.6.0/static-1.6.0.zip
+    about: 最新的本地静态文件下载
