@@ -3,3 +3,7 @@ contact_links:
   - name: 主题文档
     url: https://blog.wehaox.com/archives/typecho-butterfly.html
     about: 主题文档
+    
+  - name: 主题下载
+    url: https://github.com/wehaox/Typecho-Butterfly/releases
+    about: 主题下载
