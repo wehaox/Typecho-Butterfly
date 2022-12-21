@@ -1,0 +1,63 @@
+name: Bug 反馈
+description: 反馈bug以改善主题
+title: '[Bug]: '
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        重要：請按照模板提交
+        Please follow the template to create a new issue
+  - type: input
+    id: butterfly-ver
+    attributes:
+      label: 使用的 Butterfly 版本？ | What version of Butterfly are you use?
+      description: 在后台控制台外观中查看当前版本
+    validations:
+      required: true
+
+  - type: dropdown
+    id: modify
+    attributes:
+      label: 是否修改过主题文件？ || Has the theme files been modified?
+      options:
+        - 不是 (No)
+        - 是 (Yes)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: 使用的浏览器？ || What browse are you using?
+      options:
+        - Chrome
+        - Edge
+        - Safari
+        - firefox
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: 博客的运行环境？ || What the running environment of the blog?
+      options:
+        - linux|php7.2+|typecho1.2|mysql5.6+|nginx
+        - linux|php8.0+|typecho1.2|mysql5.6+|nginx        
+        - linux|php7.2+|typecho1.2|sqlite|nginx
+        - linux|php8.0+|typecho1.2|sqlite|nginx
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述 | Describe the bug
+      description: 请描述你的问题 | A clear and concise description of what the bug is.
+      placeholder: 如果以上某些选项没有对应的值，请提供相应信息。这里你可以详细说明你的问题，请尽量提供截图
+      value:
+    validations:
+      required: true
