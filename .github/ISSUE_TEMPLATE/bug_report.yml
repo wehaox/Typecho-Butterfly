@@ -1,5 +1,5 @@
 name: Bug 反馈
-description: 反馈bug以改善主题
+description: 反馈bug以改善主题(如果你的主题不是从release页下载的，请前往release下载后，测试是否存在同样bug再反馈)
 title: '[Bug]: '
 
 body:
@@ -8,6 +8,17 @@ body:
       value: |
         重要：請按照模板提交
         Please follow the template to create a new issue
+        
+  - type: dropdown
+    id: modify
+    attributes:
+      label: 是否从release页下的主题？ | Is the theme download from Release Page?
+      options:
+        - 是 (Yes)      
+        - 不是 (No)
+    validations:
+      required: true
+ 
   - type: input
     id: butterfly-ver
     attributes:
@@ -19,7 +30,7 @@ body:
   - type: dropdown
     id: modify
     attributes:
-      label: 是否修改过主题文件？ || Has the theme files been modified?
+      label: 是否修改过主题文件？ | Has the theme files been modified?
       options:
         - 不是 (No)
         - 是 (Yes)
@@ -29,7 +40,7 @@ body:
   - type: dropdown
     id: browser
     attributes:
-      label: 使用的浏览器？ || What browse are you using?
+      label: 使用的浏览器？ | What browse are you using?
       options:
         - Chrome
         - Edge
@@ -42,7 +53,7 @@ body:
   - type: dropdown
     id: platform
     attributes:
-      label: 博客的运行环境？ || What the running environment of the blog?
+      label: 博客的运行环境？ | What the running environment of the blog?
       options:
         - linux|php7.2+|typecho1.2|mysql5.6+|nginx
         - linux|php8.0+|typecho1.2|mysql5.6+|nginx        
