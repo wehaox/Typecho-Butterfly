@@ -10,7 +10,7 @@ body:
         Please follow the template to create a new issue
         
   - type: dropdown
-    id: modify
+    id: downlad
     attributes:
       label: 是否从release页下的主题？ | Is the theme download from Release Page?
       options:
@@ -51,7 +51,7 @@ body:
       required: true
 
   - type: dropdown
-    id: platform
+    id: environment
     attributes:
       label: 博客的运行环境？ | What the running environment of the blog?
       options:
