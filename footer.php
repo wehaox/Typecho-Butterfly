@@ -99,7 +99,7 @@
 <?php if (!empty($this->options->beautifyBlock) && in_array('showButterflyClock',$this->options->beautifyBlock)): ?>
 <script data-pjax>function butterfly_clock_anzhiyu_injector_config() {
 var a = document.getElementsByClassName("sticky_layout")[0];
-a && a.insertAdjacentHTML("afterbegin", '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://jsd.anzhiy.cn/npm/hexo-butterfly-clock-anzhiyu@1.1.7/lib/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>')}
+a && a.insertAdjacentHTML("afterbegin", '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>')}
 for (var elist = "null".split(","), cpage = location.pathname, epage = "all", 
 qweather_key = "<?php $this->options->qweather_key() ?>", 
 gaud_map_key = "<?php $this->options->gaud_map_key() ?>", 
@@ -107,10 +107,9 @@ baidu_ak_key = "undefined", flag = 0,
 clock_rectangle = "112.6534116,27.96920845", clock_default_rectangle_enable = "false", i = 0; i < elist.length; i++) cpage.includes(elist[i]) && flag++;
       "all" === epage && 0 == flag ? butterfly_clock_anzhiyu_injector_config() : epage === cpage && butterfly_clock_anzhiyu_injector_config()</script>
 <script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script>
-<script data-pjax src="https://jsd.anzhiy.cn/npm/hexo-butterfly-clock-anzhiyu@1.1.7/lib/clock.min.js"></script>
+<script data-pjax src="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/clock.min.js"></script>
 <link rel="stylesheet" href="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/clock.min.css">
 <?php endif ?>
-
 <?php $this->header('commentReply=1&description=0&keywords=0&generator=0&template=0&pingback=0&xmlrpc=0&wlw=0&rss2=0&rss1=0&antiSpam=0&atom'); ?>
 <?php if ($this->options->NewTabLink == 'on'): ?>
 <script>$(document).ready(function(){var a=document.getElementsByTagName("a");for(let i=0;i<a.length;i++){let domain=document.domain;let url=a[i].href;if(typeof(url)!="undefined"&&url.length!=0&&url.match(domain)==null&&url!="javascript:void(0);"){a[i].setAttribute("target","_BLANK")}}});</script>
@@ -171,7 +170,7 @@ $num=count($cid);
 $html="";
 for($i=0;$i<$num;$i++){
 $this->widget('Widget_Archive@post'.$i, 'pageSize=1&type=post', 'cid='.$cid[$i])->to($ji);
-$html=$html.'<div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="'.$ji->permalink.'" alt=""><img width="48" height="48" src="'.get_ArticleThumbnail($ji).'" alt="" /></a><div class="blog-slider__content"><span class="blog-slider__code">'.date('Y-m-d', $ji->modified).'</span><a class="blog-slider__title" href="'.$ji->permalink.'" alt="'.$ji->title.'">'.$ji->title.'</a><div class="blog-slider__text">'.mb_substr($ji->content, 20, 40, 'utf-8').'</div><a class="blog-slider__button" href="'.$ji->permalink.'" alt="">详情</a></div></div>';}echo $html;
+$html=$html.'<div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="'.$ji->permalink.'" alt=""><img width="48" height="48" src="'.get_ArticleThumbnail($ji).'" alt="" /></a><div class="blog-slider__content"><span class="blog-slider__code">'.date('Y-m-d', $ji->modified).'</span><a class="blog-slider__title" href="'.$ji->permalink.'" alt="'.$ji->title.'">'.$ji->title.'</a><div class="blog-slider__text">'.$ji->title.'</div><a class="blog-slider__button" href="'.$ji->permalink.'" alt="">详情</a></div></div>';}echo $html;
 ?>
 </div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>`;
 // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)

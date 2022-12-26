@@ -294,7 +294,7 @@ function themeConfig($form) {
     'ShowCategory' => _t('显示分类'),
     'ShowTag' => _t('显示标签'),
     'ShowArchive' => _t('显示归档'),
-    'ShowWebinfo' => _t('显示网站咨询'),
+    'ShowWebinfo' => _t('显示网站资讯'),
     'ShowOther' => _t('显示其它杂项'),
     'ShowMobileSide' => _t('手机端显示侧栏'),
     'ShowWeiboHot' => _t('显示微博热搜')
@@ -360,8 +360,8 @@ function themeConfig($form) {
     );
     $form->addInput($coverPosition->multiMode());    
     
-    $qweather_key = new Typecho_Widget_Helper_Form_Element_Text('qweather_key', NULL, null,  _t('和风天气key'),_t('<a href="https://github.com/anzhiyu-c/hexo-butterfly-clock-anzhiyu/#安装">按照教程获取key</a>'));
-    $gaud_map_key = new Typecho_Widget_Helper_Form_Element_Text('gaud_map_key', NULL, null,  _t('高得地图web服务key'), _t('侧栏显示时钟用到的key，同上'));
+    $qweather_key = new Typecho_Widget_Helper_Form_Element_Text('qweather_key', NULL, null,  _t('时钟和风天气key'),_t('<a href="https://github.com/anzhiyu-c/hexo-butterfly-clock-anzhiyu/#安装">按照教程获取key</a>'));
+    $gaud_map_key = new Typecho_Widget_Helper_Form_Element_Text('gaud_map_key', NULL, null,  _t('时钟高得地图web服务key'), _t('侧栏显示时钟用到的key，同上'));
 	$form->addInput($qweather_key);
 	$form->addInput($gaud_map_key);
     
