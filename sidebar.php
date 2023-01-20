@@ -85,7 +85,7 @@
             <?php while($contents->next()): ?>
              <div class="aside-list-item"> 
               <a class="thumbnail" href="<?php $contents->permalink() ?>" title="<?php $contents->title() ?>" >
-               <img onerror="this.onerror=null;this.src='https://tva1.sinaimg.cn/large/007X0Rdyly1gpaaf55n1rj30ic09u0sw.jpg'" data-lazy-src="<?php GetRandomThumbnail($contents); ?> " 
+               <img onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'" data-lazy-src="<?php GetRandomThumbnail($contents); ?> " 
                src="<?php echo GetLazyLoad() ?>"
                alt="<?php $contents->title() ?>">
                </a>

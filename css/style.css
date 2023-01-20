@@ -479,8 +479,8 @@ code[class*="language-"], pre[class*="language-"] {
 }
 #card-newest-comments > .aside-list>.aside-list-item .thumbnail>img{
     border-radius: 50%;
-    width: 53px;
-    height: 53px;
+    width: 50px!important;
+    height: 50px!important;
 }
 
 #card-newest-comments > .aside-list>.aside-list-item .thumbnail>img:hover {

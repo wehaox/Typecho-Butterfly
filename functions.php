@@ -136,7 +136,7 @@ function themeConfig($form) {
     $AD = new Typecho_Widget_Helper_Form_Element_Textarea('AD', NULL, NULL, _t('广告(由@yzl3014提供)'), _t('在这里填入广告，填入后自动显示在侧栏中公告栏的下方，支持html'));
     $form->addInput($AD);
     
-    $headerimg = new Typecho_Widget_Helper_Form_Element_Text('headerimg', NULL,_t('https://tva1.sinaimg.cn/large/007X0Rdyly1ghm1qiihrdj31hc0u07jk.jpg'), _t('主页顶图(banner image)'), _t('填入主页头图链接'));
+    $headerimg = new Typecho_Widget_Helper_Form_Element_Text('headerimg', NULL,_t('https://s2.loli.net/2023/01/18/bIJTVaR3MLPzcZ7.jpg'), _t('主页顶图(banner image)'), _t('填入主页头图链接'));
     $form->addInput($headerimg);
     
     $buildtime = new Typecho_Widget_Helper_Form_Element_Text('buildtime', NULL,_t('2021/04/05'), _t('建站时间'), _t('按照输入框内格式填写'));
@@ -341,7 +341,7 @@ function themeConfig($form) {
     'showLineNumber' => _t('是否显示代码块行号'),
     'showSnackbar' => _t('是否显示主题以及简繁切换弹窗'),
     'showLazyloadBlur' => _t('是否开启懒加载模糊效果'),
-    'showButterflyClock' => _t('是否开启侧栏显示时钟'),
+    'showButterflyClock' => _t('是否开启侧栏显示时钟(需要在下方填写和风和高德key)'),
     ),
     array('ShowTopimg','PostShowTopimg','PageShowTopimg','showLineNumber','showSnackbar','showLazyloadBlur'), _t('美化选项'));
     $beautifyBlock->setAttribute('id', 'beautifyBlock');

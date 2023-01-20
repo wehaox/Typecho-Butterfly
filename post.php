@@ -140,8 +140,8 @@
 <?php $this->widget('Widget_Archive@recommend'.$prevId, 'pageSize=1&type=post', 'cid='.$prevId)->to($prev);?>
     <?php $this->widget('Widget_Archive@recommend'.$prevId, 'pageSize=1&type=post', 'cid='.$prevId)->to($prev);?>
 <div class="prev-post pull-left">
-      <a href="<?php $prev->permalink();?>">
-       <img class="prev-cover" onerror="this.onerror=null;this.src='https://tva1.sinaimg.cn/large/007X0Rdyly1gpaaf55n1rj30ic09u0sw.jpg'" data-lazy-src="<?php echo get_ArticleThumbnail($prev);?>" src="<?php echo GetLazyLoad() ?>" alt="<?php $prev->title();?>">
+      <a href="<?php $prev->permalink();?>" title="<?php $prev->title();?>">
+       <img class="cover" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'" data-lazy-src="<?php echo get_ArticleThumbnail($prev);?>" src="<?php echo GetLazyLoad() ?>" alt="<?php $prev->title();?>">
         <div class="pagination-info">
         <div class="label">上一篇</div>
         <div class="next_info"><?php $prev->title();?></div>
@@ -151,8 +151,8 @@
 <?php elseif(!empty($nextId)&&empty($prevId)) : ?>   
  <?php $this->widget('Widget_Archive@recommend'.$nextId, 'pageSize=1&type=post', 'cid='.$nextId)->to($next);?>
 <div class="prev-post pull-full">
-    <a href="<?php $next->permalink();?>">
-      <img onerror="this.onerror=null;this.src='https://tva1.sinaimg.cn/large/007X0Rdyly1gpaaf55n1rj30ic09u0sw.jpg'" class="next-cover" data-lazy-src="<?php echo get_ArticleThumbnail($next);?>" src="<?php echo GetLazyLoad() ?>" alt="<?php $next->title();?>">
+    <a href="<?php $next->permalink();?>" title="<?php $next->title();?>">
+      <img class="cover" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'" class="next-cover" data-lazy-src="<?php echo get_ArticleThumbnail($next);?>" src="<?php echo GetLazyLoad() ?>" alt="<?php $next->title();?>">
              <div class="pagination-info">
         <div class="label">下一篇</div>
         <div class="next_info"><?php $next->title();?></div></div>
@@ -163,8 +163,8 @@
 <?php $this->widget('Widget_Archive@recommend'.$prevId, 'pageSize=1&type=post', 'cid='.$prevId)->to($prev);?>
   <?php $this->widget('Widget_Archive@recommend'.$nextId, 'pageSize=1&type=post', 'cid='.$nextId)->to($next);?>
   <div class="next-post pull-right">
-    <a href="<?php $next->permalink();?>">
-      <img onerror="this.onerror=null;this.src='https://tva1.sinaimg.cn/large/007X0Rdyly1gpaaf55n1rj30ic09u0sw.jpg'" class="next-cover" data-lazy-src="<?php echo get_ArticleThumbnail($next);?>" src="<?php echo GetLazyLoad() ?>" alt="<?php $next->title();?>">
+    <a href="<?php $next->permalink();?>" title="<?php $next->title();?>">
+      <img class="cover" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'" class="next-cover" data-lazy-src="<?php echo get_ArticleThumbnail($next);?>" src="<?php echo GetLazyLoad() ?>" alt="<?php $next->title();?>">
              <div class="pagination-info">
         <div class="label">下一篇</div>
         <div class="next_info"><?php $next->title();?></div></div>
@@ -174,7 +174,7 @@
     <?php $this->widget('Widget_Archive@recommend'.$prevId, 'pageSize=1&type=post', 'cid='.$prevId)->to($prev);?>
 <div class="prev-post pull-full">
       <a href="<?php $prev->permalink();?>">
-       <img onerror="this.onerror=null;this.src='https://tva1.sinaimg.cn/large/007X0Rdyly1gpaaf55n1rj30ic09u0sw.jpg'" class="prev-cover" data-lazy-src="<?php echo get_ArticleThumbnail($prev);?>" src="<?php echo GetLazyLoad() ?>" alt="<?php $prev->title();?>">
+       <img class="cover" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'" class="prev-cover" data-lazy-src="<?php echo get_ArticleThumbnail($prev);?>" src="<?php echo GetLazyLoad() ?>" alt="<?php $prev->title();?>">
         <div class="pagination-info">
         <div class="label">上一篇</div>
         <div class="next_info"><?php $prev->title();?></div>

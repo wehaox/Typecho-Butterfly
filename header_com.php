@@ -21,8 +21,8 @@
     <link rel="preconnect" href="//<?php $this->options->jsdelivrLink() ?>" />
     <link rel="preconnect" href="//cdn.staticfile.org" />
     <!--<link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">-->
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.5.3'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.7.1'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.7.3'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.7.3'); ?>">
     <!--魔改美化-->
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?>
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.5.9'); ?>">
@@ -42,8 +42,8 @@
     <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/OwO.min.css'); ?>" />
     <?php endif; ?>
     <?php if (!empty($this->options->beautifyBlock) && in_array('showSnackbar',$this->options->beautifyBlock)): ?>
-    <link rel="stylesheet" href="/usr/themes/butterfly/css/snackbar.min.css" media="print" onload="this.media='all'">
-    <script src="/usr/themes/butterfly/js/snackbar.min.js"></script>
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('/css/snackbar.min.css')?>" media="print" onload="this.media='all'">
+    <script src="<?php $this->options->themeUrl('js/snackbar.min.js')?>"></script>
     <?php endif; ?>
     <?php if (!empty($this->options->beautifyBlock) && in_array('showLazyloadBlur',$this->options->beautifyBlock)): ?>
     <style>
@@ -60,48 +60,48 @@
     <?php endif; ?>
 <!--额外的-->
 <script>
-    const GLOBAL_CONFIG = {
-        root: "/",
-        algolia: void 0,
-        localSearch: {
-            path: "",
-            languages: {
-                hits_empty: "回车查询：${query}"
-            }
-        },
-        translate: {
+const GLOBAL_CONFIG = {
+    root: "/",
+    algolia: void 0,
+    localSearch: {
+        path: undefined,
+        languages: {
+            hits_empty: "回车查询：${query}"
+        }
+    },
+    translate: {
             defaultEncoding: <?php $this->options->DefaultEncoding() ?>,
             translateDelay: 0,
             msgToTraditionalChinese: "繁",
             msgToSimplifiedChinese: "简"
         },
-        noticeOutdate: void 0,
-        highlight: {
-            plugin: "highlighjs",
-            highlightCopy: !0,
-            highlightLang: !0,
-            highlightHeightLimit: 400
-        },
-        copy: {
+    noticeOutdate: void 0,
+    highlight: {
+        plugin: "highlighjs",
+        highlightCopy: !0,
+        highlightLang: !0,
+        highlightHeightLimit: 400
+    },
+    copy: {
             success: "复制成功",
             error: "复制错误",
             noSupport: "浏览器不支持"
-        },
-        relativeDate: {
-            homepage: !0,
-            post: !0
-        },
-        runtime: "天",
-        date_suffix: {
+    },
+    relativeDate: {
+        homepage: !0,
+        post: !0
+    },
+    runtime: "天",
+    date_suffix: {
             just: "",
             min: "",
             hour: "",
             day: "",
             month: ""
-        },
-        copyright: undefined,
-        lightbox: "fancybox",
-        Snackbar: {
+    },
+    copyright: undefined,
+    lightbox: "fancybox",
+    Snackbar: {
             "chs_to_cht": "你已切换为繁体",
             "cht_to_chs": "你已切换为简体",
             "day_to_night": "你已切换为深色模式",
@@ -110,18 +110,22 @@
             "bgDark": "#121212",
             "position": "<?php $this->options->SnackbarPosition() ?>"
         },
-        source: {
+    source: {
             justifiedGallery: {
                 js: "https://<?php $this->options->jsdelivrLink() ?>/npm/flickr-justified-gallery@2/dist/fjGallery.min.js",
                 css: "https://<?php $this->options->jsdelivrLink() ?>/npm/flickr-justified-gallery@2/dist/fjGallery.min.css"
             }
         },
-        isPhotoFigcaption: !1,
-        islazyload: !0,
-        isAnchor: !0,
-        coverPosition: '<?php $this->options->coverPosition() ?>',
-    }
-    var saveToLocal = {
+    isPhotoFigcaption: !1,
+    islazyload: !0,
+    isAnchor: !0,
+    percent: {
+        toc: !0,
+        rightside: !0
+    },
+    coverPosition: '<?php $this->options->coverPosition() ?>',
+}
+var saveToLocal = {
       set: function setWithExpiry(key, value, ttl) {
         const now = new Date()
         const expiryDay = ttl * 86400000
@@ -160,7 +164,7 @@
       }
       document.head.appendChild(script)
     })
-  </script>
+</script>
 <script id="config-diff">
 var GLOBAL_CONFIG_SITE = { 
 		    isPost: !0,
@@ -323,9 +327,9 @@ var GLOBAL_CONFIG_SITE = {
     <?php $this->options->CustomHead() ?>
 </head>
 <body>
-<script src="<?php $this->options->themeUrl('/js/main.js?v1.6.0'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/utils.js?v1.5.0'); ?>"> </script>
-<script src="<?php $this->options->themeUrl('/js/tw_cn.js?v1.7.0'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/js/main.js?v1.7.3'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/js/utils.js?v1.7.3'); ?>"> </script>
+<script src="<?php $this->options->themeUrl('/js/tw_cn.js?v1.7.3'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/local-search.js'); ?>"> </script>
 <?php if($this->options->StaticFile == 'CDN' && $this->options->CDNURL == ''): ?>
 <script src="https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>

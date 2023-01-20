@@ -12,7 +12,7 @@
             'tag'       =>  _t('标签 %s 下的文章'),
             'author'    =>  _t('%s 发布的文章')
         ), '', ''); ?>
-    <?php if($this->user->hasLogin()):?>
+    <?php if($this->user->hasLogin() && $this->is('page')):?>
     <a style="float: none;"  class="post-edit-link" href="<?php $this->options->adminUrl(); ?>write-page.php?cid=<?php echo $this->cid;?>" title="編輯" target="_blank"><i class="fas fa-pencil-alt"></i></a><?php endif;?>
         </h1>
     </div>

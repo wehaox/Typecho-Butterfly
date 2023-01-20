@@ -52,7 +52,6 @@
 </div>
 <?php $this->need('post_sidebar.php'); ?>
 <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
-<script src="<?php $this->options->themeUrl('js/comjs.js'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.0'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/clipboard.min.js'); ?>"></script>
 <script>

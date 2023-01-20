@@ -70,7 +70,7 @@
  <?php $this->options->CustomBodyEnd() ?>
 <!--搜索  -->
 <div id="local-search">
-  <div class="search-dialog" style="">
+  <div class="search-dialog">
     <nav class="search-nav">
       <span class="search-dialog-title">本地搜索</span>
       <span id="loading-status"></span>
@@ -173,8 +173,8 @@ $this->widget('Widget_Archive@post'.$i, 'pageSize=1&type=post', 'cid='.$cid[$i])
 $html=$html.'<div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="'.$ji->permalink.'" alt=""><img width="48" height="48" src="'.get_ArticleThumbnail($ji).'" alt="" /></a><div class="blog-slider__content"><span class="blog-slider__code">'.date('Y-m-d', $ji->modified).'</span><a class="blog-slider__title" href="'.$ji->permalink.'" alt="'.$ji->title.'">'.$ji->title.'</a><div class="blog-slider__text">'.$ji->title.'</div><a class="blog-slider__button" href="'.$ji->permalink.'" alt="">详情</a></div></div>';}echo $html;
 ?>
 </div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>`;
-// parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
-parent_div_git.insertAdjacentHTML("afterbegin", item_html) // 有报错，但不影响使用(支持pjax跳转)
+parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+// parent_div_git.insertAdjacentHTML("afterbegin", item_html) // 有报错，但不影响使用(支持pjax跳转)
 }
 if (document.getElementById('recent-posts') && (location.pathname === 'all' || 'all' === 'all')) {
 butterfly_swiper_injector_config()}
@@ -186,7 +186,7 @@ butterfly_swiper_injector_config()}
 <?php endif?>
 </div>
 <!--js-pjax end-->
-<div id="rightside">
+<div id="rightside" style="">
 	<div id="rightside-config-hide" class="">
 	    <button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button>	    
 	    <button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button>	    
@@ -224,7 +224,8 @@ butterfly_swiper_injector_config()}
 			</i>
 		</a>
 		<?php endif ?>
-		<button id="go-up" type="button" title="回到顶部">
+		<button id="go-up" type="button" title="回到頂部" class="show-percent">
+			<span class="scroll-percent"></span>
 			<i class="fas fa-arrow-up">
 			</i>
 		</button>
