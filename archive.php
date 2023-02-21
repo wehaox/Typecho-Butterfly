@@ -4,10 +4,10 @@
     <div class="recent-posts category_ui" id="recent-posts">
         <?php if ($this->have()): ?>
     	<?php while($this->next()): ?>
-           <div class="recent-post-item" >
+           <div class="recent-post-item">
            <wehao class="post_cover">
           <a  class="article-title" href="<?php $this->permalink() ?>">     
-              	<img class="post_bg" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" src="<?php echo GetLazyLoad() ?>" onerror="this.onerror=null;this.src='https://tva1.sinaimg.cn/large/007X0Rdyly1gpaaf55n1rj30ic09u0sw.jpg'"></a>
+              	<img class="post-bg" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" src="<?php echo GetLazyLoad() ?>" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'"></a>
             </wehao>
               <div class="recent-post-info">
 			    <a  class="article-title" href="<?php $this->permalink() ?>"><?php $this->title() ?></a>

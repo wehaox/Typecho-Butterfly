@@ -46,9 +46,11 @@
     <?php elseif(!$this->options->author_bottom) : ?>
     <?php endif; ?>
 </div>
+<?php if (!empty($this->options->sidebarBlock) && in_array('ShowAnnounce', $this->options->sidebarBlock)): ?> 
     <div class="card-widget card-announcement"><div class="item-headline">
         <i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div>
     <div class="announcement_content"><?php $this->options->announcement() ?></div></div>
+<?php endif; ?>
 <?php if (!empty($this->options->AD)): ?>
     <div class="card-widget">
         <div class="item-headline"><i class="fa-solid fa-rectangle-ad"></i><span>广告</span></div>

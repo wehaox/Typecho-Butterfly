@@ -1165,8 +1165,8 @@ function ArtPlayer($text)
 // 重写文章图片加载
 function PostImage($text)
 {
-    $text = preg_replace_callback('/<img src=\"(.*?)\".*?alt\=\"(.*?)\".*?>/ism', function ($text) {
-        return '<img class="" title="'.$text[2].'" alt="'.$text[2].'" data-lazy-src="'.$text[1].'" src="'.GetLazyLoad().'" />';
+    $text = preg_replace_callback('/<img src=\"(.*?)"\ alt=\"(.*?)"\>/ism', function ($text) {
+        return '<img title="'.$text[2].'" alt="'.$text[2].'" data-lazy-src="'.$text[1].'" src="'.GetLazyLoad().'" />';
     }, $text);
     return $text;
 }

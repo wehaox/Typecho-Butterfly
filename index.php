@@ -7,7 +7,7 @@
  * <a href="https://www.wehaox.com">个人网站</a> | <a href="https://blog.wehaox.com/archives/typecho-butterfly.html">主题使用文档</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.7.3
+ * @version 1.7.4
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -45,7 +45,7 @@ if($sticky && $this->is('index') || $this->is('front')){
 <main class="layout" id="content-inner">
 <div class="recent-posts" id="recent-posts">
 <?php while($this->next()): ?>
-    <div class="recent-post-item" >
+    <div class="recent-post-item">
         <wehao class="post_cover">
              <a  href="<?php $this->permalink() ?>">
                  <img class="post-bg" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" src="<?php echo GetLazyLoad() ?>" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'"></a>
@@ -112,7 +112,7 @@ function ver() {console.log(`
     #    # #    #   #     #   #      #   #  #      #        #    
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                            1.7.3
+                            1.7.4
 ===================================================================
 `);}
 </script>
