@@ -43,7 +43,12 @@
     		    <div class="commentsFormArea" style="text-align: right;">
                    <button class="submit" type="submit" ><?php _e('评论'); ?></button>
                 </div>
-                <?php if($this->options->siteKey !== "" && $this->options->siteKey !== ""){RecapOutPut($this->user->hasLogin()) ;?><script>$(document).ready(function(){if($("#comment_keys").length == 0){$(".g-recaptcha").css({"position":"relative","top":"-40px"})}})</script> <?php }?>   
+                <?php if($this->options->siteKey !== "" && $this->options->siteKey !== ""){RecapOutPut($this->user->hasLogin()) ;?><script>$(document).ready(function(){if($("#comment_keys").length == 0){$(".g-recaptcha").css({"position":"relative","top":"-40px"})}})</script> <?php }?>
+                
+                <?php if($this->options->hcaptchaSecretKey !== "" && $this->options->hcaptchaAPIKey !== ""){
+                RecapOutPut($this->user->hasLogin());?>
+                <script>$(document).ready(function(){if($("#comment_keys").length == 0){$(".h-captcha").css({"position":"relative","top":"-40px"})}})</script>
+                <?php }?>                  
                 </form>
 <?php if(!$this->user->hasLogin() && $this->options->EnableCommentsLogin === 'on'): ?>
 <div id="comment_login" style="display:none">

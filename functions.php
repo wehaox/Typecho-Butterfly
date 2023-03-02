@@ -288,6 +288,7 @@ function themeConfig($form) {
 
     $sidebarBlock = new Typecho_Widget_Helper_Form_Element_Checkbox('sidebarBlock', 
     array(
+    'ShowAuthorInfo' => _t('显示作者信息'),
     'ShowAnnounce' => _t('显示公告'),
     'ShowRecentPosts' => _t('显示最新文章'),
     'ShowRecentComments' => _t('显示最近回复'),
@@ -299,7 +300,7 @@ function themeConfig($form) {
     'ShowMobileSide' => _t('手机端显示侧栏'),
     'ShowWeiboHot' => _t('显示微博热搜')
     ),
-    array('ShowAnnounce','ShowRecentPosts', 'ShowRecentComments', 'ShowCategory','ShowTag', 'ShowArchive', 'ShowWebinfo', 'ShowOther','ShowMobileSide'), _t('侧边栏显示'));
+    array('ShowAuthorInfo','ShowAnnounce','ShowRecentPosts', 'ShowRecentComments', 'ShowCategory','ShowTag', 'ShowArchive', 'ShowWebinfo', 'ShowOther','ShowMobileSide'), _t('侧边栏显示'));
     $sidebarBlock->setAttribute('id', 'aside');
     $form->addInput($sidebarBlock->multiMode());
     // 在线人数显示
@@ -320,14 +321,14 @@ function themeConfig($form) {
     // 文章侧边栏设置
     $PostSidebarBlock = new Typecho_Widget_Helper_Form_Element_Checkbox('PostSidebarBlock', 
     array(
-    // 'ShowAuthorInfo' => _t('显示作者信息'),
-    // 'ShowAnnounce' => _t('显示公告'),
+    'ShowAuthorInfo' => _t('显示作者信息'),
+    'ShowAnnounce' => _t('显示公告'),
     'ShowRecentPosts' => _t('显示最新文章'),
     'ShowWebinfo' => _t('显示网站咨询'),
     'ShowOther' => _t('显示其它杂项'),
     'ShowWeiboHot' => _t('显示微博热搜')
     ),
-    array('ShowRecentPosts', 'ShowWebinfo', 'ShowOther'), _t('文章侧边栏显示'),_t('说明:单独设置文章内侧栏'));
+    array('ShowAuthorInfo','ShowAnnounce','ShowRecentPosts', 'ShowWebinfo', 'ShowOther'), _t('文章侧边栏显示'),_t('说明:单独设置文章内侧栏'));
     $form->addInput($PostSidebarBlock->multiMode());
 
 // 美化选项
@@ -567,6 +568,21 @@ function themeConfig($form) {
     $secretKey = new Typecho_Widget_Helper_Form_Element_Text('secretKey', NULL, null, _t('Serect Key for reCAPTCHAv2:'), _t('填写两处密钥评论区自动开启谷歌验证码'));
 	$form->addInput($siteKey);
 	$form->addInput($secretKey);
+	
+	
+    $hcaptchaSecretKey = new Typecho_Widget_Helper_Form_Element_Text('hcaptchaSecretKey', 
+    NULL, 
+    null,
+    '<hr> 评论区hcaptch人机验证 <br> 密钥(sietkey)- 使用它作为 secret 来检查用户令牌:',
+    '<a href="https://dashboard.hcaptcha.com/welcome">点击获取密钥</a>'
+    );
+    
+    $hcaptchaAPIKey = new Typecho_Widget_Helper_Form_Element_Text('hcaptchaAPIKey', NULL, null, _t('API 密钥:'), _t('填写两处密钥评论区自动开启hcaptch人机验证'));
+    
+    $form->addInput($hcaptchaSecretKey);
+	$form->addInput($hcaptchaAPIKey);
+
+	
     
     
 $db = Typecho_Db::get();
@@ -1183,7 +1199,9 @@ function themeInit($archive) {
     if(Helper::options()->siteKey !== "" && Helper::options()->secretKey !=="" && !$loginStatus){
         comments_filter($archive); 
     }
-   ;
+    if (Helper::options()->hcaptchaSecretKey !== "" && Helper::options()->hcaptchaAPIKey !== "" && !$loginStatus) {
+        hcaptcha_filter($archive);
+    }
     if ($archive->is('index')) {
         // echo '<script src="'..'"></script>';        
     }
@@ -1730,8 +1748,12 @@ function RecapOutPut($login) {
 		if ($siteKey !== "" && $secretKey !== "" && !$login) {
 		    echo '<script src="https://recaptcha.net/recaptcha/api.js" async defer data-no-instant></script>
                               <div class="g-recaptcha" data-sitekey=' . $siteKey . '></div>';
+      	}		
+      	if (Helper::options()->hcaptchaSecretKey !== "" && Helper::options()->hcaptchaAPIKey !== "" && !$login) {
+		    echo '<script src="https://www.hCaptcha.com/1/api.js" async defer></script><div class="h-captcha" data-sitekey='. Helper::options()->hcaptchaSecretKey .'></div>';
       	}
 }
+
 function comments_filter($comment) {
     if (isset($_REQUEST['text']) != null) {
         if($_POST['g-recaptcha-response'] == null) {
@@ -1766,6 +1788,28 @@ function comments_filter($comment) {
         }
     }
     return $comment;
+}
+
+
+function hcaptcha_filter($comment){
+if (isset($_REQUEST['text']) != null) {
+    if($_POST['h-captcha-response'] == null) {
+        throw new Typecho_Widget_Exception(_t('人机验证失败,确认你加载了hcaptcha人机验证并通过验证'));
+    }else{
+     if(isset($_POST['h-captcha-response']) && !empty($_POST['h-captcha-response'])){
+         $secret = Helper::options()->hcaptchaAPIKey;
+         $verifyResponse = file_get_contents('https://hcaptcha.com/siteverify?secret='.$secret.'&response='.$_POST['h-captcha-response'].'&remoteip='.$_SERVER['REMOTE_ADDR']);
+         $responseData = json_decode($verifyResponse);
+         if($responseData->success == true)
+         {
+             return $comments;
+         }else{
+             throw new Typecho_Widget_Exception(_t($responseData->error-codes));
+         }
+     }        
+    }
+}
+return $comment;
 }
 
 // 微博热搜

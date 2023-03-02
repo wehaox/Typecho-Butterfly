@@ -531,7 +531,7 @@ code[class*="language-"], pre[class*="language-"] {
 }
 /*懒加载结束*/
 .comment-ua .iconfont{font-size: 14px!important;}
-.g-recaptcha {transform:scale(0.77);transform-origin:0 0;margin-top:10px;}
+.g-recaptcha,.h-captcha {transform:scale(0.77);transform-origin:0 0;margin-top:10px;}
 .OwO-logo{border:none!important;background:none!important}
 .OwO-logo span .iconfont{font-size:25px}
 

@@ -1,6 +1,7 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <div class="aside-content" id="aside-content">
-   <div class="card-widget card-info">
+    <?php if (!empty($this->options->sidebarBlock) && in_array('ShowAuthorInfo', $this->options->sidebarBlock)): ?>     
+    <div class="card-widget card-info">
 	 <div class="card-info-avatar is-center">
 	     <div class="avatar-img">
 	         <img data-lazy-src="<?php $this->options->logoUrl() ?>" onerror="this.onerror=null;this.src='/usr/themes/butterfly/img/friend_404.gif'" src="<?php echo GetLazyLoad() ?>" alt="avatar">
@@ -46,6 +47,7 @@
     <?php elseif(!$this->options->author_bottom) : ?>
     <?php endif; ?>
 </div>
+    <?php endif; ?>
     <?php if (!empty($this->options->sidebarBlock) && in_array('ShowAnnounce', $this->options->sidebarBlock)): ?> 
     <div class="card-widget card-announcement"><div class="item-headline">
         <i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div>

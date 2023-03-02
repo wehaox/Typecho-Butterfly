@@ -1,5 +1,6 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <div class="aside-content" id="aside-content" role="complementary">
+<?php if (!empty($this->options->PostSidebarBlock) && in_array('ShowAuthorInfo', $this->options->PostSidebarBlock)): ?>  
    <div class="card-widget card-info">
 	<div class="card-info-avatar is-center">
 	     <div class="avatar-img">
@@ -46,7 +47,8 @@
     <?php elseif(!$this->options->author_bottom) : ?>
     <?php endif; ?>
 </div>
-<?php if (!empty($this->options->sidebarBlock) && in_array('ShowAnnounce', $this->options->sidebarBlock)): ?> 
+<?php endif; ?>
+<?php if (!empty($this->options->PostSidebarBlock) && in_array('ShowAnnounce', $this->options->PostSidebarBlock)): ?> 
     <div class="card-widget card-announcement"><div class="item-headline">
         <i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div>
     <div class="announcement_content"><?php $this->options->announcement() ?></div></div>
@@ -168,6 +170,5 @@
         </div >
 	</div>
     <?php endif; ?>
-
-        </div>
+</div>
 </div><!-- end #sidebar -->
