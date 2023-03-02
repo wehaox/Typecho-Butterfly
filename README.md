@@ -37,6 +37,7 @@ Demo：[WeHao‘s Blog](https://blog.wehaox.com/)
 
 ## 🎉已实现的功能
 
+- [x] 支持评论区谷歌人机验证、hcaptcha人机验证
 - [x] 全站加密或禁止访问
 - [x] 一键开启魔改主题
 - [x] 单独设置文章过期提醒
@@ -63,15 +64,13 @@ Demo：[WeHao‘s Blog](https://blog.wehaox.com/)
 - [x] 显示相关文章
 - [x] 过期文章提醒
 - [ ] 多种在线聊天（Chatra/Tidio/Daovoice/Gitter/Crisp）
-- [ ] 多种分析系统
-- [ ] 谷歌广告/手动广告位置
+- [x] 谷歌广告/手动广告位置
 - [x] 修改网站配色
 - [ ] 打字特效 activate_power_mode
 - [ ] 多种背景特效（静止彩带/动态彩带/Canvas Nest）
 - [x] 多种鼠标点击特效（烟花/爱心）
 - [ ] 内置一种 Preloader 加载动画
 - [x] Fancybox大图模式
-- [ ] Mermaid 图表显示
 - [ ] 照片墙
 - [x] 图片懒加载
 - [x] Snackbar弹窗
