@@ -227,6 +227,12 @@ function themeConfig($form) {
     $GravatarSelect->setAttribute('id', 'gravatarlist');
     $form->addInput($GravatarSelect->multiMode());
     
+    $baidustatistics = new Typecho_Widget_Helper_Form_Element_Text('baidustatistics', NULL,_t(''), _t('百度统计'), _t('仅需要https://hm.baidu.com/hm.js?xxxxxxxxxxxxxxxxxx部分即可'));
+    $form->addInput($baidustatistics);
+    
+    $googleadsense = new Typecho_Widget_Helper_Form_Element_Text('googleadsense', NULL,_t(''), _t('谷歌广告'), _t('仅需要https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?xxxxxxxxx部分即可'));
+    $form->addInput($googleadsense);
+    
     $EnablePjax = new Typecho_Widget_Helper_Form_Element_Select('EnablePjax',
     array(
         'off' => '关闭（默认）',
