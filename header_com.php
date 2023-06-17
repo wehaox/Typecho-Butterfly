@@ -74,6 +74,9 @@
         @media screen and (max-width:900px){
             #aside-content .card-info,#aside-content .card-announcement,#aside-content .card-recent-post,#aside-content #card-newest-comments,#aside-content .card-categories,#aside-content .card-tags,#aside-content .card-archives,#aside-content .card-webinfo{display:none;}
         }
+        ins.adsbygoogle[data-ad-status="unfilled"] {
+            display: none !important;
+        }
     </style>
     <?php endif; ?>
 <!--额外的-->
