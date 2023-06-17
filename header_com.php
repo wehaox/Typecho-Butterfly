@@ -6,6 +6,7 @@
 <!DOCTYPE HTML>
 <html data-theme="light" class="">
 <head>
+    <meta content="always" name="referrer">
     <link rel="icon" type="image/png" href="<?php $this->options->Sitefavicon() ?>">
     <meta charset="<?php $this->options->charset(); ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,12 +21,29 @@
     <!-- 使用url函数转换相关路径 -->
     <link rel="preconnect" href="//<?php $this->options->jsdelivrLink() ?>" />
     <link rel="preconnect" href="//cdn.staticfile.org" />
+    <link rel="preconnect" href="//static.nuoyis.com" />
     <!--<link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">-->
     <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.7.3'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.7.4'); ?>">
     <!--魔改美化-->
     <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange',$this->options->beautifyBlock)): ?>
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.5.9'); ?>">
+    <?php endif; ?>
+    <!--百度统计-->
+    <?php if($this->options->baidustatistics != ""): ?>
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+     var hm = document.createElement("script");
+     hm.src = "https://hm.baidu.com/hm.js?<?php $this->options->baidustatistics(); ?>";
+     var s = document.getElementsByTagName("script")[0]; 
+     s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <?php endif; ?>
+    <!--谷歌AdSense广告-->
+    <?php if($this->options->googleadsense != ""): ?>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?<?php $this->options->googleadsense(); ?>" crossorigin="anonymous"></script>
     <?php endif; ?>
     <!--图标库-->
     <link href="https://at.alicdn.com/t/font_3159629_5bvsat8p5l.css" rel="stylesheet" />
@@ -112,8 +130,8 @@ const GLOBAL_CONFIG = {
         },
     source: {
             justifiedGallery: {
-                js: "https://<?php $this->options->jsdelivrLink() ?>/npm/flickr-justified-gallery@2/dist/fjGallery.min.js",
-                css: "https://<?php $this->options->jsdelivrLink() ?>/npm/flickr-justified-gallery@2/dist/fjGallery.min.css"
+                js: "https://cdn.bootcdn.net/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.js",
+                css: "https://cdn.bootcdn.net/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.css"
             }
         },
     isPhotoFigcaption: !1,
