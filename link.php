@@ -145,33 +145,3 @@ $("#card-toc,#mobile-toc-button").remove();}});
   }
 }
 ?>
-
-            </div>
-    </div>
-</div>
-
-<?php $this->need('comments.php'); ?>
-</div>
-<?php $this->need('post_sidebar.php'); ?>
-<script src="<?php $this->options->themeUrl('js/comjs.js'); ?>"></script>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.0'); ?>"></script>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/clipboard.min.js'); ?>"></script>
-<script>
-$(document).ready(function(){var tocState = $(".toc").html();if(tocState.length == "1") {
-$("#card-toc,#mobile-toc-button").remove();}});
-</script>
-<?php if (!empty($this->options->beautifyBlock) && in_array('showLineNumber',
-    $this->options->beautifyBlock)): ?> 
-<script type="text/javascript">
-	(function(){
-		var pres = document.querySelectorAll('pre');
-		var lineNumberClassName = 'line-numbers';
-		pres.forEach(function (item, index) {
-			item.className = item.className == '' ? lineNumberClassName : item.className + ' ' + lineNumberClassName;
-		});
-	})();
-</script>
-<?php endif; ?>
-</main>
-<!-- end #main-->
-<?php $this->need('footer.php'); ?>
