@@ -21,7 +21,6 @@
     <!-- 使用url函数转换相关路径 -->
     <link rel="preconnect" href="//<?php $this->options->jsdelivrLink() ?>" />
     <link rel="preconnect" href="//cdn.staticfile.org" />
-    <link rel="preconnect" href="//static.nuoyis.com" />
     <!--<link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">-->
     <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.7.3'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.7.4'); ?>">
