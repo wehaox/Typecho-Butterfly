@@ -65,20 +65,6 @@
          }
         echo $content;
        ?>
-       <?php if($this->options->googleadsense != ""): ?>
-        <div class="post-adsense" style="overflow: hidden;">
-        </br>谷歌推广区(增值备案在网站google.cn内查询)</br>
-        <ins class="adsbygoogle"
-             style="display:block; text-align:center;"
-             data-ad-layout="in-article"
-             data-ad-format="fluid"
-             data-ad-client="<?php $this->options->googleadsense(); ?>"
-             data-ad-slot="3926138616"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-        </div>
-        <?php endif; ?>
     </article>
 <div class="post-copyright">
     <div class="post-copyright__author">
@@ -243,4 +229,6 @@ $(document).ready(function(){if($(".toc").html().length == "14"){$("#card-toc,#m
 <?php endif?>
 </main>
 <!-- end #main-->
+<!-- 分享链接需要的og协议 -->
+<?php $this->need('og_meta.php'); ?>
 <?php $this->need('footer.php'); ?>

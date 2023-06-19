@@ -218,7 +218,6 @@ function themeConfig($form) {
         "https://sdn.geekzu.org/avatar/" => '极客族',
         "https://cdn.sep.cc/avatar/" => '九月的风',
         "https://gravatar.com/avatar/" => '官方源(被墙)',
-        "https://cravatar.cn/avatar/" => '中国官方源(推荐)',
         ),
         'loli',
         'gravatar源选择',
@@ -226,12 +225,6 @@ function themeConfig($form) {
     );
     $GravatarSelect->setAttribute('id', 'gravatarlist');
     $form->addInput($GravatarSelect->multiMode());
-    
-    $baidustatistics = new Typecho_Widget_Helper_Form_Element_Text('baidustatistics', NULL,_t(''), _t('百度统计'), _t('仅需要https://hm.baidu.com/hm.js?xxxxxxxxxxxxxxxxxx部分即可'));
-    $form->addInput($baidustatistics);
-    
-    $googleadsense = new Typecho_Widget_Helper_Form_Element_Text('googleadsense', NULL,_t(''), _t('谷歌广告'), _t('仅需要https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?xxxxxxxxx部分即可'));
-    $form->addInput($googleadsense);
     
     $EnablePjax = new Typecho_Widget_Helper_Form_Element_Select('EnablePjax',
     array(
@@ -253,18 +246,6 @@ function themeConfig($form) {
     $form->addInput($PjaxCallBack);
     
     /* 友链设置 */
-    $friendset = new Typecho_Widget_Helper_Form_Element_Select('friendset',
-        array(
-            '1' => '插件模式',
-            '2' => '主题模式',
-        ),
-        '2',
-        '是否使用Link插件进行友链(需点击<a href="https://github.com/JoyNop/Typecho-Links">这里</a>下载)',
-        '介绍：新手和手残党极其友好,默认从主题读取防止报错'
-    );
-    $friendset->setAttribute('id', 'friendset');
-    $form->addInput($friendset);
-
     $Friends = new Typecho_Widget_Helper_Form_Element_Textarea('Friends',NULL,NULL,
         '友情链接（非必填）',
         '介绍：用于填写友情链接 <br />
