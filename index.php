@@ -52,14 +52,15 @@ if($this->options->pageSize<=5)
     $k=$m=$g=3;
 }else if($this->options->pageSize==10)
 {
-    $k=rand(4,6);
-    $m=rand(7,9);
+    $k=rand(3,4);
+    $m=rand(6,8);
     $g=rand(10,12);
 }else if($this->options->pageSize>5&&$this->options->pageSize<10){
     $k=$m=$g=4;
 }
 endif;
 while($this->next()): 
+    echo $i;
     if($this->options->googleadsense != ""):
     if($i==$k || $i==$m || $i==$g){
 ?>
