@@ -44,7 +44,40 @@ if($sticky && $this->is('index') || $this->is('front')){
 <?php  $this->need('header.php'); ?>
 <main class="layout" id="content-inner">
 <div class="recent-posts" id="recent-posts">
-<?php while($this->next()): ?>
+<?php 
+if($this->options->googleadsense != ""):
+$i=1;
+if($this->options->pageSize<=5)
+{
+    $k=$m=$g=3;
+}else if($this->options->pageSize==10)
+{
+    $k=rand(4,6);
+    $m=rand(7,9);
+    $g=rand(10,12);
+}else if($this->options->pageSize>5&&$this->options->pageSize<10){
+    $k=$m=$g=4;
+}
+endif;
+while($this->next()): 
+    if($this->options->googleadsense != ""):
+    if($i==$k || $i==$m || $i==$g){
+?>
+ <div class="recent-post-item ads-wrap">
+        <ins class="adsbygoogle"
+             style="display:block;height:200px;width:100%;"
+             data-ad-format="fluid"
+             data-ad-client="<?php $this->options->googleadsense(); ?>"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+  </div>
+<?php 
+$i++;
+}
+$i++;
+endif;
+?>
     <div class="recent-post-item">
         <wehao class="post_cover">
              <a  href="<?php $this->permalink() ?>">
