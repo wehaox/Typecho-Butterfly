@@ -60,7 +60,6 @@ if($this->options->pageSize<=5)
 }
 endif;
 while($this->next()): 
-    echo $i;
     if($this->options->googleadsense != ""):
     if($i==$k || $i==$m || $i==$g){
 ?>
