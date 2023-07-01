@@ -65,20 +65,6 @@
          }
         echo $content;
        ?>
-       <?php if($this->options->googleadsense != ""): ?>
-        <div class="post-adsense" style="overflow: hidden;">
-        </br>谷歌推广区(增值备案在网站google.cn内查询)</br>
-        <ins class="adsbygoogle"
-             style="display:block; text-align:center;"
-             data-ad-layout="in-article"
-             data-ad-format="fluid"
-             data-ad-client="<?php $this->options->googleadsense(); ?>"
-             data-ad-slot="3926138616"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-        </div>
-        <?php endif; ?>
     </article>
 <div class="post-copyright">
     <div class="post-copyright__author">
@@ -147,6 +133,18 @@
     </ul>
   </div>
 </div>
+<?php endif; ?>
+<?php if($this->options->googleadsense != ""): ?>
+  <div class="ads-wrap">
+  <ins class="adsbygoogle"
+       style="display:block;height: 180px;"
+       data-ad-layout="rectangle,horizonta"
+       data-ad-format="fluid"
+       data-ad-client="<?php $this->options->googleadsense(); ?>"></ins></div>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+  
 <?php endif; ?>
 <nav class="pagination-post" id="pagination">
 <?php $prevId = thePrevCid($this);$nextId=theNextCid($this);?>
