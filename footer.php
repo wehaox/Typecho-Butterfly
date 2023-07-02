@@ -93,6 +93,9 @@
 </div>
 <!--搜索end  -->
 <div class="js-pjax">
+<?php if ($this->options->hcaptchaSecretKey !== "" && $this->options->hcaptchaAPIKey !== ""): ?> 
+<script src="https://hcaptcha.com/1/api.js" async defer></script>
+<?php endif ?> 
 <?php if ($this->is('post') || $this->is('page')): ?>
 <script src="<?php $this->options->themeUrl('js/comjs.js?v1.4.3'); ?>"></script>
 <?php endif ?>
@@ -115,7 +118,7 @@ clock_rectangle = "112.6534116,27.96920845", clock_default_rectangle_enable = "f
 <script>$(document).ready(function(){var a=document.getElementsByTagName("a");for(let i=0;i<a.length;i++){let domain=document.domain;let url=a[i].href;if(typeof(url)!="undefined"&&url.length!=0&&url.match(domain)==null&&url!="javascript:void(0);"){a[i].setAttribute("target","_BLANK")}}});</script>
 <?php endif; ?>        
 <?php if($this->is('index')): ?>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/wehao.js?v1.7.0'); ?>"></script>
+<script type="text/javascript" src="<?php $this->options->themeUrl('js/wehao.js?v1.7.6'); ?>"></script>
 <style>#page-header:not(.not-top-img):before {background-color: rgba(0,0,0,0);}</style>
 <!--打字-->
 <?php if (is_array($this->options->beautifyBlock) && in_array('ShowTopimg',$this->options->beautifyBlock)): ?>
@@ -262,6 +265,11 @@ e.contains("read-mode") && e.remove("read-mode")
 NProgress.start();
 })),
 document.addEventListener("pjax:complete", (function() {
+    <?php if ($this->options->hcaptchaSecretKey !== "" && $this->options->hcaptchaAPIKey !== ""): ?> 
+    hcaptcha.render('h-captcha', {
+        sitekey: '<?php $this->options->hcaptchaSecretKey() ?>'
+    });
+    <?php endif ?> 
     <?php $this->options->PjaxCallBack() ?>
     NProgress.done();
     window.refreshFn(), 
@@ -274,6 +282,7 @@ document.addEventListener("pjax:complete", (function() {
     "object" == typeof _hmt && _hmt.push(["_trackPageview", window.location.pathname]), 
     "function" == typeof loadMeting && document.getElementsByClassName("aplayer").length && loadMeting(),
     "object" == typeof Prism && Prism.highlightAll(), "object" == typeof preloader && preloader.endLoading()
+    coverShow()
 })),
 document.addEventListener("pjax:error", e => {
     // 404 === e.request.status && pjax.loadUrl("/404");

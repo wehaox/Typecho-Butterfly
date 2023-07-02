@@ -44,7 +44,6 @@ function themeConfig($form) {
     );
     $form->addInput($StaticFile->multiMode());
     
-    
     $CDNURL = new Typecho_Widget_Helper_Form_Element_Text('CDNURL',NULL,NULL,
     '自定义CDNURL(由@origami-tech提供)',
     '需要选择博客静态资源加载方式为CDN加载 此项才会生效 且<b>本地加载>自定义CDNURL>jsdelivr源</b><br>
@@ -154,7 +153,6 @@ function themeConfig($form) {
     $categorylink = new Typecho_Widget_Helper_Form_Element_Text('categorylink', NULL,_t('#null'), _t('侧栏分类链接'), _t('需在独立页面创建并手动填入链接'));
     $form->addInput($categorylink);
     
-    
     $CloseComments = new Typecho_Widget_Helper_Form_Element_Select('CloseComments',
     array(
         'off' => '关闭（默认）',
@@ -210,7 +208,10 @@ function themeConfig($form) {
         '介绍：如果你使用繁体写文章请选择繁体'
     );
     $form->addInput($DefaultEncoding->multiMode());
-    
+       
+    $themeFontSize = new Typecho_Widget_Helper_Form_Element_Text('themeFontSize', NULL,_t(''), _t('默认字体大小'), _t('填入像素值，例如14px'));
+    $form->addInput($themeFontSize);
+
     $GravatarSelect = new Typecho_Widget_Helper_Form_Element_Select('GravatarSelect',
     array(
         "https://gravatar.loli.net/avatar/" => 'loli（默认）',
@@ -226,11 +227,11 @@ function themeConfig($form) {
     );
     $GravatarSelect->setAttribute('id', 'gravatarlist');
     $form->addInput($GravatarSelect->multiMode());
-    
+
     $baidustatistics = new Typecho_Widget_Helper_Form_Element_Text('baidustatistics', NULL,_t(''), _t('百度统计'), _t('仅需要https://hm.baidu.com/hm.js?xxxxxxxxxxxxxxxxxx部分即可'));
     $form->addInput($baidustatistics);
     
-    $googleadsense = new Typecho_Widget_Helper_Form_Element_Text('googleadsense', NULL,_t(''), _t('谷歌广告'), _t('仅需要https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?xxxxxxxxx部分即可'));
+    $googleadsense = new Typecho_Widget_Helper_Form_Element_Text('googleadsense', NULL,_t(''), _t('谷歌广告(实验性功能)'), _t('填入client后的部分,如ca-pub-xxxxx'));
     $form->addInput($googleadsense);
     
     $EnablePjax = new Typecho_Widget_Helper_Form_Element_Select('EnablePjax',
@@ -247,18 +248,18 @@ function themeConfig($form) {
     $form->addInput($EnablePjax->multiMode());
     
     $PjaxCallBack = new Typecho_Widget_Helper_Form_Element_Textarea('PjaxCallBack',NULL,NULL,
-        'Pjax回调函数（非必填）',
-        '用于解决开启pjax导致js丢失问题'
+        'PJAX回调函数（非必填）',
+        '用于解决开启pjax导致某些js失效问题(填入js代码)'
     );
     $form->addInput($PjaxCallBack);
     
     /* 友链设置 */
     $friendset = new Typecho_Widget_Helper_Form_Element_Select('friendset',
         array(
-            '1' => '插件模式',
-            '2' => '主题模式',
+            '1' => '主题模式',
+            '2' => '插件模式',
         ),
-        '2',
+        '1',
         '是否使用Link插件进行友链(需点击<a href="https://github.com/JoyNop/Typecho-Links">这里</a>下载)',
         '介绍：新手和手残党极其友好,默认从主题读取防止报错'
     );
@@ -362,8 +363,9 @@ function themeConfig($form) {
     'showSnackbar' => _t('是否显示主题以及简繁切换弹窗'),
     'showLazyloadBlur' => _t('是否开启懒加载模糊效果'),
     'showButterflyClock' => _t('是否开启侧栏显示时钟(需要在下方填写和风和高德key)'),
+    'showNoAlertSearch' => _t('是否开启无弹窗搜索框'),
     ),
-    array('ShowTopimg','PostShowTopimg','PageShowTopimg','showLineNumber','showSnackbar','showLazyloadBlur'), _t('美化选项'));
+    array('ShowTopimg','PostShowTopimg','PageShowTopimg','showLineNumber','showSnackbar','showLazyloadBlur','showNoAlertSearch'), _t('美化选项'));
     $beautifyBlock->setAttribute('id', 'beautifyBlock');
     $form->addInput($beautifyBlock->multiMode());
     
@@ -401,10 +403,10 @@ function themeConfig($form) {
     $SnackbarPosition = new Typecho_Widget_Helper_Form_Element_Select('SnackbarPosition',
         array(
             'top-left' => '左上(默认)',
-            'top-center' => '上中',
+            'top-center' => '中上',
             'top-right' => '右上',
             'bottom-left' => '左下',
-            'bottom-center' => '下中',
+            'bottom-center' => '中下',
             'bottom-right' => '右下',
         ),
         'top-left',
@@ -673,6 +675,15 @@ function themeFields($layout)
     );
     $layout->addItem($thumb);
 
+    $summaryContent = new Typecho_Widget_Helper_Form_Element_Textarea(
+        'summaryContent',
+        NULL,
+        NULL,
+        '自定义文章摘要',
+        '不喜欢自动生成的摘要？那就来自定义吧！'
+    );
+    $layout->addItem($summaryContent);    
+
     $desc = new Typecho_Widget_Helper_Form_Element_Text(
         'desc',
         NULL,
@@ -734,8 +745,18 @@ function themeFields($layout)
         '文章版权说明',
         '介绍：默认为CC BY-NC-SA 4.0'
     );
-    $layout->addItem($CopyRight);    
-    
+    $layout->addItem($CopyRight);
+
+    $NoCover = new Typecho_Widget_Helper_Form_Element_Select('NoCover',
+        array(
+            'on' => '显示封面',
+            'off' => '不显示封面',
+        ),
+        'on',
+        '主页是否显示封面',
+        '介绍：这篇文章看来不需要封面'
+    );
+    $layout->addItem($NoCover);    
 }
 // 新文章缩略图
 function get_ArticleThumbnail($widget){
@@ -795,6 +816,7 @@ function GetRandomThumbnail($widget)
 // 文章封面缩略图
 function GetRandomThumbnailPost($widget)
 {
+    $img = '';
     if ($widget->fields->thumb) {
         $img = $widget->fields->thumb;
     }
@@ -1720,7 +1742,7 @@ class editor
 {
   public static function reset()
     {
-        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.6.3' . "'></script>";
+        echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.7.6' . "'></script>";
         echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css?v1.6.3' . "'>";
     }
 
@@ -1769,7 +1791,8 @@ function RecapOutPut($login) {
                               <div class="g-recaptcha" data-sitekey=' . $siteKey . '></div>';
       	}		
       	if (Helper::options()->hcaptchaSecretKey !== "" && Helper::options()->hcaptchaAPIKey !== "" && !$login) {
-		    echo '<script src="https://www.hCaptcha.com/1/api.js" async defer></script><div class="h-captcha" data-sitekey='. Helper::options()->hcaptchaSecretKey .'></div>';
+		    echo '
+            <div id="h-captcha" class="h-captcha" data-sitekey='. Helper::options()->hcaptchaSecretKey .'></div>';
       	}
 }
 
@@ -1819,13 +1842,26 @@ if (isset($_REQUEST['text']) != null) {
          $secret = Helper::options()->hcaptchaAPIKey;
          $verifyResponse = file_get_contents('https://hcaptcha.com/siteverify?secret='.$secret.'&response='.$_POST['h-captcha-response'].'&remoteip='.$_SERVER['REMOTE_ADDR']);
          $responseData = json_decode($verifyResponse);
-         if($responseData->success == true)
+         if($responseData->success === true || $responseData->success === 1)
          {
              return $comments;
-         }else{
-             throw new Typecho_Widget_Exception(_t($responseData->error-codes));
          }
-     }        
+         else{
+            switch ($responseData->error-codes) {
+                case '{[0] => "timeout-or-duplicate"}':
+                    throw new Typecho_Widget_Exception(_t('验证时间超过2分钟或连续重复发言！'));
+                    break;
+                case '{[0] => "invalid-input-secret"}':
+                    throw new Typecho_Widget_Exception(_t('网站管理员填了无效的siteKey或者secretKey...'));
+                    break;
+                case '{[0] => "bad-request"}':
+                    throw new Typecho_Widget_Exception(_t('请求错误！请检查网络'));
+                    break;
+                default:
+                    throw new Typecho_Widget_Exception(_t('很遗憾，您被当成了机器人...'));
+                }
+            }
+        }        
     }
 }
 return $comment;
@@ -1842,6 +1878,7 @@ $jyzy = array(
 	'综艺' => '综',
 	'音乐' => '音',
 	'盛典' => '盛',
+    '晚会' => '晚',
 );
 
 $hotness = array(
@@ -1855,6 +1892,7 @@ $hotness = array(
     '剧' => 'weibo-jyzy',
     '综' => 'weibo-jyzy',
     '盛' => 'weibo-jyzy',
+    '晚' => 'weibo-jyzy',
     );
 
 foreach($data as $item){
@@ -1879,4 +1917,28 @@ foreach($data as $item){
 	}
 	echo '<div class="weibo-list-item"><div class="weibo-hotness '.$hotness[$hot].'">'.$hot.'</div><span class="weibo-title"><a title="'.$item['note'].'" href="https://s.weibo.com/weibo?q=%23' . $item['word'] . '%23" target="_blank" rel="external nofollow noreferrer" style="color:#a08ed5">'.$item['note'].'</a></span><div class="weibo-num"><span>'.$item['num'].'</span></div></div>';
     }
+}
+
+// 自定义文章摘要
+function summaryContent($widget)
+{
+    $summaryContent = '';
+    if ($widget->fields->summaryContent) {
+        $summaryContent = $widget->fields->summaryContent;
+    }
+    elseif($widget->fields->excerpt && $widget->fields->excerpt!='') {
+        $summaryContent = $widget->fields->excerpt;
+    }
+    else{
+        $summaryContent = $widget->excerpt(130);
+    }
+    echo $summaryContent;
+}
+
+//主页封面处理函数
+function noCover($widget){
+    if($widget->fields->NoCover == "off"){
+        return false;
+    }
+    return true;
 }

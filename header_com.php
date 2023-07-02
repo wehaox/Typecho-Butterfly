@@ -42,7 +42,7 @@
     <?php endif; ?>
     <!--谷歌AdSense广告-->
     <?php if($this->options->googleadsense != ""): ?>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?<?php $this->options->googleadsense(); ?>" crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?php $this->options->googleadsense(); ?>" crossorigin="anonymous"></script>
     <?php endif; ?>
     <!--图标库-->
     <link href="https://at.alicdn.com/t/font_3159629_5bvsat8p5l.css" rel="stylesheet" />
@@ -64,6 +64,11 @@
     <?php endif; ?>
     <?php if (!empty($this->options->beautifyBlock) && in_array('showLazyloadBlur',$this->options->beautifyBlock)): ?>
     <style>
+      <?php if($this->options->themeFontSize != ""):?>
+      :root {
+        --global-font-size: <?php $this->options->themeFontSize() ?>;
+      } 
+      <?php endif ?>
         img[data-lazy-src]:not(.loaded) {filter: blur(10px) brightness(1);}img[data-lazy-src].error {filter: none;}
         <?php $this->options->CustomCSS() ?>
     </style>
@@ -283,6 +288,7 @@ var GLOBAL_CONFIG_SITE = {
         if (fontSizeVal !== undefined) {
           document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
         }
+        if(/iPadliphoneliPod Macintosh/.test(navigator.userAgent)){document.documentElement.classList.add('apple')}
       })()</script>
 <style type="text/css" data-typed-js-css="true">
     .typed-cursor {
@@ -316,12 +322,14 @@ var GLOBAL_CONFIG_SITE = {
     }
   </style>
 <!--额外的-->
+
 <?php if ($this->options->EnableCustomColor === 'true'): ?>
 <style>
 ::-webkit-scrollbar-thumb {
     background-color: <?php $this->options->CustomColorMain()?>!important;
 }
 :root {
+    --global-font-size: 25px!important;
     --btn-hover-color: <?php $this->options->CustomColorButtonHover()?>;
     --btn-bg: <?php $this->options->CustomColorButtonBG()?>;
     --text-bg-hover: <?php $this->options->CustomColorButtonBG()?>;
@@ -350,7 +358,9 @@ var GLOBAL_CONFIG_SITE = {
 <script src="<?php $this->options->themeUrl('/js/main.js?v1.7.3'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/utils.js?v1.7.3'); ?>"> </script>
 <script src="<?php $this->options->themeUrl('/js/tw_cn.js?v1.7.3'); ?>"> </script>
+<?php if (is_array($this->options->beautifyBlock) && !in_array('showNoAlertSearch',$this->options->beautifyBlock)): ?>
 <script src="<?php $this->options->themeUrl('/js/local-search.js'); ?>"> </script>
+<?php endif ?>
 <?php if($this->options->StaticFile == 'CDN' && $this->options->CDNURL == ''): ?>
 <script src="https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-y/instant.page/5.1.0/instantpage.min.js" type="module"> </script>

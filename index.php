@@ -7,7 +7,7 @@
  * <a href="https://www.wehaox.com">个人网站</a> | <a href="https://blog.wehaox.com/archives/typecho-butterfly.html">主题使用文档</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.7.5
+ * @version 1.7.6
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -79,11 +79,13 @@ $i++;
 endif;
 ?>
     <div class="recent-post-item">
+    <?php if(noCover($this)): ?>  
         <wehao class="post_cover">
-             <a  href="<?php $this->permalink() ?>">
-                 <img class="post-bg" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" src="<?php echo GetLazyLoad() ?>" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'"></a>
+             <a href="<?php $this->permalink() ?>">
+                <img class="post-bg" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" src="<?php echo GetLazyLoad() ?>" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'"></a>
         </wehao>
-    <div class="recent-post-info">
+    <?php endif ?>
+    <div class="recent-post-info<?php echo noCover($this) ? '' : ' no-cover'; ?>">
         <a  class="article-title" href="<?php $this->permalink() ?>"><?php $this->title() ?></a>
         <div class="article-meta-wrap">
         <?php $this->sticky(); ?>
@@ -114,16 +116,11 @@ endif;
                 <a class="twikoo-count" href="<?php $this->permalink() ?>#comments"><?php $this->commentsNum('0条评论', '1 条评论', '%d 条评论'); ?></a>
             </span>
         </div>
-    <div class="content">
-        <?php 
-        if($this->fields->excerpt && $this->fields->excerpt!='') {
-            echo $this->fields->excerpt;}
-        else{
-            echo $this->excerpt(130);
-        }
-            echo '<br><br><a href="',$this->permalink(),'" title="',$this->title(),'">阅读全文...</a>';
-        ?>
-    </div>
+        <div class="content">
+            <?php summaryContent($this);
+            echo '<br><a href="',$this->permalink(),'" title="',$this->title(),'">阅读全文...</a>';
+                ?>
+            </div>
     </div>
 </div>
 <?php endwhile; ?>
@@ -137,15 +134,15 @@ endif;
 <script>
 function ver() {console.log(`
 ===================================================================
-                                                                             
+                                                                   
     #####  #    # ##### ##### ###### #####  ###### #      #   #    
     #    # #    #   #     #   #      #    # #      #       # #     
-    #####  #    #   #     #   #####  #    # #####  #        #     
+    #####  #    #   #     #   #####  #    # #####  #        #      
     #    # #    #   #     #   #      #####  #      #        #      
-    #    # #    #   #     #   #      #   #  #      #        #    
+    #    # #    #   #     #   #      #   #  #      #        #     
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                            1.7.5
+                            1.7.6
 ===================================================================
 `);}
 </script>
