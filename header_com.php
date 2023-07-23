@@ -329,7 +329,6 @@ var GLOBAL_CONFIG_SITE = {
     background-color: <?php $this->options->CustomColorMain()?>!important;
 }
 :root {
-    --global-font-size: 25px!important;
     --btn-hover-color: <?php $this->options->CustomColorButtonHover()?>;
     --btn-bg: <?php $this->options->CustomColorButtonBG()?>;
     --text-bg-hover: <?php $this->options->CustomColorButtonBG()?>;
