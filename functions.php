@@ -256,10 +256,10 @@ function themeConfig($form) {
     /* 友链设置 */
     $friendset = new Typecho_Widget_Helper_Form_Element_Select('friendset',
         array(
-            '1' => '主题模式',
-            '2' => '插件模式',
+            '0' => '主题模式',
+            '1' => '插件模式',
         ),
-        '1',
+        '0',
         '是否使用Link插件进行友链(需点击<a href="https://github.com/JoyNop/Typecho-Links">这里</a>下载)',
         '介绍：新手和手残党极其友好,默认从主题读取防止报错'
     );
@@ -782,7 +782,7 @@ function get_ArticleThumbnail($widget){
       return $thumbUrl[1][0];
   }else {
       return $random;
-  }
+ }
 };
 
 
@@ -818,7 +818,7 @@ function GetRandomThumbnailPost($widget)
 {
     $img = '';
     if ($widget->fields->thumb) {
-        $img = $widget->fields->thumb;
+       $img = $widget->fields->thumb;
     }
     echo $img;
 }
