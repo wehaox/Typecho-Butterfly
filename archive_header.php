@@ -47,12 +47,19 @@
         <a id="site-name" href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a>
     </span>
         <div id="menus">
-              <div id="search-button">
-                  <a class="site-page social-icon search">
-                  <i class="fas fa-search fa-fw"></i>
-                  <span> 搜索</span></a>
-                  </div>
-                    <div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div>
+        <div id="search-button">
+            <a class="site-page social-icon search">
+            <i class="fas fa-search fa-fw"></i>
+            <?php if (is_array($this->options->beautifyBlock) && in_array('showNoAlertSearch',$this->options->beautifyBlock)): ?>
+                <form method="post" action="<?php $this->options->siteUrl(); ?>" role="search" id="dSearch">
+                    <input type="text" placeholder="搜索" id="dSearchIn" name="s" required="required">
+                </form>
+            <?php else: ?>
+                <span> 搜索</span>
+            <?php endif ?>
+            </a> 
+        </div>
+        <div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div>
                 <div class="menus_items">
                     <div class="menus_item">
                        <a class="site-page" href="<?php $this->options->siteUrl(); ?>">
@@ -91,6 +98,6 @@
                 <?php endwhile; ?>
             </div>
             </div>
-        </div>
+        </div> 
     </nav>
 </header>

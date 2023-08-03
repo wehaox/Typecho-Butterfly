@@ -1,7 +1,7 @@
 <nav id="nav" class="show" >
          <span id="blog-info">
             <a href="<?php $this->options->siteUrl(); ?>">
-                <?php if($this->options->SiteLogo !== '') : ?>
+                <?php if(!empty($this->options->SiteLogo)) : ?>
                 <img src="<?php $this->options->SiteLogo() ?>" width="95px" />
                 <?php else :?>
                 <span class="site-name"><?php $this->options->title() ?></span>
@@ -66,48 +66,3 @@
                 </div>
             </div>
     </nav>
-
-<?php if (is_array($this->options->beautifyBlock) && in_array('showNoAlertSearch',$this->options->beautifyBlock)): ?>
-<style>
-#dSearch{
-    display: inline-block;
-}
-#dSearch>input {
-    border: none;
-    opacity: 1;
-    outline: none;
-    width: 35px;
-    text-indent: 2px;
-    transition: all .5s;
-    background: transparent;
-}
-#page-header.nav-fixed #nav ::placeholder,
-#page-header.nav-fixed #nav input {
-    color: var(--font-color);
-}
-
-#nav ::placeholder,
-#nav input {
-    color: var(--light-grey);
-}
-#page-header.not-top-img #nav ::placeholder,
-#page-header.not-top-img #nav input {
-    color: var(--font-color);
-    text-shadow: none;
-}
-
-#page-header.nav-fixed #nav a:hover {
-    color: unset;
-}
-
-</style>
-<script>
-var input = document.getElementById('dSearchIn');
-input.addEventListener('focus', function() {
-  input.style.width = '150px';
-});
-input.addEventListener('blur', function() {
-  input.style.width = '35px';
-});
-</script>
-<?php endif ?>

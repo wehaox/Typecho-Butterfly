@@ -1,13 +1,13 @@
 <?php
 /**
- * <span><script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>主题最新版本：<span id="latest">获取中...</span><script>$(document).ready(function() {$.get("https://typecho.wehao.ml", function(data) { $("#latest").text(data.ver);});});</script></span>
+ * <span>主题最新版本：<span id="latest">获取中...</span><script>fetch('https://ty.wehao.org').then(res => res.json()).then(({ver}) => {document.getElementById("latest").textContent = ver})</script></span>
  * 这是 Typecho 版本的 butterfly 主题
  * 主题为移植至Typecho，你可以替换原butterfly主题的index.css文件
  * 当前适配 hexo-butterfly 4.6.0
  * <a href="https://www.wehaox.com">个人网站</a> | <a href="https://blog.wehaox.com/archives/typecho-butterfly.html">主题使用文档</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.7.6
+ * @version 1.7.7
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -142,7 +142,7 @@ function ver() {console.log(`
     #    # #    #   #     #   #      #   #  #      #        #     
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                            1.7.6
+                            1.7.7
 ===================================================================
 `);}
 </script>

@@ -93,6 +93,21 @@
 </div>
 <!--搜索end  -->
 <div class="js-pjax">
+<?php if (is_array($this->options->beautifyBlock) && in_array('showNoAlertSearch',$this->options->beautifyBlock)): ?>
+<script>
+(function() {
+const searchButton = document.getElementById('search-button');
+const input = document.getElementById('dSearchIn');
+searchButton.addEventListener('click', function() {
+  input.style.width = '150px';
+  input.focus();
+});
+input.addEventListener('blur', function() {
+  input.style.width = '35px';
+});
+})()
+</script>
+<?php endif ?>
 <?php if ($this->options->hcaptchaSecretKey !== "" && $this->options->hcaptchaAPIKey !== ""): ?> 
 <script src="https://hcaptcha.com/1/api.js" async defer></script>
 <?php endif ?> 
