@@ -1,39 +1,7 @@
 <?php  $this->need('header_com.php'); ?>
 <style>#body-wrap {min-height: 0;}</style>
 <div id="web_bg"></div>
-<div id="rightside">
-	<div id="rightside-config-hide" class="">
-		<button id="font-plus" type="button" title="放大字体">
-			<i class="fas fa-plus">
-			</i>
-		</button>
-		<button id="font-minus" type="button" title="缩小字体">
-			<i class="fas fa-minus">
-			</i>
-		</button>
-		<button id="translateLink" type="button" title="简繁转换">
-			簡
-		</button>
-		<button id="darkmode" type="button" title="浅色和深色模式转换">
-			<i class="fas fa-adjust">
-			</i>
-		</button>
-		<button id="hide-aside-btn" type="button" title="单栏和双栏切换">
-			<i class="fas fa-arrows-alt-h">
-			</i>
-		</button>
-	</div>
-	<div id="rightside-config-show">
-		<button id="rightside_config" type="button" title="设置">
-			<i class="fas fa-cog fa-spin">
-			</i>
-		</button>
-		<button id="go-up" type="button" title="回到顶部">
-			<i class="fas fa-arrow-up">
-			</i>
-		</button>
-	</div>
-</div>
+<?php require_once('public/rightside.php');?>
 <div class="page" id="body-wrap">
 <header class="not-home-page" id="page-header"  style="background-image: url(<?php if ($this->is('page')){GetRandomThumbnailPost($this);}?>)">
          <div id="page-site-info"><h1 id="site-title"><?php $this->archiveTitle(array(

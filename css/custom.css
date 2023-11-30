@@ -85,12 +85,12 @@ audio {
 .recent-post-info {
 	padding: 0 40px;
 	margin-top: 1em;
-	width: 100%
+	width: 100%;
 }
 
-@media screen and (max-width:768px) {
-	width:100%
-}
+/* @media screen and (max-width:768px) {
+	width: 100%;
+} */
 
 #recent-posts>.recent-post-item,.layout>div:first-child:not(.recent-posts),.layout_post>#page,.layout_post>#post,.read-mode .layout_post>#post {
 	background: var(--light_page_color)

@@ -7,49 +7,7 @@
      <?php  $this->need('public/nav.php'); ?>
 </header>
     <div id="error-wrap"><div class="error-content"><div class="error-img"><img src="https://i.loli.net/2020/05/19/aKOcLiyPl2JQdFD.png" alt="Page not found" class="entered"></div><div class="error-info"><h1 class="error_title">404</h1><div class="error_subtitle">頁面沒有找到</div></div></div></div></div>
-<div id="rightside">
-	<div id="rightside-config-hide" class="">
-	    <?php if ($this->is('post')): ?>
-	    <button id="readmode" type="button" title="阅读模式">
-	        <i class="fas fa-book-open"></i>
-	    </button>
-	    <?php endif ?>
-		<button id="translateLink" type="button" title="简繁转换">
-			繁
-		</button>
-		<button id="darkmode" type="button" title="浅色和深色模式转换">
-			<i class="fas fa-adjust">
-			</i>
-		</button>
-		<button id="hide-aside-btn" type="button" title="单栏和双栏切换">
-			<i class="fas fa-arrows-alt-h">
-			</i>
-		</button>
-	</div>
-	<div id="rightside-config-show">
-		<button id="rightside_config" type="button" title="设置">
-			<i class="fas fa-cog fa-spin">
-			</i>
-		</button>
-		<?php if ($this->is('post')): ?>
-		<button class="close" id="mobile-toc-button" type="button" title="目录">
-			<i class="fas fa-list-ul">
-			</i>
-		</button>
-		<?php endif ?>
-		<?php if(!$this->is('index') && $this->allow('comment')): ?>
-		<a id="to_comment" href="#comments" title="直达评论">
-			<i class="fas fa-comments">
-			</i>
-		</a>
-		<?php endif ?>
-		<button id="go-up" type="button" title="回到顶部">
-			<i class="fas fa-arrow-up">
-			</i>
-		</button>
-	</div>
-</div>
-
+    <?php require_once('public/rightside.php');?>
 <?php if ($this->options->showFramework == 'off'): ?>
 <style>.framework-info{display:none}</style>
 <?php endif; ?>
@@ -145,7 +103,7 @@ new Typed("#subtitle",{
 <?php elseif($this->options->StaticFile == 'CDN' && $this->options->CDNURL !== ''): ?>
 <link rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.css">
 <script src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.js"></script>
-<script src="<?php $this->options->CDNURL() ?>/static/js/pjax.min.js"></script>
+<script src="<?php $this->options->CDNURL() ?>/js/pjax.min.js"></script>
 <?php else: ?>
 <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/nprogress.css'); ?>">
 <script src="<?php $this->options->themeUrl('static/js/nprogress.js'); ?>"></script>
