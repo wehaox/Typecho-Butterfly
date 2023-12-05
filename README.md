@@ -10,9 +10,9 @@
 
 原主题：[hexo-butterfly](https://github.com/jerryc127/hexo-theme-butterfly)
 
-Demo：[WeHao‘s Blog](https://blog.wehaox.com/)
+Demo：[WeHao‘s Blog](https://blog.haoi.net/)
 
-使用文档：[使用文档](https://blog.wehaox.com/archives/typecho-butterfly.html)
+使用文档：[使用文档](https://blog.haoi.net/archives/typecho-butterfly.html)
 
 ## 💻安装
 你最好从[Release](https://github.com/wehaox/Typecho-Butterfly/releases)  页面下载，code页下载代码可能更新遗漏或者更新提前导致页面出错  
@@ -78,7 +78,7 @@ Demo：[WeHao‘s Blog](https://blog.wehaox.com/)
 
 详情看：
 
-[博客说明](https://blog.wehaox.com/archives/blogtheme.html)
+[博客说明](https://blog.haoi.net/archives/blogtheme.html)
 
 
 ## 请作者喝瓶快乐水
