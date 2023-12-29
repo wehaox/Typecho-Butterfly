@@ -22,7 +22,6 @@
           ), '', ' - '); ?><?php $this->options->title(); ?></title>
   <!-- 使用url函数转换相关路径 -->
   <link rel="preconnect" href="//<?php $this->options->jsdelivrLink() ?>" />
-  <link rel="preconnect" href="//cdn.staticfile.org" />
   <!--<link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">-->
   <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.7.3'); ?>">
   <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.7.8'); ?>">
@@ -48,7 +47,7 @@
   <?php endif; ?>
   <!--图标库-->
   <link href="https://at.alicdn.com/t/font_3159629_5bvsat8p5l.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="https://lib.baomitu.com/font-awesome/6.5.1/css/all.min.css">
   <!--其余静态文件-->
   <link rel="stylesheet" href="<?php cdnBaseUrl() ?>/css/fancybox.css">
   <link rel="stylesheet" href="<?php cdnBaseUrl() ?>/css/OwO.min.css">

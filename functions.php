@@ -537,14 +537,14 @@ function getGravatar($email, $name, $comments_a, $s = 96, $d = 'mp', $r = 'g')
         }
         $dbk = $db->fetchRow($db->select('qqk')->from('table.comments')->where('mail=?', $email))['qqk'];
         if ($dbk == NULL) {
-            $geturl = 'https://ptlogin2.qq.com/getface?&imgtype=1&uin=' . $qquser;
-            $qqurl = file_get_contents($geturl);
-            $str1 = explode('sdk&k=', $qqurl);
-            if (isset($str1[1])) {
-                $str2 = explode('&t=', $str1[1]);
-                $k = $str2[0];
-                $db->query($db->update('table.comments')->rows(array('qqk' => $k))->where('mail=?', $email));
-            }
+            // $geturl = 'https://ptlogin2.qq.com/getface?&imgtype=1&uin=' . $qquser;
+            // $qqurl = file_get_contents($geturl);
+            // $str1 = explode('sdk&k=', $qqurl);
+            // if (isset($str1[1])) {
+            //     $str2 = explode('&t=', $str1[1]);
+            //     $k = $str2[0];
+            //     $db->query($db->update('table.comments')->rows(array('qqk' => $k))->where('mail=?', $email));
+            // }
             $url = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $qquser . '&spec=100';
         } else {
             $url = 'https://q1.qlogo.cn/g?b=qq&k=' . $dbk . '&s=100';
@@ -1175,13 +1175,4 @@ function cdnBaseUrl(){
     else{
         echo Helper::options()->themeUrl . '/static';
     }
-}
-
-function darkTimeFunc(){
-    $time = Helper::options()->darkTime;
-    if(empty($time)){
-        $time = "7-20";
-    }
-    $timeSlot = explode('-', $time);
-    echo "e <= $timeSlot[0] || e >= $timeSlot[1]";
 }
