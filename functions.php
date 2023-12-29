@@ -1176,3 +1176,12 @@ function cdnBaseUrl(){
         echo Helper::options()->themeUrl . '/static';
     }
 }
+
+function darkTimeFunc(){
+    $time = Helper::options()->darkTime;
+    if(empty($time)){
+        $time = "7-20";
+    }
+    $timeSlot = explode('-', $time);
+    echo "e <= $timeSlot[0] || e >= $timeSlot[1]";
+}
