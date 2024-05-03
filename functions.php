@@ -720,7 +720,7 @@ function threadedComments($comments, $options)
                 $comments_a = 'class="vimg" style="border-radius: 50%;"';
                 echo getGravatar($email, $name, $comments_a); ?>
                 <div class="vuser">
-                    <cite class="vnick" title="<?php $comments->author(); ?>">
+                    <cite class="vnick" title="<?php $comments->author; ?>">
                         <?php $comments->author(); ?>
                     </cite>
                     <?php commentRank($comments, $comments->mail); ?>
