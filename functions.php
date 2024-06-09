@@ -537,14 +537,13 @@ function getGravatar($email, $name, $comments_a, $s = 96, $d = 'mp', $r = 'g')
         }
         $dbk = $db->fetchRow($db->select('qqk')->from('table.comments')->where('mail=?', $email))['qqk'];
         if ($dbk == NULL) {
-            // $geturl = 'https://ptlogin2.qq.com/getface?&imgtype=1&uin=' . $qquser;
-            // $qqurl = file_get_contents($geturl);
-            // $str1 = explode('sdk&k=', $qqurl);
-            // if (isset($str1[1])) {
-            //     $str2 = explode('&t=', $str1[1]);
-            //     $k = $str2[0];
-            //     $db->query($db->update('table.comments')->rows(array('qqk' => $k))->where('mail=?', $email));
-            // }
+            $geturl = 'http://qqk.wehao.org/?uin=' . $qquser;
+            $qqurl = file_get_contents($geturl);
+            $json = json_decode($qqurl, true);
+            if (isset($json['code']) && $json['code'] == 200) {
+                $k = $json['k'].'&kti='.$json['kti'];
+                $db->query($db->update('table.comments')->rows(array('qqk' => $k))->where('mail=?', $email));
+            }
             $url = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $qquser . '&spec=100';
         } else {
             $url = 'https://q1.qlogo.cn/g?b=qq&k=' . $dbk . '&s=100';
@@ -833,6 +832,17 @@ function get_post_view($archive)
             Typecho_Cookie::set('contents_views', $cookie);
         }
     }
+    echo $exist == 0 ? '0' : ' ' . $exist;
+}
+
+function only_get_post_view($archive)
+{
+    $db = Typecho_Db::get();
+    $cid = $archive->cid;
+    if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')))) {
+        $db->query('ALTER TABLE `' . $db->getPrefix() . 'contents` ADD `views` INT(10) DEFAULT 0;');
+    }
+    $exist = $db->fetchRow($db->select('views')->from('table.contents')->where('cid = ?', $cid))['views'];
     echo $exist == 0 ? '0' : ' ' . $exist;
 }
 //总访问量
@@ -1180,8 +1190,8 @@ function cdnBaseUrl(){
 function darkTimeFunc(){
     $time = Helper::options()->darkTime;
     if(empty($time)){
-        $time = "7-20";
+        $time = "20-7";
     }
     $timeSlot = explode('-', $time);
-    echo "e <= $timeSlot[0] || e >= $timeSlot[1]";
+    echo "e >= $timeSlot[0] || e <= $timeSlot[1]";
 }

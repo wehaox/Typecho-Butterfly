@@ -7,7 +7,7 @@
  * <a href="https://www.wehaox.com">个人网站</a> | <a href="https://blog.wehaox.com/archives/typecho-butterfly.html">主题使用文档</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.7.9
+ * @version 1.7.10
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -115,6 +115,11 @@ endif;
                 <i class="fas fa-comments"></i>
                 <a class="twikoo-count" href="<?php $this->permalink() ?>#comments"><?php $this->commentsNum('0条评论', '1 条评论', '%d 条评论'); ?></a>
             </span>
+            <span class="article-meta">
+                <span class="article-meta-separator">|</span>
+                <i class="far fa-eye fa-fw post-meta-icon"></i>
+                <span class="post-meta-label">阅读量:<?php only_get_post_view($this) ?></span>
+            </span>
         </div>
         <div class="content">
             <?php summaryContent($this);
@@ -142,7 +147,7 @@ function ver() {console.log(`
     #    # #    #   #     #   #      #   #  #      #        #     
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                            1.7.9
+                            1.7.10
 ===================================================================
 `);}
 </script>

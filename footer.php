@@ -270,7 +270,7 @@
           "object" == typeof _hmt && _hmt.push(["_trackPageview", window.location.pathname]),
           "function" == typeof loadMeting && document.getElementsByClassName("aplayer").length && loadMeting(),
           "object" == typeof Prism && Prism.highlightAll(), "object" == typeof preloader && preloader.endLoading()
-        coverShow()
+        // coverShow()
       })),
       document.addEventListener("pjax:error", e => {
         // 404 === e.request.status && pjax.loadUrl("/404");

@@ -39,7 +39,8 @@
               <span class="post-meta-separator">|</span>
               <span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i>
                 <span class="post-meta-label">阅读量:</span>
-                <span id="busuanzi_value_page_pv"><?php get_post_view($this) ?></span></span>
+                <span id="busuanzi_value_page_pv"><?php get_post_view($this) ?></span>
+              </span>
           </div>
         </div>
       </div>

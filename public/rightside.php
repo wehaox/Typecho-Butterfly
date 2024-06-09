@@ -1,3 +1,4 @@
+<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <div id="rightside">
   <div id="rightside-config-hide" class="">
     <button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button>

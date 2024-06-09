@@ -1,3 +1,4 @@
+<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php  $this->need('header_com.php'); ?>
 <style>#body-wrap {min-height: 0;}</style>
 <div id="web_bg"></div>

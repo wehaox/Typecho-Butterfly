@@ -1,3 +1,4 @@
+<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php
 function themeConfig($form)
 {
@@ -595,7 +596,7 @@ function themeConfig($form)
     $form->addInput($darkModeSelect->multiMode());
 
     $darkTime = new Typecho_Widget_Helper_Form_Element_Text('darkTime', NULL, 
-    _t('7-20'), _t('自动暗色时间段'), _t('默认为7-20,24小时格式,按照格式(7-20)填写'));
+    _t('7-20'), _t('自动暗色时间段'), _t('24小时格式,按照格式默认(20-7)填写,开始时间-结束时间(包含)'));
     $form->addInput($darkTime);
 
     //自定义颜色    
