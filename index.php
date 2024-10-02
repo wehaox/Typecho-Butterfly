@@ -4,10 +4,10 @@
  * 这是 Typecho 版本的 butterfly 主题
  * 主题为移植至Typecho，你可以替换原butterfly主题的index.css文件
  * 当前适配 hexo-butterfly 4.6.0
- * <a href="https://www.wehaox.com">个人网站</a> | <a href="https://blog.wehaox.com/archives/typecho-butterfly.html">主题使用文档</a>
+ * <a href="https://www.haoi.net">个人网站</a> | <a href="https://blog.haoi.net/archives/typecho-butterfly.html">主题使用文档</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.7.10
+ * @version 1.8.0
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -59,6 +59,7 @@ if($this->options->pageSize<=5)
     $k=$m=$g=4;
 }
 endif;
+$coverIndex = 1; 
 while($this->next()): 
     if($this->options->googleadsense != ""):
     if($i==$k || $i==$m || $i==$g){
@@ -77,10 +78,16 @@ $i++;
 }
 $i++;
 endif;
+
+if($this->options->coverPosition === 'cross'){
+    $sideClass = ($coverIndex % 2 == 0) ? 'right' : 'left';
+}else{
+    $sideClass  = $this->options->coverPosition;
+}
 ?>
     <div class="recent-post-item">
     <?php if(noCover($this)): ?>  
-        <wehao class="post_cover">
+        <wehao class="post_cover  <?php echo $sideClass; ?>">
              <a href="<?php $this->permalink() ?>">
                 <img class="post-bg" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" src="<?php echo GetLazyLoad() ?>" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'"></a>
         </wehao>
@@ -128,7 +135,11 @@ endif;
             </div>
     </div>
 </div>
-<?php endwhile; ?>
+<?php 
+ if (noCover($this)) {
+    $coverIndex++;
+}
+ endwhile; ?>
 <nav id="pagination">
  <?php $this->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>', 1, '...', array('wrapTag' => 'div', 'wrapClass' => 'pagination', 'itemTag' => '', 'prevClass' => 'extend prev', 'nextClass' => 'extend next', 'currentClass' => 'page-number current' )); ?>
 </nav>
@@ -147,7 +158,7 @@ function ver() {console.log(`
     #    # #    #   #     #   #      #   #  #      #        #     
     #####   ####    #     #   ###### #    # #      ######   #  
     
-                            1.7.10
+                           <?php echo getThemeVersion().PHP_EOL?>
 ===================================================================
 `);}
 </script>

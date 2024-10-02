@@ -1,6 +1,9 @@
 <?php
+use Typecho\Plugin;
 if (!defined('__TYPECHO_ROOT_DIR__'))
     exit;
+
+require_once('api/api.php');
 require_once('config/custom_config.php');
 
 
@@ -65,19 +68,6 @@ function GetRandomThumbnailPost($widget)
         $img = $widget->fields->thumb;
     }
     echo $img;
-}
-
-// 文章字数统计
-function art_count($cid)
-{
-    $db = Typecho_Db::get();
-    $rs = $db->fetchRow($db->select('table.contents.text')->from('table.contents')->where('table.contents.cid=?', $cid)->order('table.contents.cid', Typecho_Db::SORT_ASC)->limit(1));
-    echo mb_strlen($rs['text'], 'UTF-8');
-}
-// 文章字数统计2
-function charactersNum($archive)
-{
-    return mb_strlen($archive->text, 'UTF-8');
 }
 
 // 全站字数统计
@@ -785,50 +775,22 @@ function onlinePeople()
     echo $slzxrs;
 }
 
-/*
- * 无插件阅读数
- */
-function get_post_view($archive)
-{
-    $db = Typecho_Db::get();
-    $cid = $archive->cid;
-    if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')))) {
-        $db->query('ALTER TABLE `' . $db->getPrefix() . 'contents` ADD `views` INT(10) DEFAULT 0;');
-    }
-    $exist = $db->fetchRow($db->select('views')->from('table.contents')->where('cid = ?', $cid))['views'];
-    if ($archive->is('single')) {
-        $cookie = Typecho_Cookie::get('contents_views');
-        $cookie = $cookie ? explode(',', $cookie) : array();
-        if (!in_array($cid, $cookie)) {
-            $db->query($db->update('table.contents')
-                ->rows(array('views' => (int) $exist + 1))
-                ->where('cid = ?', $cid));
-            $exist = (int) $exist + 1;
-            array_push($cookie, $cid);
-            $cookie = implode(',', $cookie);
-            Typecho_Cookie::set('contents_views', $cookie);
-        }
-    }
-    echo $exist == 0 ? '0' : ' ' . $exist;
-}
-
 function only_get_post_view($archive)
 {
     $db = Typecho_Db::get();
     $cid = $archive->cid;
-    if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')))) {
-        $db->query('ALTER TABLE `' . $db->getPrefix() . 'contents` ADD `views` INT(10) DEFAULT 0;');
-    }
     $exist = $db->fetchRow($db->select('views')->from('table.contents')->where('cid = ?', $cid))['views'];
-    echo $exist == 0 ? '0' : ' ' . $exist;
+    if ($exist >= 10000) {
+        $out = sprintf('%.2f W', $exist / 10000);
+    } else {
+        $out = sprintf('%d', $exist);
+    }
+    echo $out;
 }
 //总访问量
 function theAllViews()
 {
     $db = Typecho_Db::get();
-    if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')))) {
-        $db->query('ALTER TABLE `' . $db->getPrefix() . 'contents` ADD `views` INT(10) DEFAULT 0;');
-    }
     $row = $db->fetchAll($db->select('SUM(views)')->from('table.contents'));
     echo array_values($row[0])[0];
 }
@@ -871,7 +833,6 @@ function thePrevCid($widget, $default = NULL)
         return $default;
     }
 }
-;
 
 /**
  * 获取下一篇文章mid
@@ -896,7 +857,6 @@ function theNextCid($widget, $default = NULL)
         return $default;
     }
 }
-;
 
 //调用博主最近文章更新时间
 function get_last_update()
@@ -930,15 +890,7 @@ function get_last_update()
         }
     }
 }
-//文章阅读时间统计
-function art_time($cid)
-{
-    $db = Typecho_Db::get();
-    $rs = $db->fetchRow($db->select('table.contents.text')->from('table.contents')->where('table.contents.cid=?', $cid)->order('table.contents.cid', Typecho_Db::SORT_ASC)->limit(1));
-    $text = preg_replace("/[^\x{4e00}-\x{9fa5}]/u", "", $rs['text']);
-    $text_word = mb_strlen($text, 'utf-8');
-    echo ceil($text_word / 400);
-}
+
 // 自定义编辑器
 Typecho_Plugin::factory('admin/write-post.php')->bottom = array('editor', 'reset');
 Typecho_Plugin::factory('admin/write-page.php')->bottom = array('editor', 'reset');
@@ -992,11 +944,11 @@ function RecapOutPut($login)
 {
     $siteKey = Helper::options()->siteKey;
     $secretKey = Helper::options()->secretKey;
-    if ($siteKey !== "" && $secretKey !== "" && !$login) {
+    if (!empty($siteKey) && !empty($secretKey) && !$login) {
         echo '<script src="https://recaptcha.net/recaptcha/api.js" async defer data-no-instant></script>
                               <div class="g-recaptcha" data-sitekey=' . $siteKey . '></div>';
     }
-    if (Helper::options()->hcaptchaSecretKey !== "" && Helper::options()->hcaptchaAPIKey !== "" && !$login) {
+    if (!empty(Helper::options()->hcaptchaSecretKey) && !empty(Helper::options()->hcaptchaAPIKey) && !$login) {
         echo '
             <div id="h-captcha" class="h-captcha" data-sitekey=' . Helper::options()->hcaptchaSecretKey . '></div>';
     }
@@ -1171,4 +1123,121 @@ function darkTimeFunc(){
     }
     $timeSlot = explode('-', $time);
     echo "e >= $timeSlot[0] || e <= $timeSlot[1]";
+}
+
+// 三合一避免重复查询
+function get_post_details($archive)
+{
+    $db = Typecho_Db::get();
+    $cid = $archive->cid;
+
+    $row = $db->fetchRow($db->select('text', 'views')->from('table.contents')->where('cid = ?', $cid)->limit(1));
+    $text = $row['text'];
+    $views = (int)$row['views'];
+    $total_length = mb_strlen($text, 'UTF-8');
+
+    $chinese_text = preg_replace("/[^\x{4e00}-\x{9fa5}]/u", "", $text);
+    $chinese_length = mb_strlen($chinese_text, 'utf-8');
+
+    $reading_time = ceil($chinese_length / 400);
+
+    if ($archive->is('single')) {
+        $cookie = Typecho_Cookie::get('contents_views');
+        $cookie = $cookie ? explode(',', $cookie) : array();
+
+        if (!in_array($cid, $cookie)) {
+            $db->query($db->update('table.contents')
+                ->rows(array('views' => $views + 1))
+                ->where('cid = ?', $cid));
+            $views += 1;
+            array_push($cookie, $cid);
+            $cookie = implode(',', $cookie);
+            Typecho_Cookie::set('contents_views', $cookie);
+        }
+    }
+
+    return [
+        'total_length' => $total_length,
+        'chinese_length' => $chinese_length,
+        'reading_time' => $reading_time,
+        'views' => $views
+    ];
+}
+
+
+function getSiteStatistics()
+{
+    $db = Typecho_Db::get();
+    $now = time();
+
+    // 合并查询，获取所有需要的信息
+    $query = $db->select(
+        ['SUM(LENGTH(text))' => 'totalChars', 'SUM(views)' => 'totalViews', 'MAX(created)' => 'latestCreate', 'MAX(modified)' => 'latestModify']
+    )->from('table.contents')->where('table.contents.status = ?', 'publish')->where('table.contents.type = ?', 'post');
+
+    $result = $db->fetchRow($query);
+
+    // 计算字符数并添加单位
+    $chars = $result['totalChars'];
+    $unit = '';
+    if ($chars >= 10000) {
+        $chars /= 10000;
+        $unit = 'W';
+    } elseif ($chars >= 1000) {
+        $chars /= 1000;
+        $unit = 'K';
+    }
+    $charCount = sprintf('%.2lf %s', $chars, $unit);
+
+    // 获取总浏览次数
+    $totalViews = $result['totalViews'];
+
+    // 获取最后更新信息
+    $latestCreate = $result['latestCreate'];
+    $latestModify = $result['latestModify'];
+    $lastUpdate = '';
+
+    if ($latestCreate >= $latestModify) {
+        $lastUpdate = Typecho_I18n::dateWord($latestCreate, $now);
+    } else {
+        $lastModified = $now - $latestModify;
+        $timeIntervals = [
+            31536000 => '年',
+            2592000 => '个月',
+            86400 => '天',
+            3600 => '小时',
+            60 => '分钟',
+            1 => '秒'
+        ];
+        foreach ($timeIntervals as $interval => $label) {
+            if ($lastModified > $interval) {
+                $value = floor($lastModified / $interval);
+                $lastUpdate = $value . ' ' . $label . '前';
+                break;
+            }
+        }
+    }
+
+    $stat = Typecho_Widget::widget('Widget_Stat');
+    $publishedPostsNum = $stat->publishedPostsNum;
+    $categoriesNum = $stat->categoriesNum;
+
+    $tagsNum = tagsNum(false);
+    
+
+    // 返回结果数组
+    return [
+        'charCount' => $charCount,
+        'totalViews' => $totalViews,
+        'lastUpdate' => $lastUpdate,
+        'publishedPostsNum' =>  $publishedPostsNum,
+        'categoriesNum' =>  $categoriesNum,
+        'tagsNum' =>  $tagsNum,
+    ];
+}
+
+function getThemeVersion()
+{
+  $version = Plugin::parseInfo(Helper::options()->themeFile(Helper::options()->theme, "index.php"))["version"];
+  return $version;
 }

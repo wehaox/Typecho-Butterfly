@@ -48,10 +48,21 @@
 <!--搜索end  -->
 <div class="js-pjax">
 <?php if ($this->options->NewTabLink == 'on'): ?>
-<script>$(document).ready(function(){var a=document.getElementsByTagName("a");for(let i=0;i<a.length;i++){let domain=document.domain;let url=a[i].href;if(typeof(url)!="undefined"&&url.length!=0&&url.match(domain)==null&&url!="javascript:void(0);"){a[i].setAttribute("target","_BLANK")}}});</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var aElements = document.getElementsByTagName('a');
+  var domain = document.domain;
+  for (var i = 0; i < aElements.length; i++) {
+    var aElement = aElements[i];
+    var url = aElement.href;
+    if (url && url.length > 0 && url.indexOf(domain) === -1 && url !== 'javascript:void(0);') {
+      aElement.setAttribute('target', '_blank');
+    }
+  }
+});
+</script>
 <?php endif; ?>        
 <?php if($this->is('index')): ?>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/wehao.js?v1.4.0'); ?>"></script>
 <!--打字-->
 <?php if (is_array($this->options->beautifyBlock) && in_array('ShowTopimg',$this->options->beautifyBlock)): ?>
    <?php if(!empty($this->options->CustomSubtitle)): ?>

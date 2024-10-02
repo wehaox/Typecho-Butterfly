@@ -1,4 +1,5 @@
-<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit;     
+$site = getSiteStatistics();?>
 <div class="aside-content" id="aside-content">
     <?php if (!empty($this->options->sidebarBlock) && in_array('ShowAuthorInfo', $this->options->sidebarBlock)): ?>     
     <div class="card-widget card-info">
@@ -18,19 +19,21 @@
 			<a href="<?php $this->options->archivelink() ?>">
 				<div class="headline">文章</div>
 				<div class="length-num">
-				<?php Typecho_Widget::widget('Widget_Stat')->to($stat); ?><?php $stat->publishedPostsNum() ?>
+                <?php echo $site['publishedPostsNum']; ?>
 				</div>
 			</a>
 			<a href="<?php $this->options->tagslink() ?>">
 				<div class="headline">标签</div>
-				<div class="length-num"><?php echo tagsNum(); ?></div>
+				<div class="length-num">
+                    <?php echo $site['tagsNum']; ?>
+                </div>
 			</a>
 			<a href="<?php $this->options->categorylink() ?>">
 				<div class="headline">
 					分类
 				</div>
 				<div class="length-num">
-					<?php Typecho_Widget::widget('Widget_Stat')->to($stat); ?><?php $stat->categoriesNum() ?>
+					<?php echo $site['categoriesNum']; ?>
 				</div>
 			</a>
 		</div>
@@ -184,7 +187,8 @@
         </ul>
 	</div>
     <?php endif; ?>
-<?php if (!empty($this->options->sidebarBlock) && in_array('ShowWebinfo', $this->options->sidebarBlock)): ?>
+<?php 
+if (!empty($this->options->sidebarBlock) && in_array('ShowWebinfo', $this->options->sidebarBlock)): ?>
   <div class="card-widget card-webinfo">
      <div class="item-headline">
    <i class="fas fa-chart-line"></i>
@@ -193,8 +197,9 @@
    <div class="webinfo-item">
       <div class="item-name">文章数目 :</div>
       <div class="item-count">
-          	<?php Typecho_Widget::widget('Widget_Stat')->to($stat); ?><?php $stat->publishedPostsNum() ?>
-           </div></div>
+          	<?php echo $site['publishedPostsNum']; ?>
+           </div>
+        </div>
     <div class="webinfo-item">
       <div class="item-name">已运行时间 :</div>
       <div class="item-count" id="runtimeshows" data-publishdate="">
@@ -203,7 +208,7 @@
     <div class="webinfo-item">
       <div class="item-name">本站总字数 :</div>
       <div class="item-count">
-         <?php allOfCharacters(); ?>
+         <?php echo $site['charCount']; ?>
           </div></div>
 <?php if ($this->options->ShowOnlinePeople == 'on'): ?>           
     <div class="webinfo-item">
@@ -215,12 +220,12 @@
     <div class="webinfo-item">
       <div class="item-name">本站总访问量 :</div>
       <div class="item-count" >
-      <?php theAllViews();?>
+      <?php echo $site['totalViews'];?>
       </div></div>
     <div class="webinfo-item">
       <div class="item-name">最后更新时间 :</div>
      <div class="item-count" >
-    <?php get_last_update(); ?>
+    <?php echo $site['lastUpdate'];?>
       </div></div>
   </div>
   </div>

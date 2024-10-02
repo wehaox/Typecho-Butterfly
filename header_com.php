@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.7.8'); ?>">
   <!--魔改美化-->
   <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange', $this->options->beautifyBlock)) : ?>
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.5.9'); ?>">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.8.1'); ?>">
   <?php endif; ?>
   <!--百度统计-->
   <?php if ($this->options->baidustatistics != "") : ?>
@@ -158,7 +158,6 @@
         toc: !0,
         rightside: !0
       },
-      coverPosition: '<?php $this->options->coverPosition() ?>',
     }
     var saveToLocal = {
       set: function setWithExpiry(key, value, ttl) {
@@ -205,7 +204,7 @@
       isPost: !0,
       isHome: !0,
       isHighlightShrink: !0,
-      isToc: !0,
+      isToc: <?php echo $this->fields->ShowToc === 'off' ? 0 : 1; ?>,
     }
   </script>
   <?php if ($this->is('post')) : ?>
@@ -214,7 +213,7 @@
         isPost: !0,
         isHome: !0,
         isHighlightShrink: !1,
-        isToc: !0,
+        isToc: <?php echo $this->fields->ShowToc === 'off' ? 0 : 1; ?>,
       }
     </script>
   <?php else : ?>
@@ -223,7 +222,7 @@
         isPost: !1,
         isHome: !0,
         isHighlightShrink: !1,
-        isToc: !0,
+        isToc: <?php echo $this->fields->ShowToc === 'off' ? 0 : 1; ?>,
       }
     </script>
   <?php endif; ?>
@@ -441,10 +440,7 @@
     <script src="<?php $this->options->themeUrl('/js/local-search.js'); ?>"> </script>
   <?php endif ?>
 
-  <script src="<?php cdnBaseUrl() ?>/js/jquery.min.js"></script>
-  <script src="<?php cdnBaseUrl() ?>/js/instantpage.min.js">
-    type = "module" >
-  </script>
+  <script src="<?php cdnBaseUrl() ?>/js/instantpage.min.js" type = "module"></script>
   <script src="<?php cdnBaseUrl() ?>/js/medium-zoom.min.js"> </script>
   <script src="<?php cdnBaseUrl() ?>/js/dream-msg.min.js"></script>
   <script src="<?php cdnBaseUrl() ?>/js/lazyload.iife.min.js"></script>

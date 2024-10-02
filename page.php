@@ -54,9 +54,6 @@
 <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.0'); ?>"></script>
 <script type="text/javascript" src="<?php $this->options->themeUrl('js/clipboard.min.js'); ?>"></script>
-<script>
-$(document).ready(function(){if($(".toc").html().length == "14") {$("#card-toc,#mobile-toc-button").remove()}});
-</script>
 <?php if (!empty($this->options->beautifyBlock) && in_array('showLineNumber',
     $this->options->beautifyBlock)): ?> 
 <script type="text/javascript">
@@ -69,9 +66,6 @@ $(document).ready(function(){if($(".toc").html().length == "14") {$("#card-toc,#
 	})();
 </script>
 <?php endif; ?>
-<?php if($this->fields->ShowToc === 'off') : ?>
-<style>#card-toc,#mobile-toc-button{display: none!important;}</style>
-<?php endif?>
 </main>
 <!-- end #main-->
 <?php $this->need('footer.php'); ?>

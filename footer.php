@@ -64,7 +64,6 @@
 <?php if ($this->options->ShowLive2D !== 'off' && !isMobile()) : ?>
   <script src="<?php cdnBaseUrl() ?>/js/autoload.js"></script>
 <?php endif; ?>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/custom.main.js'); ?>"></script>
 <script>
   <?php $this->options->CustomScript() ?>
 </script>
@@ -90,11 +89,13 @@
       <div id="local-search-results"></div>
     </div>
   </div>
-  <div id="search-mask" style=""></div>
+  <div id="search-mask"></div>
 </div>
 </div>
 <!--搜索end  -->
 <div class="js-pjax">
+  <script data-pjax src="<?php $this->options->themeUrl('js/comjs.js?v1.8.0'); ?>"></script>
+  <script data-pjax src="<?php $this->options->themeUrl('/js/smooth.min.js'); ?>"> </script>
   <?php if (is_array($this->options->beautifyBlock) && in_array('showNoAlertSearch', $this->options->beautifyBlock)) : ?>
     <script>
       (function() {
@@ -114,8 +115,14 @@
     <script src="https://hcaptcha.com/1/api.js" async defer></script>
   <?php endif ?>
   <?php if ($this->is('post') || $this->is('page')) : ?>
-    <script src="<?php $this->options->themeUrl('js/comjs.js?v1.4.3'); ?>"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', ()=>{
+        initializeCodeToolbar();
+        tocCheck();
+      });
+    </script>
   <?php endif ?>
+
   <?php if (!empty($this->options->beautifyBlock) && in_array('showButterflyClock', $this->options->beautifyBlock)) : ?>
     <script data-pjax>
       function butterfly_clock_anzhiyu_injector_config() {
@@ -136,20 +143,22 @@
   <?php $this->header('commentReply=1&description=0&keywords=0&generator=0&template=0&pingback=0&xmlrpc=0&wlw=0&rss2=0&rss1=0&antiSpam=0&atom'); ?>
   <?php if ($this->options->NewTabLink == 'on') : ?>
     <script>
-      $(document).ready(function() {
-        var a = document.getElementsByTagName("a");
-        for (let i = 0; i < a.length; i++) {
-          let domain = document.domain;
-          let url = a[i].href;
-          if (typeof(url) != "undefined" && url.length != 0 && url.match(domain) == null && url != "javascript:void(0);") {
-            a[i].setAttribute("target", "_BLANK")
+      document.addEventListener('DOMContentLoaded', function() {
+        var aElements = document.getElementsByTagName('a');
+        var domain = document.domain;
+
+        for (var i = 0; i < aElements.length; i++) {
+          var aElement = aElements[i];
+          var url = aElement.href;
+
+          if (url && url.length > 0 && url.indexOf(domain) === -1 && url !== 'javascript:void(0);') {
+            aElement.setAttribute('target', '_blank');
           }
         }
       });
     </script>
   <?php endif; ?>
   <?php if ($this->is('index')) : ?>
-    <script type="text/javascript" src="<?php $this->options->themeUrl('js/wehao.js?v1.7.6'); ?>"></script>
     <style>
       #page-header:not(.not-top-img):before {
         background-color: rgba(0, 0, 0, 0);
@@ -227,13 +236,14 @@
   <?php endif ?>
 </div>
 <!--js-pjax end-->
-<?php require_once('public/rightside.php');?>
+<?php require_once('public/rightside.php'); ?>
 <!--pjax-->
 <?php if ($this->options->EnablePjax === 'on') : ?>
   <link rel="stylesheet" href="<?php cdnBaseUrl() ?>/css/nprogress.css">
   <script src="<?php cdnBaseUrl() ?>/js/pjax.min.js"></script>
   <script src="<?php cdnBaseUrl() ?>/js/nprogress.js"></script>
   <script>
+    let intervalNum = 0;
     let pjaxSelectors = ["title", "#body-wrap", "#rightside-config-hide", "#rightside-config-show", ".js-pjax"];
     var pjax = new Pjax({
       elements: 'a:not([target="_blank"])',
@@ -249,6 +259,7 @@
         const e = document.body.classList;
         e.contains("read-mode") && e.remove("read-mode")
         NProgress.start();
+        intervalNum = 0
       })),
       document.addEventListener("pjax:complete", (function() {
         <?php if ($this->options->hcaptchaSecretKey !== "" && $this->options->hcaptchaAPIKey !== "") : ?>
@@ -258,6 +269,25 @@
         <?php endif ?>
         <?php $this->options->PjaxCallBack() ?>
         NProgress.done();
+        const checkInterval = setInterval(() => {
+          intervalNum ++
+          if(intervalNum > 100 || document.querySelectorAll(".recent-post-item").length > 0){
+            clearInterval(checkInterval)
+          }
+          if(document.getElementsByTagName('article').length > 0){
+            clearInterval(checkInterval)
+            initializeCodeToolbar()
+            if (document.getElementById("web-login")) {
+              webLogin()
+              document.querySelector('.submit').addEventListener("click", function() {
+                document.getElementById("comment_login").classList.toggle("login_active");
+              });
+            }
+            if(document.querySelector('.toc')){
+              tocCheck()
+            }
+          }
+        }, 600);
         window.refreshFn(),
           document.querySelectorAll("script[data-pjax]").forEach(e => {
             const t = document.createElement("script"),
@@ -270,7 +300,6 @@
           "object" == typeof _hmt && _hmt.push(["_trackPageview", window.location.pathname]),
           "function" == typeof loadMeting && document.getElementsByClassName("aplayer").length && loadMeting(),
           "object" == typeof Prism && Prism.highlightAll(), "object" == typeof preloader && preloader.endLoading()
-        // coverShow()
       })),
       document.addEventListener("pjax:error", e => {
         // 404 === e.request.status && pjax.loadUrl("/404");

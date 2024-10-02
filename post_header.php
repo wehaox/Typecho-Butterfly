@@ -1,5 +1,5 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<?php  $this->need('header_com.php'); ?>
+<?php  $this->need('header_com.php'); $post_info = get_post_details($this);?>
 <body style="zoom: 1;">
     <div id="web_bg"></div>
 <div class="page" id="body-wrap">
@@ -26,13 +26,13 @@
                 <span class="post-meta-separator">|</span>
                   <i class="far fa-file-word fa-fw post-meta-icon"></i>
               <span class="post-meta-label">字数总计:</span>
-              <span class="word-count"><?php art_count($this->cid); ?></span>
+              <span class="word-count"><?php echo $post_info['total_length']; ?></span>
               <span class="post-meta-separator">|</span>
               <i class="far fa-clock fa-fw post-meta-icon"></i>
               <span class="post-meta-label">阅读时长:</span>
-              <span><?php echo art_time($this->cid); ?>分钟</span>
+              <span><?php echo $post_info['reading_time']; ?>分钟</span>
               <span class="post-meta-separator">|</span>
-              <span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><?php get_post_view($this) ?></span></span>
+              <span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><?php echo $post_info['views'] ?></span></span>
                </div>
           </div>
         </div>

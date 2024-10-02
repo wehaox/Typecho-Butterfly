@@ -24,7 +24,7 @@ function themeConfig($form)
             class="btn btn-s" value="还原主题数据" />&nbsp;&nbsp;<input type="submit" name="type" class="btn btn-s"
             value="删除备份数据" />
     </form>
-    <script src='https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js'></script>
+    <script src='https://lib.baomitu.com/jquery/1.10.2/jquery.min.js'></script>
     <script src="<?php Helper::options()->themeUrl('js/themecustom.js?v1.5.3'); ?>"></script>
     <script src='https://static.wehao.org/postdomai.js'></script>
     <?php
@@ -34,6 +34,18 @@ function themeConfig($form)
 
     $slide_cids = new Typecho_Widget_Helper_Form_Element_Text('slide_cids', NULL, NULL, '主页轮播图文章的 cid', '填入自动开启，填入方式同上，<b style="color:red">注意：填入错误cid会导致页面出错</b>');
     $form->addInput($slide_cids);
+
+    $enableApi = new Typecho_Widget_Helper_Form_Element_Select(
+        'enableApi',
+        array(
+            'on' => '开',
+            'off' => '关(默认)',
+        ),
+        'off',
+        'API模式(实验性功能)',
+        '介绍：API模式,开发中,此版无用'
+    );
+    $form->addInput($enableApi->multiMode());
 
     $StaticFile = new Typecho_Widget_Helper_Form_Element_Select(
         'StaticFile',
@@ -232,14 +244,14 @@ function themeConfig($form)
     $GravatarSelect = new Typecho_Widget_Helper_Form_Element_Select(
         'GravatarSelect',
         array(
-            "https://gravatar.loli.net/avatar/" => 'loli（默认）',
+            "https://cravatar.cn/avatar/" => '中国官方源(默认)',
+            "https://gravatar.loli.net/avatar/" => 'loli',
             'https://gravatar.helingqi.com/wavatar/' => '禾令奇',
             "https://sdn.geekzu.org/avatar/" => '极客族',
             "https://cdn.sep.cc/avatar/" => '九月的风',
             "https://gravatar.com/avatar/" => '官方源(被墙)',
-            "https://cravatar.cn/avatar/" => '中国官方源(推荐)',
         ),
-        'loli',
+        'https://cravatar.cn/avatar/',
         'gravatar源选择',
         '介绍：评论区头像gravatar源'
     );
@@ -261,7 +273,7 @@ function themeConfig($form)
         'off',
         '开启PJAX',
         '介绍：页面无刷新加载,有效提高页面加载速度<br>
-         请先查看<a href="https://blog.wehaox.com/archives/typecho-butterfly.html#cl-13">使用文档</a>'
+         请先查看<a href="https://blog.haoi.net/archives/typecho-butterfly.html#cl-13">使用文档</a>'
     );
     $EnablePjax->setAttribute('id', 'pjax');
     $form->addInput($EnablePjax->multiMode());
@@ -839,7 +851,15 @@ function themeFields($layout)
 }
 
 function themeInit($archive)
-{
+{    
+
+    // 初始化数据库中必要列
+    $db = Typecho_Db::get();
+    if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')))) {
+        $db->query('ALTER TABLE ' . $db->getPrefix() . 'contents ADD COLUMN views INT DEFAULT 0;');
+    }
+    //初始化完成
+
     if (Helper::options()->EnablePjax == "on") {
         Helper::options()->commentsAntiSpam = false;
     }
@@ -848,7 +868,7 @@ function themeInit($archive)
         $archive->content = ParseCode($archive->content);
     }
     $loginStatus = $archive->widget('Widget_User')->hasLogin();
-    if (Helper::options()->siteKey !== "" && Helper::options()->secretKey !== "" && !$loginStatus) {
+    if (!empty(Helper::options()->siteKey) && !empty(Helper::options()->secretKey) && !$loginStatus) {
         comments_filter($archive);
     }
     if (Helper::options()->hcaptchaSecretKey !== "" && Helper::options()->hcaptchaAPIKey !== "" && !$loginStatus) {
@@ -857,5 +877,15 @@ function themeInit($archive)
     if ($archive->is('index')) {
         // echo '<script src="'..'"></script>';        
     }
+    
+    // api处理
+    // if (Helper::options()->enableApi === "on") {
+    //     $requestUri = $archive->request->getRequestUri();
+    //     $API_PREFIX = '/api123/';
+    //     if (strpos($requestUri, $API_PREFIX) === 0) {
+    //         $apiPath = substr($requestUri, strlen($API_PREFIX));
+    //         routeApiRequest($apiPath);
+    //     }
+    // }
 }
 ?>

@@ -5,6 +5,9 @@
 	--light_page_color: hsla(0,0%,100%,0.5);
 	--dark_page_color: rgba(18,18,18,0.8)
 }
+/* html{
+	scroll-behavior: smooth;
+} */
 
 body {
 	cursor: url(/usr/themes/butterfly/img/default.cur),default
@@ -1958,4 +1961,19 @@ pre[class*=language-] {
 }
 #footer-wrap{
     color: var(--font-color)!important;
+}
+
+#comment_login{
+    overflow: hidden;
+    max-height: 0;
+    transition: all .3s;
+}
+.login_active{
+	max-height: 44px!important;
+}
+
+@media screen and (max-width:520px) {
+	.login_active{
+		max-height: 111px!important;
+	}
 }
