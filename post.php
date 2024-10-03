@@ -1,4 +1,4 @@
-<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; $post_info = get_post_details($this);?>
 <?php $this->need('post_header.php'); ?>
 <main class="layout" id="content-inner">
   <div id="post">
