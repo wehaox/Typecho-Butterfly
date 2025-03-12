@@ -77,12 +77,13 @@ function themeConfig($form)
         'jsdelivrLink',
         array(
             'cdn.jsdelivr.net' => '官方默认源',
+            'cdn.jsdmirror.com' => 'jsdmirror源',
             'gcore.jsdelivr.net' => 'gcore源',
             'fastly.jsdelivr.net' => 'fastly源',
             'raw.fastgit.org' => 'fastgit源',
         ),
-        'gcore.jsdelivr.net',
-        'jsdelivr提供的cdn源切换(默认采用gcore源)',
+        'cdn.jsdmirror.com',
+        'jsdelivr提供的cdn源切换(默认采用jsdmirror源)',
         '需要开启上方的CDN加载'
     );
     $form->addInput($jsdelivrLink->multiMode());

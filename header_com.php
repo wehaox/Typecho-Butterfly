@@ -22,7 +22,7 @@
           ), '', ' - '); ?><?php $this->options->title(); ?></title>
   <!-- 使用url函数转换相关路径 -->
   <link rel="preconnect" href="//<?php $this->options->jsdelivrLink() ?>" />
-  <!--<link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">-->
+  <!--<link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/justifiedGallery/dist/css/justifiedGallery.min.css">-->
   <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.7.3'); ?>">
   <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.7.8'); ?>">
   <!--魔改美化-->
