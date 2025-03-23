@@ -3,7 +3,7 @@
 function themeConfig($form)
 {
     ?>
-    <link rel="stylesheet" href="<?php Helper::options()->themeUrl('css/themedash.css?v1.5.3'); ?>">
+    <link rel="stylesheet" href="<?php Helper::options()->themeUrl('css/themedash.css?v1.8.1'); ?>">
     <div class='set_toc'>
         <div class='mtoc'>
             <a href='#themeBackup'>主题备份与还原</a>
@@ -16,13 +16,15 @@ function themeConfig($form)
             <a href='#ShowLive2D'>Live2D设置</a>
             <a href='#otherCustom'>其他自定义内容</a>
             <a href='#CustomColor'>自定义颜色</a>
+            <a href='#cache'>缓存设置</a>
             <a href='#NULL' id='point'>返回上次保存设置时的锚点</a>
         </div>
     </div>
     <form class="protected" action="?butterflybf" method="post" id="themeBackup">
-        <input type="submit" name="type" class="btn btn-s" value="备份主题数据" />&nbsp;&nbsp;<input type="submit" name="type"
-            class="btn btn-s" value="还原主题数据" />&nbsp;&nbsp;<input type="submit" name="type" class="btn btn-s"
-            value="删除备份数据" />
+        <input type="submit" name="type" class="btn btn-s" value="备份主题数据" />
+        <input type="submit" name="type"  class="btn btn-s" value="还原主题数据" />
+        <input type="submit" name="type" class="btn btn-s" value="删除备份数据" />
+        <input type="submit" name="type" class="btn btn-s" value="清除所有缓存" />
     </form>
     <script src='https://lib.baomitu.com/jquery/1.10.2/jquery.min.js'></script>
     <script src="<?php Helper::options()->themeUrl('js/themecustom.js?v1.5.3'); ?>"></script>
@@ -82,8 +84,8 @@ function themeConfig($form)
             'fastly.jsdelivr.net' => 'fastly源',
             'raw.fastgit.org' => 'fastgit源',
         ),
-        'cdn.jsdmirror.com',
-        'jsdelivr提供的cdn源切换(默认采用jsdmirror源)',
+        'gcore.jsdelivr.net',
+        'jsdelivr提供的cdn源切换(默认采用gcore源)',
         '需要开启上方的CDN加载'
     );
     $form->addInput($jsdelivrLink->multiMode());
@@ -162,6 +164,9 @@ function themeConfig($form)
 
     $headerimg = new Typecho_Widget_Helper_Form_Element_Text('headerimg', NULL, _t('https://s2.loli.net/2023/01/18/bIJTVaR3MLPzcZ7.jpg'), _t('主页顶图(banner image)'), _t('填入主页头图链接'));
     $form->addInput($headerimg);
+
+    $mobileHeaderImg = new Typecho_Widget_Helper_Form_Element_Text('mobileHeaderImg', NULL, _t(''), _t('移动端主页顶图(banner image for mobile)'), _t('在移动端显示的顶部图片，不填则使用默认顶图'));
+    $form->addInput($mobileHeaderImg);
 
     $buildtime = new Typecho_Widget_Helper_Form_Element_Text('buildtime', NULL, _t('2021/04/05'), _t('建站时间'), _t('按照输入框内格式填写'));
     $form->addInput($buildtime);
@@ -689,8 +694,43 @@ function themeConfig($form)
     $form->addInput($hcaptchaAPIKey);
 
 
+    $turnstileSiteKey = new Typecho_Widget_Helper_Form_Element_Text(
+        'turnstileSiteKey',
+        NULL,
+        null,
+        '<hr>Cloudflare Turnstile人机验证 <br> 站点密钥(Site Key)- 使用它作为来检查用户令牌:',
+        '<a href="https://dash.cloudflare.com/sign-up?to=/:account/turnstile">点击获取密钥</a>'
+    );
 
+    $turnstileKey = new Typecho_Widget_Helper_Form_Element_Text('turnstileKey', NULL, null, _t('密钥(Secret Key):'), _t('填写两处密钥评论区自动开启cloudflare Turnstile人机验证'));
 
+    $form->addInput($turnstileSiteKey);
+    $form->addInput($turnstileKey);
+
+    $EnableCache = new Typecho_Widget_Helper_Form_Element_Select(
+        'EnableCache',
+        array(
+            'off' => '关闭(默认)',
+            'file' => '文件缓存',
+            'redis' => 'redis缓存(暂不支持)',
+        ),
+        'off',
+        '博客缓存(实验性功能)',
+        '介绍：启用缓存可以减少数据库查询，确保usr/cache/目录下有足够的权限，服务器io过低不要开启文件缓存。未进行有效测试，请谨慎使用'
+    );
+    $EnableCache->setAttribute('id', 'cache');
+    $form->addInput($EnableCache->multiMode());
+
+    
+    $CacheTime = new Typecho_Widget_Helper_Form_Element_Text(
+        'CacheTime',
+        NULL,
+        '86400',
+        '默认缓存时间（秒）',
+        '介绍：设置默认的缓存过期时间，单位为秒。默认为86400秒（24小时）。'
+    );
+    $form->addInput($CacheTime);
+    
     $db = Typecho_Db::get();
     $sjdq = $db->fetchRow($db->select()->from('table.options')->where('name = ?', 'theme:butterfly'));
     $ysj = $sjdq['value'];
@@ -748,6 +788,16 @@ function themeConfig($form)
                 echo '<div class="tongzhi">不用删了！备份不存在！！！</div>';
             }
         }
+        // 处理清除缓存请求
+        if ($_POST["type"] == "清除所有缓存") {
+            clearCache();
+            echo '<div class="tongzhi">缓存已清除，请等待自动刷新！如果等不到请点击';
+            ?>
+            <a href="<?php Helper::options()->adminUrl('options-theme.php'); ?>">这里</a></div>
+            <script language="JavaScript">window.setTimeout("location='<?php Helper::options()->adminUrl('options-theme.php'); ?>'", 2500);</script>
+            <?php
+        }
+        
     }
     // 结束
 }
@@ -856,8 +906,12 @@ function themeInit($archive)
 
     // 初始化数据库中必要列
     $db = Typecho_Db::get();
-    if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')))) {
-        $db->query('ALTER TABLE ' . $db->getPrefix() . 'contents ADD COLUMN views INT DEFAULT 0;');
+    try {
+        if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')))) {
+            $db->query('ALTER TABLE ' . $db->getPrefix() . 'contents ADD COLUMN views INT DEFAULT 0;');
+        }
+    } catch (Exception $e) {
+        throw new Exception('数据库初始化失败: ' . $e->getMessage());
     }
     //初始化完成
 
@@ -872,8 +926,11 @@ function themeInit($archive)
     if (!empty(Helper::options()->siteKey) && !empty(Helper::options()->secretKey) && !$loginStatus) {
         comments_filter($archive);
     }
-    if (Helper::options()->hcaptchaSecretKey !== "" && Helper::options()->hcaptchaAPIKey !== "" && !$loginStatus) {
+    if (!empty(Helper::options()->hcaptchaSecretKey) && !empty(Helper::options()->hcaptchaAPIKey) && !$loginStatus) {
         hcaptcha_filter($archive);
+    }
+    if (!empty(Helper::options()->turnstileSiteKey) && !empty(Helper::options()->turnstileKey) && !$loginStatus) {
+        turnstile_filter($archive);
     }
     if ($archive->is('index')) {
         // echo '<script src="'..'"></script>';        

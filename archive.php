@@ -60,11 +60,7 @@
 							</span>
 						</div>
 						<div class="content">
-							<?php if ($this->fields->excerpt && $this->fields->excerpt != '') {
-								echo $this->fields->excerpt;
-							} else {
-								echo $this->excerpt(130);
-							}
+							<?php summaryContent($this);
 							echo '<br><br><a href="', $this->permalink(), '" title="', $this->title(), '">阅读全文...</a>';
 							?>
 						</div>

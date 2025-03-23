@@ -47,7 +47,8 @@
                 <div class="commentsFormArea" style="text-align: right;">
                     <button class="submit" type="submit"><?php _e('评论'); ?></button>
                 </div>
-                <?php if(!empty($this->options->siteKey) && !empty($this->options->siteKey)){RecapOutPut($this->user->hasLogin()) ;?>
+                <?php RecapOutPut($this->user->hasLogin()) ?>
+                <?php if(!empty($this->options->siteKey) && !empty($this->options->siteKey)){?>
                     <script>
                         document.addEventListener('DOMContentLoaded', () => {
                             if (!document.querySelector('#comment_keys')) {
@@ -61,8 +62,7 @@
                         });
                     </script>
                 <?php } ?>
-                <?php if ($this->options->hcaptchaSecretKey !== "" && $this->options->hcaptchaAPIKey !== "") {
-                    RecapOutPut($this->user->hasLogin()); ?>
+                <?php if (!empty($this->options->hcaptchaSecretKey) && !empty($this->options->hcaptchaAPIKey)) {?>
                     <script>
                           document.addEventListener('DOMContentLoaded', () => {
                             if (!document.querySelector('#comment_keys')) {

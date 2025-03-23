@@ -7,7 +7,7 @@
  * <a href="https://www.haoi.net">个人网站</a> | <a href="https://blog.haoi.net/archives/typecho-butterfly.html">主题使用文档</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.8.0
+ * @version 1.8.1
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -17,7 +17,7 @@ if($sticky && $this->is('index') || $this->is('front')){
     $sticky_cids = explode(',', strtr($sticky, ' ', ','));//分割文本 
     $sticky_html = "<span class='article-meta'><i class='fas fa-thumbtack article-meta__icon sticky'></i><span class='sticky'>置顶 </span><span class='article-meta__separator'>|</span></span>";
     $db = Typecho_Db::get();
-    $select1 = $this->select()->where('type = ?', 'post');
+    $select1 = $this->select()->where('type = ? AND status = ? AND created < ?', 'post','publish',time());
     $select2 = $this->select()->where('type = ? AND status = ? AND created < ?', 'post','publish',time());
     $this->row = [];
     $this->stack = [];
@@ -145,8 +145,6 @@ if($this->options->coverPosition === 'cross'){
 </nav>
 </div>
 <?php $this->need('sidebar.php'); ?>
-</main>
-<?php $this->need('footer.php'); ?>
 <script>
 function ver() {console.log(`
 ===================================================================
@@ -161,4 +159,7 @@ function ver() {console.log(`
                            <?php echo getThemeVersion().PHP_EOL?>
 ===================================================================
 `);}
+ver();
 </script>
+</main>
+<?php $this->need('footer.php'); ?>

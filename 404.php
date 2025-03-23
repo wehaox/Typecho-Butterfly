@@ -18,7 +18,7 @@
 <script id="fireworks" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.0/dist/fireworks.min.js" async="async" mobile="false"></script>
 <?php endif; ?>
 <?php if ($this->options->ShowLive2D !== 'off' && !isMobile()) : ?>
-    <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+  <?php require_once('public/live2d.php'); ?>
 <?php endif; ?>
 <script><?php $this->options->CustomScript() ?></script>
  <?php $this->options->CustomBodyEnd() ?>

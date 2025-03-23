@@ -62,7 +62,7 @@
   <script id="fireworks" src="<?php cdnBaseUrl() ?>/js/fireworks.min.js" async="async" mobile="false"></script>
 <?php endif; ?>
 <?php if ($this->options->ShowLive2D !== 'off' && !isMobile()) : ?>
-  <script src="<?php cdnBaseUrl() ?>/js/autoload.js"></script>
+  <?php require_once('public/live2d.php'); ?>
 <?php endif; ?>
 <script>
   <?php $this->options->CustomScript() ?>
@@ -111,7 +111,7 @@
       })()
     </script>
   <?php endif ?>
-  <?php if ($this->options->hcaptchaSecretKey !== "" && $this->options->hcaptchaAPIKey !== "") : ?>
+  <?php if (!empty($this->options->hcaptchaSecretKey) && !empty($this->options->hcaptchaAPIKey)) : ?>
     <script src="https://hcaptcha.com/1/api.js" async defer></script>
   <?php endif ?>
   <?php if ($this->is('post') || $this->is('page')) : ?>
@@ -262,10 +262,18 @@
         intervalNum = 0
       })),
       document.addEventListener("pjax:complete", (function() {
-        <?php if ($this->options->hcaptchaSecretKey !== "" && $this->options->hcaptchaAPIKey !== "") : ?>
+        <?php if (!empty($this->options->hcaptchaSecretKey) && !empty($this->options->hcaptchaAPIKey)) : ?>
           hcaptcha.render('h-captcha', {
             sitekey: '<?php $this->options->hcaptchaSecretKey() ?>'
           });
+        <?php endif ?>
+        <?php if (!empty($this->options->turnstileSiteKey) && !empty($this->options->turnstileKey)) : ?>
+          if (typeof loadTurnstile === "function") {
+            loadTurnstile();
+          }
+          if (typeof setupThemeObserver === "function") {
+            setupThemeObserver();
+          }
         <?php endif ?>
         <?php $this->options->PjaxCallBack() ?>
         NProgress.done();

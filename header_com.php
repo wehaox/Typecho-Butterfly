@@ -158,6 +158,7 @@
         toc: !0,
         rightside: !0
       },
+      turnstile: '<?php echo $this->options->turnstileSiteKey ?>',
     }
     var saveToLocal = {
       set: function setWithExpiry(key, value, ttl) {
@@ -433,7 +434,7 @@
 </head>
 
 <body>
-  <script src="<?php $this->options->themeUrl('/js/main.js?v1.7.3'); ?>"> </script>
+  <script src="<?php $this->options->themeUrl('/js/main.js?v1.8.1'); ?>"> </script>
   <script src="<?php $this->options->themeUrl('/js/utils.js?v1.7.3'); ?>"> </script>
   <script src="<?php $this->options->themeUrl('/js/tw_cn.js?v1.7.3'); ?>"> </script>
   <?php if (is_array($this->options->beautifyBlock) && !in_array('showNoAlertSearch', $this->options->beautifyBlock)) : ?>

@@ -1,7 +1,7 @@
 .typecho-option-submit {
     position: fixed;
     left: 0px;
-    top: 88%;
+    bottom: 0px;
     background-color: rgba(255, 255, 255, .5);
     backdrop-filter: blur(8px);
     height: 80px;
@@ -9,6 +9,7 @@
     box-shadow: 0px -6px 11px -10px rgb(133 133 133 / 60%);
     z-index: 9;
     transition-duration: .5s;
+    margin: 0;
 }
 .typecho-option-submit:hover{
     backdrop-filter: blur(.3px);
@@ -49,7 +50,7 @@
 
 @media screen and (max-width: 575px){
     .typecho-option-submit {
-        top: 84%;
+        bottom: 36px;
     }
 }
 .SideClock li{

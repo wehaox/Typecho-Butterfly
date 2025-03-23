@@ -21,7 +21,7 @@ if(isset($_COOKIE["ThemePassword"]) && $_COOKIE["ThemePassword"] !==$this->optio
     </head>
 <body _c_t_common="1">
     <link rel="stylesheet" href="//unpkg.com/element-plus/dist/index.css" />
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.23/dist/vue.global.prod.js"></script>
+    <script src="https://lib.baomitu.com/vue/3.2.23/vue.global.prod.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="//unpkg.com/element-plus"></script>
     <div id="web_bg"></div>

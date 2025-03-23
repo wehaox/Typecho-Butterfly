@@ -483,7 +483,10 @@ document.addEventListener('DOMContentLoaded', function () {
    */
   const rightSideFn = {
     switchReadMode: () => { // read-mode
-      $('.code-toolbar').addClass('read-fa')
+      let toolbar = document.querySelector('.code-toolbar');
+      if (toolbar) {
+        toolbar.classList.add('read-fa');
+      }
       const $body = document.body
       $body.classList.add('read-mode')
       const newEle = document.createElement('button')

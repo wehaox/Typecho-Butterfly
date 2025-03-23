@@ -62,20 +62,7 @@
       </script>
     <?php endif; ?>
     <article class="post-content" id="article-container">
-      <?php
-      $db = Typecho_Db::get();
-      $sql = $db->select()->from('table.comments')
-        ->where('cid = ?', $this->cid)
-        ->where('mail = ?', $this->remember('mail', true))
-        ->limit(1);
-      $result = $db->fetchAll($sql);
-      if ($this->user->hasLogin() || $result) {
-        $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<div class="reply-content">$1</div>', $this->content);
-      } else {
-        $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<p class="need-reply">此处内容 <a href="#comments">回复</a> 可见</p>', $this->content);
-      }
-      echo $content;
-      ?>
+      <?php echo getCachedPostContent($this); ?>
     </article>
     <div class="post-copyright">
       <div class="post-copyright__author">

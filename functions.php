@@ -6,23 +6,47 @@ if (!defined('__TYPECHO_ROOT_DIR__'))
 require_once('api/api.php');
 require_once('config/custom_config.php');
 
+// 处理清除缓存的请求
+if (isset($_GET['clearCache']) && is_numeric($_GET['clearCache'])) {
+    // 检查用户是否为管理员
+    $user = Typecho_Widget::widget('Widget_User');
+    if ($user->hasLogin() && $user->pass('administrator')) {
+        $cid = intval($_GET['clearCache']);
+        // 清除该文章所有相关缓存
+        clearCache('post_content_' . $cid);
+        clearCache('post_full_content_' . $cid);
+        clearCache('post_parsed_content_' . $cid);
+        clearCache('post_details_' . $cid);
+        
+        // 清除不同用户状态的缓存版本
+        clearCache('post_parsed_content_' . $cid . '_logged_in');
+        clearCache('post_parsed_content_' . $cid . '_guest');
+        
+        // 清除全站统计相关缓存
+        clearCache('all_characters');
+        clearCache('site_statistics');
+        clearCache('tags_num');
+        clearCache('all_views');
+        
+        // 如果是AJAX请求，返回成功信息
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            echo json_encode(['success' => true]);
+            exit;
+        }
+    } else {
+        // 如果不是管理员，返回错误信息
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            echo json_encode(['success' => false, 'message' => '只有管理员才能清除缓存']);
+            exit;
+        }
+    }
+}
 
 // 新文章缩略图
 function get_ArticleThumbnail($widget)
 {
-    // 当文章无图片时的随机缩略图
-//   $rand = mt_rand(1, 26); // 随机 1-9 张缩略图
-//   // 缩略图加速
-//   $rand_url;
-//   if(!empty(Helper::options()->articleImgSpeed)){
-//     $rand_url = Helper::options()->articleImgSpeed;
-//   }else {
-//     $rand_url = $widget->widget('Widget_Options')->themeUrl . '/images/articles/';
-//   }
-//   $random =  $rand_url . $rand . '.jpg'; // 随机缩略图路径
-//   $random =  'https://static01.imgkr.com/temp/517e5d14c312427dbf93304563869279.png';
-//   $attach = $widget->attachments(1)->attachment;
-    $random = '/usr/themes/butterfly/img/DefualtThumbnail.jpg';
+    $theme_path = Helper::options()->themeUrl;
+    $random = $theme_path . '/img/DefualtThumbnail.jpg';
     $pattern = '/\<img.*?src\=\"(.*?)\"[^>]*>/i';
 
     //如果有自定义缩略图
@@ -31,6 +55,22 @@ function get_ArticleThumbnail($widget)
     } else if (preg_match_all($pattern, $widget->content, $thumbUrl) && strlen($thumbUrl[1][0]) > 7) {
         return $thumbUrl[1][0];
     } else {
+        // 判断是否有Thumb文件夹
+        $theme_dir = dirname(dirname(__FILE__)) . '/butterfly';
+        if (is_dir($theme_dir . '/thumb')) {
+            // 获取thumb目录下所有图片文件
+            $images = array();
+            foreach (array('jpg', 'jpeg', 'png', 'gif', 'webp') as $ext) {
+                $images = array_merge($images, glob($theme_dir . '/thumb/*.' . $ext));
+            }
+            if (!empty($images)) {
+                $index = $widget->cid % count($images); // 使用取模运算确保索引在有效范围内
+                $random_img = $images[$index];
+                // $random_img = $images[array_rand($images)];
+                $random = Helper::options()->themeUrl . '/thumb/' . basename($random_img);
+                return $random;
+            }
+        }
         return $random;
     }
 }
@@ -39,26 +79,7 @@ function get_ArticleThumbnail($widget)
 function GetRandomThumbnail($widget)
 {
     // $random = 'https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg';
-    $random = '/usr/themes/butterfly/img/DefualtThumbnail.jpg';
-    if (Helper::options()->futureRandom) {
-        $moszu = explode("\r\n", Helper::options()->futureRandom);
-        $random = $moszu[array_rand($moszu, 1)] . "?futureRandom=" . mt_rand(0, 1000000);
-    }
-    $pattern = '/\<img.*?src\=\"(.*?)\"[^>]*>/i';
-    $patternMD = '/\!\[.*?\]\((http(s)?:\/\/.*?(jpg|jpeg|gif|png|webp))/i';
-    $patternMDfoot = '/\[.*?\]:\s*(http(s)?:\/\/.*?(jpg|jpeg|gif|png|webp))/i';
-    $t = preg_match_all($pattern, $widget->content, $thumbUrl);
-    $img = $random;
-    if ($widget->fields->thumb) {
-        $img = $widget->fields->thumb;
-    } elseif ($t) {
-        $img = $thumbUrl[1][0];
-    } elseif (preg_match_all($patternMD, $widget->content, $thumbUrl)) {
-        $img = $thumbUrl[1][0];
-    } elseif (preg_match_all($patternMDfoot, $widget->content, $thumbUrl)) {
-        $img = $thumbUrl[1][0];
-    }
-    echo $img;
+    echo get_ArticleThumbnail($widget);
 }
 // 文章封面缩略图
 function GetRandomThumbnailPost($widget)
@@ -70,21 +91,73 @@ function GetRandomThumbnailPost($widget)
     echo $img;
 }
 
-// 全站字数统计
+// 添加缓存辅助函数
+function getCache($key, $expiration = 3600) {
+    // 检查是否启用缓存
+    if (Helper::options()->EnableCache != 'file') {
+        return false;
+    }
+    
+    $cache_file = __TYPECHO_ROOT_DIR__ . '/usr/cache/' . md5($key) . '.cache';
+    if (file_exists($cache_file) && (time() - filemtime($cache_file) < $expiration)) {
+        $data = @file_get_contents($cache_file);
+        if ($data === false) {
+            return false;
+        }
+        
+        $unserialized = @unserialize($data);
+        if ($unserialized === false && $data !== 'b:0;') {
+            // 缓存数据损坏，删除缓存文件
+            @unlink($cache_file);
+            return false;
+        }
+        
+        return $unserialized;
+    }
+    return false;
+}
+
+function setCache($key, $value) {
+    // 检查是否启用缓存
+    if (Helper::options()->EnableCache != 'file') {
+        return;
+    }
+    
+    if (!is_dir(__TYPECHO_ROOT_DIR__ . '/usr/cache/')) {
+        mkdir(__TYPECHO_ROOT_DIR__ . '/usr/cache/', 0755, true);
+    }
+    $cache_file = __TYPECHO_ROOT_DIR__ . '/usr/cache/' . md5($key) . '.cache';
+    file_put_contents($cache_file, serialize($value));
+}
+
+// 优化全站字数统计，添加缓存
 function allOfCharacters()
 {
+    $cache_key = 'all_characters';
+    $cache_time = Helper::options()->CacheTime ? intval(Helper::options()->CacheTime) : 86400;
+    $cached_data = getCache($cache_key, $cache_time);
+    
+    if ($cached_data !== false) {
+        echo $cached_data;
+        return;
+    }
+    
     $showPrivate = 0;
     $chars = 0;
     $db = Typecho_Db::get();
     if ($showPrivate == 0) {
-        $select = $db->select('text')->from('table.contents')->where('table.contents.status = ?', 'publish');
+        $select = $db->select('SUM(LENGTH(text)) AS chars')->from('table.contents')
+                     ->where('table.contents.status = ?', 'publish');
+        $row = $db->fetchRow($select);
+        $chars = $row['chars'];
     } else {
         $select = $db->select('text')->from('table.contents');
+        $rows = $db->fetchAll($select);
+        foreach ($rows as $row) {
+            $chars += mb_strlen($row['text'], 'UTF-8');
+        }
     }
-    $rows = $db->fetchAll($select);
-    foreach ($rows as $row) {
-        $chars += mb_strlen($row['text'], 'UTF-8');
-    }
+    
     $unit = '';
     if ($chars >= 10000) {
         $chars /= 10000;
@@ -94,35 +167,37 @@ function allOfCharacters()
         $unit = 'K';
     }
     $out = sprintf('%.2lf %s', $chars, $unit);
+    
+    setCache($cache_key, $out);
     echo $out;
 }
 
-function thumb($cid)
-{
-    if (empty($imgurl)) {
-        $rand_num = 10; //随机图片数量，根据图片目录中图片实际数量设置
-        if ($rand_num == 0) {
-            $imgurl = "img/0.jpg";
-            //如果$rand_num = 0,则显示默认图片，须命名为"0.jpg"，注意是绝对地址
-        } else {
-            $imgurl = "img/" . rand(1, $rand_num) . ".jpg";
-            //随机图片，须按"1.jpg","2.jpg","3.jpg"...的顺序命名，注意是绝对地址
-        }
-    }
-    $db = Typecho_Db::get();
-    $rs = $db->fetchRow($db->select('table.contents.text')
-        ->from('table.contents')
-        ->where('table.contents.type = ?', 'attachment')
-        ->where('table.contents.parent= ?', $cid)
-        ->order('table.contents.cid', Typecho_Db::SORT_ASC)
-        ->limit(1));
-    $img = unserialize($rs['text']);
-    if (empty($img)) {
-        echo $imgurl;
-    } else {
-        echo '你的博客地址' . $img['path'];
-    }
-}
+// function thumb($cid)
+// {
+//     if (empty($imgurl)) {
+//         $rand_num = 10; //随机图片数量，根据图片目录中图片实际数量设置
+//         if ($rand_num == 0) {
+//             $imgurl = "img/0.jpg";
+//             //如果$rand_num = 0,则显示默认图片，须命名为"0.jpg"，注意是绝对地址
+//         } else {
+//             $imgurl = "img/" . rand(1, $rand_num) . ".jpg";
+//             //随机图片，须按"1.jpg","2.jpg","3.jpg"...的顺序命名，注意是绝对地址
+//         }
+//     }
+//     $db = Typecho_Db::get();
+//     $rs = $db->fetchRow($db->select('table.contents.text')
+//         ->from('table.contents')
+//         ->where('table.contents.type = ?', 'attachment')
+//         ->where('table.contents.parent= ?', $cid)
+//         ->order('table.contents.cid', Typecho_Db::SORT_ASC)
+//         ->limit(1));
+//     $img = unserialize($rs['text']);
+//     if (empty($img)) {
+//         echo $imgurl;
+//     } else {
+//         echo '你的博客地址' . $img['path'];
+//     }
+// }
 
 
 // 评论时间
@@ -492,10 +567,21 @@ function timeZone($from)
  */
 function tagsNum($display = true)
 {
-    $db = Typecho_Db::get();
-    $total_tags = $db->fetchObject($db->select(array('COUNT(mid)' => 'num'))
-        ->from('table.metas')
-        ->where('table.metas.type = ?', 'tag'))->num;
+    $cache_key = 'tags_num';
+    $cache_time = Helper::options()->CacheTime ? intval(Helper::options()->CacheTime) : 3600;
+    $cached_data = getCache($cache_key, $cache_time);
+    
+    if ($cached_data === false) {
+        $db = Typecho_Db::get();
+        $total_tags = $db->fetchObject($db->select(array('COUNT(mid)' => 'num'))
+            ->from('table.metas')
+            ->where('table.metas.type = ?', 'tag'))->num;
+        
+        setCache($cache_key, $total_tags);
+    } else {
+        $total_tags = $cached_data;
+    }
+    
     if ($display) {
         echo $total_tags;
     } else {
@@ -560,13 +646,13 @@ function getOs($agent) {
         'Windows XP' => ['/nt 5.1/i', 'iconfont icon-windows'],
         'Windows 10' => ['/nt 10.0/i', 'fab fa-windows'],
         'Windows 11' => ['/nt 11.0/i', 'fab fa-windows'],
-        'Android Pie' => ['/android 9/i', 'fab fa-android'],
-        'Android ICS' => ['/android 4/i', 'fab fa-android'],
-        'Android Lollipop' => ['/android 5/i', 'fab fa-android'],
-        'Android M' => ['/android 6/i', 'fab fa-android'],
-        'Android Nougat' => ['/android 7/i', 'fab fa-android'],
-        'Android Oreo' => ['/android 8/i', 'fab fa-android'],
-        'Android Q' => ['/android 10/i', 'fab fa-android'],
+        'Android Pie(9)' => ['/android 9/i', 'fab fa-android'],
+        'Android ICS(4)' => ['/android 4/i', 'fab fa-android'],
+        'Android Lollipop(5)' => ['/android 5/i', 'fab fa-android'],
+        'Android M(6)' => ['/android 6/i', 'fab fa-android'],
+        'Android Nougat(7)' => ['/android 7/i', 'fab fa-android'],
+        'Android Oreo(8)' => ['/android 8/i', 'fab fa-android'],
+        'Android Q(10)' => ['/android 10/i', 'fab fa-android'],
         'Android 11' => ['/android 11/i', 'fab fa-android'],
         'Android 12' => ['/android 12/i', 'fab fa-android'],
         'Android 13' => ['/android 13/i', 'fab fa-android'],
@@ -790,9 +876,21 @@ function only_get_post_view($archive)
 //总访问量
 function theAllViews()
 {
+    $cache_key = 'all_views';
+    $cache_time = Helper::options()->CacheTime ? intval(Helper::options()->CacheTime) : 86400;
+    $cached_data = getCache($cache_key, $cache_time);
+    
+    if ($cached_data !== false) {
+        echo $cached_data;
+        return;
+    }
+    
     $db = Typecho_Db::get();
-    $row = $db->fetchAll($db->select('SUM(views)')->from('table.contents'));
-    echo array_values($row[0])[0];
+    $row = $db->fetchRow($db->select('SUM(views) AS views')->from('table.contents'));
+    $views = array_values($row)[0];
+    
+    setCache($cache_key, $views);
+    echo $views;
 }
 //  回复可见       
 Typecho_Plugin::factory('Widget_Abstract_Contents')->excerptEx = array('myyodux', 'one');
@@ -866,10 +964,10 @@ function get_last_update()
     $status = 'publish';
     $now = time();
     $db = Typecho_Db::get();
-    $prefix = $db->getPrefix();
+    // $prefix = $db->getPrefix();
     $create = $db->fetchRow($db->select('created')->from('table.contents')->where('table.contents.type=? and status=?', $type, $status)->order('created', Typecho_Db::SORT_DESC)->limit($num));
     $update = $db->fetchRow($db->select('modified')->from('table.contents')->where('table.contents.type=? and status=?', $type, $status)->order('modified', Typecho_Db::SORT_DESC)->limit($num));
-    if ($create >= $update) {
+    if ($create >= $update && $create['created'] != 0) {
         echo Typecho_I18n::dateWord(isset($create['created']), $now);
     } else {
         $lastModified = $now - $update['modified'];
@@ -900,6 +998,44 @@ class editor
     {
         echo "<script src='" . Helper::options()->themeUrl . '/edit/extend.js?v1.7.6' . "'></script>";
         echo "<link rel='stylesheet' href='" . Helper::options()->themeUrl . '/edit/edit.css?v1.6.3' . "'>";
+        
+        // 使用HEREDOC语法来输出JavaScript代码，便于IDE高亮和编辑
+        echo <<<JS
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // 获取发布按钮和保存按钮
+                let publishBtn1 = document.querySelector('#b-wmd-md-submit');
+                let publishBtn2 = document.querySelector('#btn-submit');
+                
+                // 定义清除缓存的函数
+                function clearArticleCache() {
+                    // 获取当前文章ID
+                    var cid = document.querySelector('input[name="cid"]');
+                    if (cid && cid.value) {
+                        fetch('?clearCache=' + cid.value)
+                            .then(response => {
+                                if (response.ok) {
+                                    console.log('缓存已清除');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('清除缓存失败:', error);
+                            });
+                    }
+                }
+                
+                // 监听第一个按钮
+                if (publishBtn1) {
+                    publishBtn1.addEventListener('click', clearArticleCache);
+                }
+                
+                // 监听第二个按钮
+                if (publishBtn2) {
+                    publishBtn2.addEventListener('click', clearArticleCache);
+                }
+            });
+        </script>
+        JS;
     }
 
 }
@@ -951,6 +1087,73 @@ function RecapOutPut($login)
     if (!empty(Helper::options()->hcaptchaSecretKey) && !empty(Helper::options()->hcaptchaAPIKey) && !$login) {
         echo '
             <div id="h-captcha" class="h-captcha" data-sitekey=' . Helper::options()->hcaptchaSecretKey . '></div>';
+    }
+    if (!empty(Helper::options()->turnstileSiteKey) && !empty(Helper::options()->turnstileKey) && !$login) {
+        echo '
+        <div style="margin-top: 10px;" class="cf-turnstile" id="cf-turnstile" 
+        data-sitekey=' . Helper::options()->turnstileSiteKey . '
+        data-theme="auto"></div>
+        <script>
+        let turnstileWidgetId = null;
+        
+        function loadTurnstile() {
+            if (typeof turnstile === "undefined") {
+                let script = document.createElement("script");
+                script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+                script.async = true;
+                script.defer = true;
+                document.head.appendChild(script);
+                
+                script.onload = function() {
+                    initTurnstile();
+                };
+            } else {
+                initTurnstile();
+            }
+        }
+        
+        function initTurnstile() {
+            if (document.getElementById("cf-turnstile")) {
+                let theme = document.documentElement.getAttribute("data-theme") || "auto";
+                if (turnstile && typeof turnstile.render === "function") {
+                    if (turnstileWidgetId) {
+                        turnstile.remove(turnstileWidgetId);
+                    }
+                    turnstileWidgetId = turnstile.render("#cf-turnstile", {
+                        sitekey: "' . Helper::options()->turnstileSiteKey . '",
+                        theme: theme
+                    });
+                }
+            }
+        }
+        
+        // 监视主题变化
+        function setupThemeObserver() {
+            // 使用 MutationObserver 观察 data-theme 属性变化
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === "attributes" && mutation.attributeName === "data-theme") {
+                        // 主题已变更，更新 Turnstile
+                        if (typeof turnstile !== "undefined" && turnstileWidgetId) {
+                            initTurnstile();
+                        }
+                    }
+                });
+            });
+            
+            // 开始观察文档根元素的 data-theme 属性
+            observer.observe(document.documentElement, { 
+                attributes: true,
+                attributeFilter: ["data-theme"]
+            });
+        }
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            loadTurnstile();
+            setupThemeObserver();
+        });
+        </script>
+        ';
     }
 }
 
@@ -1018,6 +1221,46 @@ function hcaptcha_filter($comment)
                             break;
                         default:
                             throw new Typecho_Widget_Exception(_t('很遗憾，您被当成了机器人...'));
+                    }
+                }
+            }
+        }
+    }
+    return $comment;
+}
+
+function turnstile_filter($comment){
+    if (isset($_REQUEST['text']) != null) {
+        if ($_POST['cf-turnstile-response'] == null) {
+            throw new Typecho_Widget_Exception(_t('人机验证失败,确认你加载了Cloudflare Turnstile人机验证并通过验证'));
+        } else {
+            if (isset($_POST['cf-turnstile-response']) && !empty($_POST['cf-turnstile-response'])) {
+                $secret = Helper::options()->turnstileKey;
+                $cfResponse = $_POST['cf-turnstile-response'];
+                $ip = $_SERVER['REMOTE_ADDR'];
+                $header = array(
+                    "Content-Type: application/x-www-form-urlencoded"
+                );
+                $params = array('secret' => $secret, 'response' => $cfResponse, 'remoteip' => $ip);
+                $verifyResponse = restFull('https://challenges.cloudflare.com/turnstile/v0/siteverify',$params, 'POST', $header);
+                $responseData = json_decode($verifyResponse,true);
+                $isSuccess = $responseData['success'];
+                if ($isSuccess) {
+                    return $comment;
+                } else {
+                    $errorCodes = $responseData['error-codes'][0];
+                    switch ($errorCodes) {
+                        case 'timeout-or-duplicate':
+                            throw new Typecho_Widget_Exception(_t('验证超时或连续重复发言,请刷新重新评论'));
+                            break;
+                        case 'invalid-input-secret':
+                            throw new Typecho_Widget_Exception(_t('网站管理员填了无效的siteKey或者secretKey...'));
+                            break;
+                        case 'bad-request':
+                            throw new Typecho_Widget_Exception(_t('请求错误！请检查网络'));
+                            break;
+                        default:
+                            throw new Typecho_Widget_Exception($errorCodes);
                     }
                 }
             }
@@ -1125,21 +1368,36 @@ function darkTimeFunc(){
     echo "e >= $timeSlot[0] || e <= $timeSlot[1]";
 }
 
-// 三合一避免重复查询
+// 优化文章详情获取，添加缓存
 function get_post_details($archive)
 {
-    $db = Typecho_Db::get();
     $cid = $archive->cid;
-
+    $cache_key = 'post_details_' . $cid;
+    
+    // 对于浏览量，我们不缓存，因为需要实时更新
+    // 但对于文章内容分析，可以缓存
+    $content_cache_key = 'post_content_' . $cid;
+    $content_details = getCache($content_cache_key, 86400); // 缓存一天
+    
+    $db = Typecho_Db::get();
     $row = $db->fetchRow($db->select('text', 'views')->from('table.contents')->where('cid = ?', $cid)->limit(1));
-    $text = $row['text'];
     $views = (int)$row['views'];
-    $total_length = mb_strlen($text, 'UTF-8');
-
-    $chinese_text = preg_replace("/[^\x{4e00}-\x{9fa5}]/u", "", $text);
-    $chinese_length = mb_strlen($chinese_text, 'utf-8');
-
-    $reading_time = ceil($chinese_length / 400);
+    
+    if ($content_details === false) {
+        $text = $row['text'];
+        $total_length = mb_strlen($text, 'UTF-8');
+        $chinese_text = preg_replace("/[^\x{4e00}-\x{9fa5}]/u", "", $text);
+        $chinese_length = mb_strlen($chinese_text, 'utf-8');
+        $reading_time = ceil($chinese_length / 400);
+        
+        $content_details = [
+            'total_length' => $total_length,
+            'chinese_length' => $chinese_length,
+            'reading_time' => $reading_time
+        ];
+        
+        setCache($content_cache_key, $content_details);
+    }
 
     if ($archive->is('single')) {
         $cookie = Typecho_Cookie::get('contents_views');
@@ -1156,17 +1414,20 @@ function get_post_details($archive)
         }
     }
 
-    return [
-        'total_length' => $total_length,
-        'chinese_length' => $chinese_length,
-        'reading_time' => $reading_time,
-        'views' => $views
-    ];
+    return array_merge($content_details, ['views' => $views]);
 }
 
-
+// 优化站点统计函数，合并多个查询并添加缓存
 function getSiteStatistics()
 {
+    $cache_key = 'site_statistics';
+    $cache_time = Helper::options()->CacheTime ? intval(Helper::options()->CacheTime) : 86400;
+    $cached_data = getCache($cache_key, $cache_time);
+    
+    if ($cached_data !== false) {
+        return $cached_data;
+    }
+    
     $db = Typecho_Db::get();
     $now = time();
 
@@ -1197,7 +1458,7 @@ function getSiteStatistics()
     $latestModify = $result['latestModify'];
     $lastUpdate = '';
 
-    if ($latestCreate >= $latestModify) {
+    if ($latestCreate >= $latestModify && $latestCreate) {
         $lastUpdate = Typecho_I18n::dateWord($latestCreate, $now);
     } else {
         $lastModified = $now - $latestModify;
@@ -1224,16 +1485,18 @@ function getSiteStatistics()
 
     $tagsNum = tagsNum(false);
     
-
     // 返回结果数组
-    return [
+    $result = [
         'charCount' => $charCount,
         'totalViews' => $totalViews,
         'lastUpdate' => $lastUpdate,
-        'publishedPostsNum' =>  $publishedPostsNum,
-        'categoriesNum' =>  $categoriesNum,
-        'tagsNum' =>  $tagsNum,
+        'publishedPostsNum' => $publishedPostsNum,
+        'categoriesNum' => $categoriesNum,
+        'tagsNum' => $tagsNum,
     ];
+    
+    setCache($cache_key, $result);
+    return $result;
 }
 
 function getThemeVersion()
@@ -1241,3 +1504,280 @@ function getThemeVersion()
   $version = Plugin::parseInfo(Helper::options()->themeFile(Helper::options()->theme, "index.php"))["version"];
   return $version;
 }
+
+// 请求封装
+function restFull($url, $params, $method, $header = array(), $timeout = 5, $cookie = null)
+{
+  // 确保 header 是数组
+  if (!is_array($header)) {
+    $header = array();
+  }
+
+  if($timeout == null){
+    $timeout = 5;
+  }
+
+  // 设置基础 cURL 选项
+  $opts = array(
+    CURLOPT_TIMEOUT => $timeout,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_HTTPHEADER => $header
+  );
+
+  // 如果有 cookie，添加到选项中
+  if ($cookie !== null) {
+    $opts[CURLOPT_COOKIE] = $cookie;
+  }
+
+  // 根据请求类型设置特定参数
+  switch (strtoupper($method)) {
+    case 'GET':
+      $opts[CURLOPT_URL] = $url . '?' . http_build_query($params);
+      break;
+    case 'POST':
+      $opts[CURLOPT_URL] = $url;
+      $opts[CURLOPT_POST] = 1;
+      $opts[CURLOPT_POSTFIELDS] = http_build_query($params);
+      break;
+    case 'DELETE':
+      $opts[CURLOPT_URL] = $url;
+      $header[] = "X-HTTP-Method-Override: DELETE";
+      $opts[CURLOPT_HTTPHEADER] = $header;
+      $opts[CURLOPT_CUSTOMREQUEST] = 'DELETE';
+      $opts[CURLOPT_POSTFIELDS] = $params;
+      break;
+    case 'PUT':
+      $opts[CURLOPT_URL] = $url;
+      $opts[CURLOPT_CUSTOMREQUEST] = 'PUT';
+      $opts[CURLOPT_POSTFIELDS] = $params;
+      break;
+    default:
+      throw new Exception('不支持的请求方式！');
+  }
+
+  // 初始化并执行 cURL 请求
+  $ch = curl_init();
+  curl_setopt_array($ch, $opts);
+  $data = curl_exec($ch);
+  $error = curl_error($ch);
+  curl_close($ch);
+  if ($error) {
+    return "error: " . $error;
+  } else {
+    return $data;
+  }
+}
+
+// 添加缓存清理函数，可以在文章更新、评论发布等操作后调用
+function clearCache($key = null) {
+    if ($key) {
+        $cache_file = __TYPECHO_ROOT_DIR__ . '/usr/cache/' . md5($key) . '.cache';
+        if (file_exists($cache_file)) {
+            unlink($cache_file);
+        }
+    } else {
+        // 清除所有缓存
+        $cache_dir = __TYPECHO_ROOT_DIR__ . '/usr/cache/';
+        if (is_dir($cache_dir)) {
+            $files = glob($cache_dir . '*.cache');
+            foreach ($files as $file) {
+                unlink($file);
+            }
+        }
+    }
+}
+
+// 在文章保存后清除相关缓存
+function clearCacheOnSave($contents, $edit) {
+    // 清除全站统计相关缓存
+    clearCache('all_characters');
+    clearCache('site_statistics');
+    clearCache('tags_num');
+    clearCache('all_views');
+    
+    // 如果是编辑现有文章
+    if (isset($edit->cid)) {
+        // 清除该文章所有相关缓存
+        $cid = $edit->cid;
+        clearCache('post_content_' . $cid);
+        clearCache('post_full_content_' . $cid);
+        clearCache('post_parsed_content_' . $cid);
+        clearCache('post_details_' . $cid);
+        
+        // 清除不同用户状态的缓存版本
+        clearCache('post_parsed_content_' . $cid . '_logged_in');
+        clearCache('post_parsed_content_' . $cid . '_guest');
+        
+        // 清除评论用户的缓存版本
+        $db = Typecho_Db::get();
+        $commenters = $db->fetchAll($db->select('DISTINCT mail')->from('table.comments')
+            ->where('cid = ?', $cid));
+        foreach ($commenters as $commenter) {
+            if ($commenter['mail']) {
+                clearCache('post_parsed_content_' . $cid . '_' . md5($commenter['mail']));
+                clearCache('post_parsed_content_' . $cid . '_' . md5($commenter['mail']) . '_commented');
+            }
+        }
+    }
+    
+    return $contents;
+}
+
+// 在评论发布后清除相关缓存
+function clearCacheOnComment($comment) {
+    if (isset($comment->cid)) {
+        $cid = $comment->cid;
+        // 清除文章详情缓存
+        clearCache('post_details_' . $cid);
+        
+        // 清除该评论者相关的文章内容缓存
+        if ($comment->mail) {
+            clearCache('post_parsed_content_' . $cid . '_' . md5($comment->mail));
+            clearCache('post_parsed_content_' . $cid . '_' . md5($comment->mail) . '_commented');
+        }
+        
+        // 清除访客版本的缓存
+        clearCache('post_parsed_content_' . $cid . '_guest');
+    }
+    return $comment;
+}
+
+// 优化缓存文章内容函数
+function getPostContent($cid) {
+    // 检查是否启用缓存
+    if (Helper::options()->EnableCache != 'file') {
+        $db = Typecho_Db::get();
+        $row = $db->fetchRow($db->select('text')->from('table.contents')->where('cid = ?', $cid));
+        return $row ? $row['text'] : null;
+    }
+    
+    $cache_key = 'post_full_content_' . $cid;
+    $cache_time = Helper::options()->CacheTime ? intval(Helper::options()->CacheTime) : 86400;
+    $cached_data = getCache($cache_key, $cache_time);
+    
+    if ($cached_data !== false) {
+        return $cached_data;
+    }
+    
+    $db = Typecho_Db::get();
+    $row = $db->fetchRow($db->select('text')->from('table.contents')->where('cid = ?', $cid));
+    
+    if ($row) {
+        $content = $row['text'];
+        setCache($cache_key, $content);
+        return $content;
+    }
+    
+    return null;
+}
+
+// 重写评论显示函数
+function getCachedPostContent($archive) {
+    $cid = $archive->cid;
+    
+    // 检查是否启用缓存
+    if (Helper::options()->EnableCache != 'file') {
+        // 直接处理内容，不使用缓存
+        return processPostContent($archive);
+    }
+    
+    // 检查用户登录状态
+    $user = Typecho_Widget::widget('Widget_User');
+    $isLoggedIn = $user->hasLogin();
+    
+    $userEmail = $archive->remember('mail', true);
+    
+    // 根据不同状态使用不同的缓存键
+    $cache_key = 'post_parsed_content_' . $cid;
+    if ($isLoggedIn) {
+        $cache_key .= '_logged_in';
+    } elseif ($userEmail) {
+        $cache_key .= '_' . md5($userEmail);
+    } else {
+        $cache_key .= '_guest';
+    }
+    
+    // 添加额外的缓存标识，确保不同状态下的内容都被缓存
+    $hasCommented = false;
+    if ($userEmail) {
+        $db = Typecho_Db::get();
+        $sql = $db->select()->from('table.comments')
+            ->where('cid = ?', $cid)
+            ->where('mail = ?', $userEmail)
+            ->limit(1);
+        $result = $db->fetchAll($sql);
+        $hasCommented = !empty($result);
+        
+        if ($hasCommented) {
+            $cache_key .= '_commented';
+        }
+    }
+    
+    $cache_time = Helper::options()->CacheTime ? intval(Helper::options()->CacheTime) : 86400;
+    $cached_data = getCache($cache_key, $cache_time);
+    
+    if ($cached_data !== false) {
+        return $cached_data;
+    }
+    
+    // 处理内容
+    if ($isLoggedIn || $hasCommented) {
+        $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<div class="reply-content">$1</div>', $archive->content);
+    } else {
+        $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<p class="need-reply">此处内容 <a href="#comments">回复</a> 可见</p>', $archive->content);
+    }
+    
+    // 应用其他自定义格式化函数（如果有）
+    if (function_exists('ParseCode')) {
+        $content = ParseCode($content);
+    }
+    // 缓存处理后的内容
+    setCache($cache_key, $content);
+    return $content;
+}
+
+// 处理文章内容的辅助函数
+function processPostContent($archive) {
+    $cid = $archive->cid;
+    
+    // 检查用户登录状态
+    $user = Typecho_Widget::widget('Widget_User');
+    $isLoggedIn = $user->hasLogin();
+    
+    // 检查用户是否已评论
+    $hasCommented = false;
+    $userEmail = $archive->remember('mail', true);
+    if ($userEmail) {
+        $db = Typecho_Db::get();
+        $sql = $db->select()->from('table.comments')
+            ->where('cid = ?', $cid)
+            ->where('mail = ?', $userEmail)
+            ->limit(1);
+        $result = $db->fetchAll($sql);
+        $hasCommented = !empty($result);
+    }
+    
+    // 根据用户状态处理隐藏内容
+    if ($isLoggedIn || $hasCommented) {
+        $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<div class="reply-content">$1</div>', $archive->content);
+    } else {
+        $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<p class="need-reply">此处内容 <a href="#comments">回复</a> 可见</p>', $archive->content);
+    }
+    
+    // 应用其他自定义格式化函数（如果有）
+    if (function_exists('ParseCode')) {
+        $content = ParseCode($content);
+    }
+    
+    return $content;
+}
+
+// Typecho_Plugin::factory('Widget_Contents_Post_Edit')->finishPublish = array('ThemeCacheCleaner', 'clearCache');
+// Typecho_Plugin::factory('Widget_Contents_Page_Edit')->finishPublish = array('ThemeCacheCleaner', 'clearCache');
+// // Typecho_Plugin::factory('Widget_Feedback')->finishComment = 'clearCacheOnComment';
+
+// class ThemeCacheCleaner {
+//     public static function clearCache() {
+//         clearCache();
+//     }
+// }
