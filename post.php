@@ -94,8 +94,8 @@
       </div>
       <div class="post_share">
         <div class="social-share share-component" data-image="https://tva4.sinaimg.cn/large/007X0Rdygy1ghm2u8yvhdj30sg0g0gp1.jpg" data-sites="facebook,twitter,wechat,weibo,qq">
-          <link rel="stylesheet" href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/social-share.js/1.0.16/css/share.min.css" media="all" onload="this.media='all'">
-          <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/social-share.js/1.0.16/js/social-share.min.js" defer=""></script>
+          <link rel="stylesheet" href="https://lib.baomitu.com/social-share.js/1.0.16/css/share.min.css" media="all" onload="this.media='all'">
+          <script src="https://lib.baomitu.com/social-share.js/1.0.16/js/social-share.min.js" defer=""></script>
         </div>
       </div>
     </div>
@@ -210,4 +210,5 @@
   <?php endif; ?>
 </main>
 <!-- end #main-->
+
 <?php $this->need('footer.php'); ?>
