@@ -1,5 +1,4 @@
 <?php
-use Typecho\Plugin;
 if (!defined('__TYPECHO_ROOT_DIR__'))
     exit;
 
@@ -1501,7 +1500,7 @@ function getSiteStatistics()
 
 function getThemeVersion()
 {
-  $version = Plugin::parseInfo(Helper::options()->themeFile(Helper::options()->theme, "index.php"))["version"];
+  $version = Typecho_Plugin::parseInfo(Helper::options()->themeFile(Helper::options()->theme, "index.php"))["version"];
   return $version;
 }
 
