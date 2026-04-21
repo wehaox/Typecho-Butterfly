@@ -441,6 +441,7 @@
   <?php renderFileCachePermissionWarning(); ?>
   <script src="<?php $this->options->themeUrl('/js/main.js?v1.8.3'); ?>"> </script>
   <script src="<?php $this->options->themeUrl('/js/utils.js?v1.7.3'); ?>"> </script>
+  <script src="<?php $this->options->themeUrl('/js/external-link-confirm.js?v1.0.0'); ?>"> </script>
   <script src="<?php $this->options->themeUrl('/js/tw_cn.js?v1.7.3'); ?>"> </script>
   <?php if (is_array($this->options->beautifyBlock) && !in_array('showNoAlertSearch', $this->options->beautifyBlock)) : ?>
     <script src="<?php $this->options->themeUrl('/js/local-search.js'); ?>"> </script>

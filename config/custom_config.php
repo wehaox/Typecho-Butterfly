@@ -102,6 +102,18 @@ function themeConfig($form)
     );
     $form->addInput($NewTabLink->multiMode());
 
+    $ExternalLinkConfirm = new Typecho_Widget_Helper_Form_Element_Select(
+        'ExternalLinkConfirm',
+        array(
+            'off' => '关闭（默认）',
+            'on' => '开启',
+        ),
+        'off',
+        '是否开启站外链接点击二次确认',
+        '介绍：点击站外链接时会弹出确认提示，防止误触跳转'
+    );
+    $form->addInput($ExternalLinkConfirm->multiMode());
+
     $showFramework = new Typecho_Widget_Helper_Form_Element_Select(
         'showFramework',
         array(
@@ -110,7 +122,7 @@ function themeConfig($form)
         ),
         'on',
         '是否显示底部博客框架和主题',
-        '介绍：如果你是小白自行修改主题名会导致侵权提示，你可以在这里关闭同时希望你可以<b>尊重本主题</b>'
+        '介绍：你可以在这里关闭同时希望你可以<b>尊重本主题</b>'
     );
     $form->addInput($showFramework->multiMode());
 

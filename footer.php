@@ -146,20 +146,16 @@
     <link rel="stylesheet" href="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/clock.min.css">
   <?php endif ?>
   <?php $this->header('commentReply=1&description=0&keywords=0&generator=0&template=0&pingback=0&xmlrpc=0&wlw=0&rss2=0&rss1=0&antiSpam=0&atom'); ?>
-  <?php if ($this->options->NewTabLink == 'on') : ?>
+  <?php if ($this->options->NewTabLink == 'on' || $this->options->ExternalLinkConfirm == 'on') : ?>
     <script data-pjax>
       (function() {
-        var aElements = document.getElementsByTagName('a');
-        var domain = document.domain;
-
-        for (var i = 0; i < aElements.length; i++) {
-          var aElement = aElements[i];
-          var url = aElement.href;
-
-          if (url && url.length > 0 && url.indexOf(domain) === -1 && url !== 'javascript:void(0);') {
-            aElement.setAttribute('target', '_blank');
-          }
+        if (typeof ExternalLinkConfirm === 'undefined') {
+          return;
         }
+        ExternalLinkConfirm.init({
+          enableNewTab: <?php echo $this->options->NewTabLink == 'on' ? 'true' : 'false'; ?>,
+          enableConfirm: <?php echo $this->options->ExternalLinkConfirm == 'on' ? 'true' : 'false'; ?>
+        });
       })();
     </script>
   <?php endif; ?>

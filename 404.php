@@ -47,19 +47,17 @@
 </div>
 <!--搜索end  -->
 <div class="js-pjax">
-<?php if ($this->options->NewTabLink == 'on'): ?>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  var aElements = document.getElementsByTagName('a');
-  var domain = document.domain;
-  for (var i = 0; i < aElements.length; i++) {
-    var aElement = aElements[i];
-    var url = aElement.href;
-    if (url && url.length > 0 && url.indexOf(domain) === -1 && url !== 'javascript:void(0);') {
-      aElement.setAttribute('target', '_blank');
-    }
+<?php if ($this->options->NewTabLink == 'on' || $this->options->ExternalLinkConfirm == 'on'): ?>
+<script data-pjax>
+(function() {
+  if (typeof ExternalLinkConfirm === 'undefined') {
+    return;
   }
-});
+  ExternalLinkConfirm.init({
+    enableNewTab: <?php echo $this->options->NewTabLink == 'on' ? 'true' : 'false'; ?>,
+    enableConfirm: <?php echo $this->options->ExternalLinkConfirm == 'on' ? 'true' : 'false'; ?>
+  });
+})();
 </script>
 <?php endif; ?>        
 <?php if($this->is('index')): ?>

@@ -111,7 +111,10 @@ document.addEventListener('DOMContentLoaded', function () {
         setLang()
         setTimeout(translateBody, translateDelay)
       }
-      translateButtonObject.addEventListener('click', translatePage, false)
+      if (translateButtonObject.dataset.translateInit !== 'true') {
+        translateButtonObject.dataset.translateInit = 'true'
+        translateButtonObject.addEventListener('click', translatePage, false)
+      }
     }
   }
   translateInitialization()

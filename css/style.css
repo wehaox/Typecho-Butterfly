@@ -575,3 +575,192 @@
 /*    -ms-transform-origin: 0 50%;*/
 /*    transform-origin: 0 50%;*/
 /*}*/
+
+/* 站外链接确认弹窗 */
+.external-link-modal-open {
+  overflow: hidden;
+}
+
+.external-link-modal-mask {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 10000;
+}
+
+.external-link-modal-mask.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.external-link-modal {
+  width: min(100%, 520px);
+  background: var(--card-bg, #fff);
+  color: var(--font-color, #363636);
+  border: var(--border-style, 1px solid rgba(0, 0, 0, 0.08));
+  border-radius: 12px;
+  box-shadow: var(--card-box-shadow, 0 8px 30px rgba(0, 0, 0, 0.15));
+  padding: 1.5rem;
+  transform: translateY(15px) scale(0.97);
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.external-link-modal-mask.is-active .external-link-modal {
+  transform: translateY(0) scale(1);
+}
+
+.external-link-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.external-link-modal__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--font-color, #363636);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.external-link-modal__title i {
+  color: var(--btn-bg, #49b1f5);
+}
+
+.external-link-modal__close {
+  border: none;
+  background: transparent;
+  color: var(--font-color, #999);
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.external-link-modal__close:hover {
+  color: var(--btn-hover-color, #3b9ed6);
+}
+
+.external-link-modal__desc {
+  margin: 0 0 0.85rem;
+  font-size: 0.95rem;
+  color: var(--font-color, #666);
+}
+
+.external-link-modal__url-box {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+  margin-bottom: 1.5rem;
+}
+
+.external-link-modal__url {
+  margin: 0;
+  flex: 1;
+  background: var(--search-bg, rgba(0, 0, 0, 0.04));
+  border-radius: 8px;
+  border: var(--border-style, 1px solid rgba(0, 0, 0, 0.08));
+  padding: 0.6rem 0.8rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  word-break: break-all;
+  user-select: text;
+  display: flex;
+  align-items: center;
+}
+
+.external-link-modal__copy {
+  border: var(--border-style, 1px solid rgba(0, 0, 0, 0.08));
+  cursor: pointer;
+  border-radius: 8px;
+  width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: var(--font-color, #666);
+  background: var(--search-bg, rgba(0, 0, 0, 0.04));
+  flex-shrink: 0;
+}
+
+.external-link-modal__copy:hover {
+  color: var(--btn-bg, #49b1f5);
+  background: var(--card-bg, #fff);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.external-link-modal__copy.is-success {
+  color: #52c41a;
+  border-color: #52c41a;
+}
+
+.external-link-modal__btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.external-link-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.external-link-modal__btn--cancel {
+  color: var(--font-color, #666);
+  background: transparent;
+  border: var(--border-style, 1px solid rgba(0, 0, 0, 0.12));
+}
+
+.external-link-modal__btn--cancel:hover {
+  color: var(--btn-color, #fff);
+  background: var(--font-color, #666);
+  border-color: transparent;
+}
+
+.external-link-modal__btn--confirm {
+  color: var(--btn-color, #fff);
+  background: var(--btn-bg, #49b1f5);
+}
+
+.external-link-modal__btn--confirm:hover {
+  background: var(--btn-hover-color, #3b9ed6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(73, 177, 245, 0.3);
+}
+
+@media screen and (max-width: 520px) {
+  .external-link-modal {
+    padding: 1.2rem;
+  }
+
+  .external-link-modal__btn {
+    width: 100%;
+  }
+
+  .external-link-modal__actions {
+    flex-direction: column-reverse;
+  }
+}
