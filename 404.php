@@ -1,12 +1,12 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php $this->page404(); ?>
-<?php  $this->need('header_com.php'); ?>
+<?php  $this->need('includes/header_com.php'); ?>
 <div id="web_bg"></div>
 <div class="error404" id="body-wrap">
      <header class="not-top-img" id="page-header">
      <?php  $this->need('public/nav.php'); ?>
 </header>
-    <div id="error-wrap"><div class="error-content"><div class="error-img"><img src="https://i.loli.net/2020/05/19/aKOcLiyPl2JQdFD.png" alt="Page not found" class="entered"></div><div class="error-info"><h1 class="error_title">404</h1><div class="error_subtitle">頁面沒有找到</div></div></div></div></div>
+    <div id="error-wrap"><div class="error-content"><div class="error-img"><img src="https://i.loli.net/2020/05/19/aKOcLiyPl2JQdFD.png" alt="Page not found" class="entered"></div><div class="error-info"><h1 class="error_title">404</h1><div class="error_subtitle">页面没有找到</div></div></div></div></div>
     <?php require_once('public/rightside.php');?>
 <?php if ($this->options->showFramework == 'off'): ?>
 <style>.framework-info{display:none}</style>
@@ -147,7 +147,7 @@ document.addEventListener("pjax:complete", (function() {
     {page_path: window.location.pathname}),
     "object" == typeof _hmt && _hmt.push(["_trackPageview", window.location.pathname]), 
     "function" == typeof loadMeting && document.getElementsByClassName("aplayer").length && loadMeting(),
-    "object" == typeof Prism && Prism.highlightAll(), "object" == typeof preloader && preloader.endLoading()
+    "object" == typeof preloader && preloader.endLoading()
 })),
 document.addEventListener("pjax:error", e => {
     // 404 === e.request.status && pjax.loadUrl("/404");

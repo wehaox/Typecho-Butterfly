@@ -1,8 +1,8 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<?php  $this->need('header_com.php'); ?>
+<?php  $this->need('includes/header_com.php'); ?>
 <style>#body-wrap {min-height: 0;}</style>
 <div id="web_bg"></div>
-<?php require_once('public/rightside.php');?>
+<?php require_once(__DIR__ . '/../public/rightside.php');?>
 <div class="page" id="body-wrap">
 <header class="not-home-page" id="page-header"  style="background-image: url(<?php if ($this->is('page')){GetRandomThumbnailPost($this);}?>)">
          <div id="page-site-info"><h1 id="site-title"><?php $this->archiveTitle(array(

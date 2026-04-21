@@ -1,24 +1,26 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<?php $this->need('page_header.php'); ?>
+<?php $this->need('includes/page_header.php'); ?>
+<?php $pageShowReward = getThemeFieldValue($this->cid, 'ShowReward', 'off'); ?>
 <main class="layout" id="content-inner">
 <div id="page" >
     <article class="post-content" id="article-container">
        <?php
-        $db = Typecho_Db::get();
-        $sql = $db->select()->from('table.comments')
-         ->where('cid = ?', $this->cid)
-         ->where('mail = ?', $this->remember('mail', true))
-         ->limit(1);
-         $result = $db->fetchAll($sql);
-         if ($this->user->hasLogin() || $result) {
-         $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<div class="reply-content">$1</div>', $this->content);
-         } else {
-         $content = preg_replace("/\[hide\](.*?)\[\/hide\]/sm", '<p class="need-reply">此处内容 <a href="#comments">回复</a> 可见</p>', $this->content);
-         }
+        $hasCommented = false;
+        $rememberMail = $this->remember('mail', true);
+        if (!empty($rememberMail)) {
+            $db = Typecho_Db::get();
+            $sql = $db->select('coid')->from('table.comments')
+             ->where('cid = ?', $this->cid)
+             ->where('mail = ?', $rememberMail)
+             ->limit(1);
+            $result = $db->fetchRow($sql);
+            $hasCommented = !empty($result);
+        }
+         $content = replaceHideContent($this->content, $this->user->hasLogin() || $hasCommented);
         echo $content;
        ?>
     </article>
-    <?php if($this->fields->ShowReward === 'show' || $this->options->ShowGlobalReward === 'show') : ?>
+    <?php if($pageShowReward === 'show' || $this->options->ShowGlobalReward === 'show') : ?>
    <div class="post-reward">
   <div class="reward-button button--animated">
     <i class="fas fa-qrcode"></i>打赏</div>
@@ -48,24 +50,9 @@
   </div>
 </div>
 <?php endif; ?>
-    <?php $this->need('comments.php'); ?>
+    <?php $this->need('includes/comments.php'); ?>
 </div>
-<?php $this->need('post_sidebar.php'); ?>
-<link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.0'); ?>"></script>
-<script type="text/javascript" src="<?php $this->options->themeUrl('js/clipboard.min.js'); ?>"></script>
-<?php if (!empty($this->options->beautifyBlock) && in_array('showLineNumber',
-    $this->options->beautifyBlock)): ?> 
-<script type="text/javascript">
-	(function(){
-		var pres = document.querySelectorAll('pre');
-		var lineNumberClassName = 'line-numbers';
-		pres.forEach(function (item, index) {
-			item.className = item.className == '' ? lineNumberClassName : item.className + ' ' + lineNumberClassName;
-		});
-	})();
-</script>
-<?php endif; ?>
+<?php $this->need('includes/sidebar.php'); ?>
 </main>
 <!-- end #main-->
 <?php $this->need('footer.php'); ?>

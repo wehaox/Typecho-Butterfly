@@ -7,7 +7,7 @@
  * <a href="https://www.haoi.net">个人网站</a> | <a href="https://blog.haoi.net/archives/typecho-butterfly.html">主题使用文档</a>
  * @package Typecho-Butterfly
  * @author b站:wehao-
- * @version 1.8.1
+ * @version 1.8.2
  * @link https://space.bilibili.com/34174433
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -17,8 +17,8 @@ if($sticky && $this->is('index') || $this->is('front')){
     $sticky_cids = explode(',', strtr($sticky, ' ', ','));//分割文本 
     $sticky_html = "<span class='article-meta'><i class='fas fa-thumbtack article-meta__icon sticky'></i><span class='sticky'>置顶 </span><span class='article-meta__separator'>|</span></span>";
     $db = Typecho_Db::get();
-    $select1 = $this->select()->where('type = ? AND status = ? AND created < ?', 'post','publish',time());
-    $select2 = $this->select()->where('type = ? AND status = ? AND created < ?', 'post','publish',time());
+    $select1 = $this->select('cid', 'title', 'slug', 'created', 'modified', 'type', 'status', 'authorId', 'commentsNum', 'text', 'views')->where('type = ? AND status = ? AND created < ?', 'post','publish',time());
+    $select2 = $this->select('cid', 'title', 'slug', 'created', 'modified', 'type', 'status', 'authorId', 'commentsNum', 'text', 'views')->where('type = ? AND status = ? AND created < ?', 'post','publish',time());
     $this->row = [];
     $this->stack = [];
     $this->length = 0;
@@ -69,7 +69,7 @@ while($this->next()):
              style="display:block;height:200px;width:100%;"
              data-ad-format="fluid"
              data-ad-client="<?php $this->options->googleadsense(); ?>"></ins>
-        <script>
+        <script data-pjax>
              (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
   </div>
@@ -87,10 +87,10 @@ if($this->options->coverPosition === 'cross'){
 ?>
     <div class="recent-post-item">
     <?php if(noCover($this)): ?>  
-        <wehao class="post_cover  <?php echo $sideClass; ?>">
+        <div class="post_cover  <?php echo $sideClass; ?>">
              <a href="<?php $this->permalink() ?>">
-                <img class="post-bg" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" src="<?php echo GetLazyLoad() ?>" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'"></a>
-        </wehao>
+                <img class="post-bg" data-lazy-src="<?php echo get_ArticleThumbnail($this);?>" src="<?php echo GetLazyLoad() ?>" alt="<?php $this->title() ?>" title="<?php $this->title() ?>" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'"></a>
+        </div>
     <?php endif ?>
     <div class="recent-post-info<?php echo noCover($this) ? '' : ' no-cover'; ?>">
         <a  class="article-title" href="<?php $this->permalink() ?>"><?php $this->title() ?></a>
@@ -144,7 +144,7 @@ if($this->options->coverPosition === 'cross'){
  <?php $this->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>', 1, '...', array('wrapTag' => 'div', 'wrapClass' => 'pagination', 'itemTag' => '', 'prevClass' => 'extend prev', 'nextClass' => 'extend next', 'currentClass' => 'page-number current' )); ?>
 </nav>
 </div>
-<?php $this->need('sidebar.php'); ?>
+<?php $this->need('includes/sidebar.php'); ?>
 <script>
 function ver() {console.log(`
 ===================================================================

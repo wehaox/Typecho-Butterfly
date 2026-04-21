@@ -36,3 +36,6 @@ textarea {
 .artplayer-dialog {
     top: 26%;
 }
+#wmd-button-bar .wmd-button-row{
+	height: unset;
+}

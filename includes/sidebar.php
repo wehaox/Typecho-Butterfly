@@ -1,11 +1,15 @@
-<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit;     
-$site = getSiteStatistics();?>
-<div class="aside-content" id="aside-content">
-    <?php if (!empty($this->options->sidebarBlock) && in_array('ShowAuthorInfo', $this->options->sidebarBlock)): ?>     
+<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+$site = getSiteStatistics();
+$disableToc = !empty($GLOBALS['BUTTERFLY_DISABLE_TOC']);
+$isSingleSidebar = $this->is('single') || $this->is('page');
+$sidebarBlocks = $isSingleSidebar ? $this->options->PostSidebarBlock : $this->options->sidebarBlock;
+$showToc = ($isSingleSidebar && !$disableToc) ? getThemeFieldValue($this->cid, 'ShowToc', 'show') : 'off'; ?>
+<div class="aside-content" id="aside-content" role="complementary">
+    <?php if (!empty($sidebarBlocks) && in_array('ShowAuthorInfo', $sidebarBlocks)): ?>
     <div class="card-widget card-info">
 	 <div class="card-info-avatar is-center">
 	     <div class="avatar-img">
-	         <img data-lazy-src="<?php $this->options->logoUrl() ?>" onerror="this.onerror=null;this.src='/usr/themes/butterfly/img/friend_404.gif'" src="<?php echo GetLazyLoad() ?>" alt="avatar">
+	         <img data-lazy-src="<?php $this->options->logoUrl() ?>" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/friend_404.gif'); ?>'" src="<?php echo GetLazyLoad() ?>" alt="avatar">
 	      </div>
 		<div class="author-info__name">
 			<?php $this->author(); ?>
@@ -51,7 +55,7 @@ $site = getSiteStatistics();?>
     <?php endif; ?>
 </div>
     <?php endif; ?>
-    <?php if (!empty($this->options->sidebarBlock) && in_array('ShowAnnounce', $this->options->sidebarBlock)): ?> 
+    <?php if (!empty($sidebarBlocks) && in_array('ShowAnnounce', $sidebarBlocks)): ?> 
     <div class="card-widget card-announcement"><div class="item-headline">
         <i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div>
     <div class="announcement_content"><?php $this->options->announcement() ?></div></div>
@@ -64,7 +68,21 @@ $site = getSiteStatistics();?>
      <?php endif; ?>
     <div class="sticky_layout">
 <!--微博热搜-->
-<?php if (!empty($this->options->sidebarBlock) && in_array('ShowWeiboHot', $this->options->sidebarBlock)): ?>
+    <?php if ($isSingleSidebar && $showToc !== 'off'): ?>
+    <div class="card-widget" id="card-toc">
+        <div class="item-headline">
+            <i class="fas fa-stream"></i>
+            <span>目录</span>
+            <span class="toc-percentage"></span>
+        </div>
+        <div class="toc-content">
+            <ol class="toc">
+                <?php getCatalog(); ?>
+            </ol>
+        </div>
+    </div>
+    <?php endif; ?>
+<?php if (!empty($sidebarBlocks) && in_array('ShowWeiboHot', $sidebarBlocks)): ?>
 <div class="card-widget card-weibo wow animate__zoomIn" data-wow-duration="2s" data-wow-delay="200ms" data-wow-offset="30" data-wow-iteration="1" style="visibility: visible; animation-duration: 2s; animation-delay: 200ms; animation-iteration-count: 1; animation-name: zoomIn;">
   <div class="card-content">
     <div class="item-headline">
@@ -72,53 +90,53 @@ $site = getSiteStatistics();?>
       <span>微博热搜</span></div>
     <div id="weibo-container" style="width:100%;height:150px;font-size:95%">
       <style>.weibo-new{background:#ff3852}.weibo-hot{background:#ff9406}.weibo-jyzy{background:#ffc000}.weibo-recommend{background:#00b7ee}.weibo-adrecommend{background:#febd22}.weibo-friend{background:#8fc21e}.weibo-boom{background:#bd0000}.weibo-topic{background:#ff6f49}.weibo-topic-ad{background:#4dadff}.weibo-boil{background:#f86400}#weibo-container{overflow-y:auto;-ms-overflow-style:none;scrollbar-width:none}#weibo-container::-webkit-scrollbar{display:none}.weibo-list-item{display:flex;flex-direction:row;justify-content:space-between;flex-wrap:nowrap}.weibo-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:auto}.weibo-num{float:right}.weibo-hotness{display:inline-block;padding:0 6px;transform:scale(.8) translateX(-3px);color:#fff;border-radius:8px}</style>
-      <div class="weibo-list">
-          <?php echo weibohot() ?> 
+      <div class="weibo-list" id="weibo-list" data-api-url="<?php $this->options->themeUrl('api/api.php?action=weibohot'); ?>">
+          <div class="weibo-list-item"><span class="weibo-title">微博热搜加载中...</span></div>
       </div>
     </div>
   </div>
 </div>
 <?php endif ?>
 <!--微博热搜end-->
-    <?php if (!empty($this->options->sidebarBlock) && in_array('ShowRecentPosts', $this->options->sidebarBlock)): ?>
+    <?php if (!empty($sidebarBlocks) && in_array('ShowRecentPosts', $sidebarBlocks)): ?>
     <div class="card-widget card-recent-post">
        <div class="item-headline">
             <i class="fas fa-history"></i><span><?php _e('最新文章'); ?></span>
         </div>
       <div class="aside-list">
-            <?php $this->widget('Widget_Contents_Post_Recent')->to($contents); ?>
-            <?php while($contents->next()): ?>
+            <?php foreach (getRecentPostsLite(5) as $contents): ?>
              <div class="aside-list-item"> 
-              <a class="thumbnail" href="<?php $contents->permalink() ?>" title="<?php $contents->title() ?>" >
-               <img onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'" data-lazy-src="<?php GetRandomThumbnail($contents); ?> " 
+              <a class="thumbnail" href="<?php echo $contents['permalink'] ?>" title="<?php echo htmlspecialchars($contents['title'], ENT_QUOTES, 'UTF-8'); ?>" >
+               <img onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'" data-lazy-src="<?php echo get_ArticleThumbnail($contents); ?>" 
                src="<?php echo GetLazyLoad() ?>"
-               alt="<?php $contents->title() ?>">
+               alt="<?php echo htmlspecialchars($contents['title'], ENT_QUOTES, 'UTF-8'); ?>">
                </a>
                <div class="content">
-                  <a class="title" href="<?php $contents->permalink() ?>">
-                      <?php $contents->title() ?>
-                      </a>
-                  <time datetime="" title="发表于 ">
-                      <?php $contents->date() ?>
-                  </time>
-               </div>
+                  <a class="title" href="<?php echo $contents['permalink'] ?>">
+                      <?php echo htmlspecialchars($contents['title'], ENT_QUOTES, 'UTF-8'); ?>
+                       </a>
+                   <time datetime="" title="发表于 ">
+                       <?php echo date('Y-m-d', $contents['created']); ?>
+                   </time>
+                </div>
               </div>
-             <?php endwhile; ?>
+             <?php endforeach; ?>
        </div>
     </div>
 <?php endif; ?>
-    <?php if (!empty($this->options->sidebarBlock) && in_array('ShowRecentComments',  $this->options->sidebarBlock)): ?>
+    <?php if (!empty($sidebarBlocks) && in_array('ShowRecentComments',  $sidebarBlocks)): ?>
         <div class="card-widget" id="card-newest-comments">
         <div class="item-headline"><i class="fas fa-bolt"></i><span><?php _e('最新评论'); ?></span></div>
         <div class="aside-list">
         <?php $this->widget('Widget_Comments_Recent', 'pageSize=6')->to($comments); ?>
         <?php while($comments->next()): ?>
+            <?php $commentLink = getCommentPermalink($comments); ?>
             <div class="aside-list-item">
-                <a href="<?php $comments->permalink(); ?>" class="thumbnail">
+                <a href="<?php echo $commentLink; ?>" class="thumbnail">
                     <?php $email=$comments->mail;$name=$comments->author; echo getGravatar($email,$name,null);?>
                 </a>
                 <div class="content">
-                <a class="comment" href="<?php $comments->permalink(); ?>">
+                <a class="comment" href="<?php echo $commentLink; ?>">
                     <?php $comments->excerpt(35, '...'); ?>
                 </a>
                      <div class="name"> 
@@ -130,7 +148,7 @@ $site = getSiteStatistics();?>
         </div>
     </div>
     <?php endif; ?>
-    <?php if (!empty($this->options->sidebarBlock) && in_array('ShowCategory', $this->options->sidebarBlock)): ?>
+    <?php if (!empty($sidebarBlocks) && in_array('ShowCategory', $sidebarBlocks)): ?>
         <div class="card-widget card-categories">
         <div class="item-headline"><i class="fas fa-folder-open"></i><span><?php _e('分类'); ?></span>
             </div>
@@ -146,7 +164,7 @@ $site = getSiteStatistics();?>
         </div>
     <?php endif; ?>
     <!-- 标签 -->
- <?php if (!empty($this->options->sidebarBlock) && in_array('ShowTag', $this->options->sidebarBlock)): ?>
+ <?php if (!empty($sidebarBlocks) && in_array('ShowTag', $sidebarBlocks)): ?>
     <div class="card-widget card-tags">
         <div class="item-headline"><i class="fas fa-tags"></i><span><?php _e('标签'); ?></span></div>
         
@@ -163,7 +181,7 @@ $site = getSiteStatistics();?>
         </div>
     </div>
     <?php endif; ?>
-    <?php if (!empty($this->options->sidebarBlock) && in_array('ShowArchive', $this->options->sidebarBlock)): ?>
+    <?php if (!empty($sidebarBlocks) && in_array('ShowArchive', $sidebarBlocks)): ?>
     <div class="card-widget card-archives">
         <div class="item-headline">
             <i class="fas fa-archive"></i><span><?php _e('归档'); ?></span></div>
@@ -188,7 +206,7 @@ $site = getSiteStatistics();?>
 	</div>
     <?php endif; ?>
 <?php 
-if (!empty($this->options->sidebarBlock) && in_array('ShowWebinfo', $this->options->sidebarBlock)): ?>
+if (!empty($sidebarBlocks) && in_array('ShowWebinfo', $sidebarBlocks)): ?>
   <div class="card-widget card-webinfo">
      <div class="item-headline">
    <i class="fas fa-chart-line"></i>
@@ -230,7 +248,7 @@ if (!empty($this->options->sidebarBlock) && in_array('ShowWebinfo', $this->optio
   </div>
   </div>
  <?php endif; ?>
-    <?php if (!empty($this->options->sidebarBlock) && in_array('ShowOther', $this->options->sidebarBlock)): ?>
+    <?php if (!empty($sidebarBlocks) && in_array('ShowOther', $sidebarBlocks)): ?>
 	<div class="card-widget card-ty-user">
 	    <div class="item-headline">
             <i class="fas fa-user"></i><span><?php _e('用户'); ?></span></div>

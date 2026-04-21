@@ -1,5 +1,5 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<?php  $this->need('header_com.php'); ?>
+<?php  $this->need('includes/header_com.php'); ?>
 <body style="zoom: 1;">
 <div id="web_bg"></div>
 <div class="page" id="body-wrap">

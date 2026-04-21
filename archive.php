@@ -1,7 +1,8 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) {
 	exit;
 } ?>
-<?php $this->need('page_header.php'); ?>
+<?php $GLOBALS['BUTTERFLY_DISABLE_TOC'] = true; ?>
+<?php $this->need('includes/page_header.php'); ?>
 <main class="layout" id="content-inner">
 	<div class="recent-posts category_ui" id="recent-posts">
 		<?php if ($this->have()) : ?>
@@ -16,10 +17,10 @@
 			?>
 				<div class="recent-post-item">
 					<?php if (noCover($this)) : ?>
-						<wehao class="post_cover  <?php echo $sideClass; ?>">
+						<div class="post_cover  <?php echo $sideClass; ?>">
 							<a href="<?php $this->permalink() ?>">
-								<img class="post-bg" data-lazy-src="<?php echo get_ArticleThumbnail($this); ?>" src="<?php echo GetLazyLoad() ?>" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'"></a>
-						</wehao>
+								<img class="post-bg" data-lazy-src="<?php echo get_ArticleThumbnail($this); ?>" src="<?php echo GetLazyLoad() ?>" alt="<?php $this->title(); ?>" title="<?php $this->title(); ?>" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'"></a>
+						</div>
 					<?php endif ?>
 					<div class="recent-post-info<?php echo noCover($this) ? '' : ' no-cover'; ?>">
 						<a class="article-title" href="<?php $this->permalink(); ?>"><?php $this->title(); ?></a>
@@ -81,6 +82,6 @@
 			<?php $this->pageNav('<i class="fas fa-chevron-left fa-fw"></i>', '<i class="fas fa-chevron-right fa-fw"></i>', 1, '...', ['wrapTag' => 'div', 'wrapClass' => 'pagination', 'itemTag' => '', 'prevClass' => 'extend prev', 'nextClass' => 'extend next', 'currentClass' => 'page-number current']); ?>
 		</nav>
 	</div><!-- end #main -->
-	<?php $this->need('sidebar.php'); ?>
+	<?php $this->need('includes/sidebar.php'); ?>
 </main>
 <?php $this->need('footer.php'); ?>

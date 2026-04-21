@@ -5,7 +5,8 @@
  *
  * @package custom
  *
- */$this->need('page_header.php');
+ */$GLOBALS['BUTTERFLY_DISABLE_TOC'] = true;
+$this->need('includes/page_header.php');
 ?>
 <main class="layout" id="content-inner">
 <div id="page"> 
@@ -46,8 +47,8 @@ $child = $categorys->getCategory($mid); echo($this->is('category', $mid));?>
 <?php endwhile; ?>
 </ul>
 </div>
-<?php $this->need('comments.php'); ?>
+<?php $this->need('includes/comments.php'); ?>
 </div>
-<?php $this->need('sidebar.php'); ?>
+<?php $this->need('includes/sidebar.php'); ?>
 </main>
 <?php $this->need('footer.php'); ?>

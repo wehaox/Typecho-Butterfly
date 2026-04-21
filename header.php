@@ -1,5 +1,5 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<?php $this->need('header_com.php'); ?>
+<?php $this->need('includes/header_com.php'); ?>
 <style>
 #page-header{
     background-image: url(<?php $this->options->headerimg();?>);

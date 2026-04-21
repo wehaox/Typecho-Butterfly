@@ -1,0 +1,44 @@
+name: 自动发布 Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 提取版本号
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+
+      - name: 准备打包目录
+        run: mkdir -p dist/package/butterfly
+
+      - name: 打包主题源码
+        run: |
+          rsync -a ./ dist/package/butterfly/ \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude "online.dat" \
+            --exclude ".gitignore" \
+            --exclude "README.md" \
+            --exclude "LICENSE" \
+            --exclude "dist"
+
+          cd dist/package
+          zip -r "../butterfly-${VERSION}.zip" butterfly
+
+      - name: 创建 Release 并上传附件
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release${{ env.VERSION }}
+          files: dist/butterfly-${{ env.VERSION }}.zip
+          generate_release_notes: true

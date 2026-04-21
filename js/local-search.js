@@ -1,49 +1,78 @@
 window.addEventListener('load', () => {
   let loadFlag = false
+  let searchReady = false
+  let escBound = false
   const openSearch = () => {
+    const searchDialog = document.querySelector('#local-search .search-dialog')
+    const searchInput = document.querySelector('#local-search-input input')
+    const searchMask = document.getElementById('search-mask')
+    if (!searchDialog || !searchInput || !searchMask) return
     const bodyStyle = document.body.style
     bodyStyle.width = '100%'
     bodyStyle.overflow = 'hidden'
-    btf.animateIn(document.getElementById('search-mask'), 'to_show 0.5s')
-    btf.animateIn(document.querySelector('#local-search .search-dialog'), 'titleScale 0.5s')
-    setTimeout(() => { document.querySelector('#local-search-input input').focus() }, 100)
+    btf.animateIn(searchMask, 'to_show 0.5s')
+    btf.animateIn(searchDialog, 'titleScale 0.5s')
+    setTimeout(() => { searchInput.focus() }, 100)
     if (!loadFlag) {
       search(GLOBAL_CONFIG.localSearch.path)
       loadFlag = true
     }
-    // shortcut: ESC
-    document.addEventListener('keydown', function f (event) {
-      if (event.code === 'Escape') {
-        closeSearch()
-        document.removeEventListener('keydown', f)
-      }
-    })
   }
 
   const closeSearch = () => {
+    const searchDialog = document.querySelector('#local-search .search-dialog')
+    const searchMask = document.getElementById('search-mask')
+    if (!searchDialog || !searchMask) return
     const bodyStyle = document.body.style
     bodyStyle.width = ''
     bodyStyle.overflow = ''
-    btf.animateOut(document.querySelector('#local-search .search-dialog'), 'search_close .5s')
-    btf.animateOut(document.getElementById('search-mask'), 'to_hide 0.5s')
+    btf.animateOut(searchDialog, 'search_close .5s')
+    btf.animateOut(searchMask, 'to_hide 0.5s')
   }
 
   // click function
   const searchClickFn = () => {
-    document.querySelector('#search-button > .search').addEventListener('click', openSearch)
-    document.getElementById('search-mask').addEventListener('click', closeSearch)
-    document.querySelector('#local-search .search-close-button').addEventListener('click', closeSearch)
+    const searchButton = document.querySelector('#search-button > .search')
+    const searchMask = document.getElementById('search-mask')
+    const closeButton = document.querySelector('#local-search .search-close-button')
+    if (searchButton && searchButton.dataset.searchInit !== 'true') {
+      searchButton.dataset.searchInit = 'true'
+      searchButton.addEventListener('click', openSearch)
+    }
+    if (searchMask && searchMask.dataset.searchMaskInit !== 'true') {
+      searchMask.dataset.searchMaskInit = 'true'
+      searchMask.addEventListener('click', closeSearch)
+    }
+    if (closeButton && closeButton.dataset.searchCloseInit !== 'true') {
+      closeButton.dataset.searchCloseInit = 'true'
+      closeButton.addEventListener('click', closeSearch)
+    }
+  }
+
+  const bindEscKey = () => {
+    if (escBound) return
+    escBound = true
+    document.addEventListener('keydown', function (event) {
+      const searchDialog = document.querySelector('#local-search .search-dialog')
+      if (!searchDialog) return
+      if (event.code === 'Escape' && getComputedStyle(searchDialog).display === 'block') {
+        closeSearch()
+      }
+    })
   }
 
   searchClickFn()
+  bindEscKey()
 
   // pjax
   window.addEventListener('pjax:complete', function () {
-    getComputedStyle(document.querySelector('#local-search .search-dialog')).display === 'block' && closeSearch()
+    const searchDialog = document.querySelector('#local-search .search-dialog')
+    searchDialog && getComputedStyle(searchDialog).display === 'block' && closeSearch()
     searchClickFn()
   })
 
   async function search (path) {
+    if (searchReady) return
     let datas = []
     const typeF = path.split('.')[1]
     const response = await fetch(GLOBAL_CONFIG.root + path)
@@ -70,6 +99,8 @@ window.addEventListener('load', () => {
     const $input = document.querySelector('#local-search-input input')
     const $resultContent = document.getElementById('local-search-results')
     const $loadingStatus = document.getElementById('loading-status')
+    if (!$input || !$resultContent || !$loadingStatus) return
+    searchReady = true
     $input.addEventListener('input', function () {
       const keywords = this.value.trim().toLowerCase().split(/[\s]+/)
       if (keywords[0] !== '') $loadingStatus.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>'

@@ -24,7 +24,7 @@
   <link rel="preconnect" href="//<?php $this->options->jsdelivrLink() ?>" />
   <!--<link rel="stylesheet" href="https://cdn.jsdmirror.com/npm/justifiedGallery/dist/css/justifiedGallery.min.css">-->
   <link rel="stylesheet" href="<?php $this->options->themeUrl('index.css?v1.7.3'); ?>">
-  <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.7.8'); ?>">
+  <link rel="stylesheet" href="<?php $this->options->themeUrl('css/style.css?v1.8.2'); ?>">
   <!--魔改美化-->
   <?php if (!empty($this->options->beautifyBlock) && in_array('ShowBeautifyChange', $this->options->beautifyBlock)) : ?>
     <link rel="stylesheet" href="<?php $this->options->themeUrl('css/custom.css?v1.8.1'); ?>">
@@ -200,30 +200,34 @@
       document.head.appendChild(script)
     })
   </script>
-  <script id="config-diff">
+  <?php
+  $disableToc = !empty($GLOBALS['BUTTERFLY_DISABLE_TOC']);
+  $currentShowToc = (($this->is('single') || $this->is('page')) && !$disableToc) ? getThemeFieldValue($this->cid, 'ShowToc', 'show') : 'off';
+  ?>
+  <script id="config-diff" data-pjax>
     var GLOBAL_CONFIG_SITE = {
       isPost: !0,
       isHome: !0,
       isHighlightShrink: !0,
-      isToc: <?php echo $this->fields->ShowToc === 'off' ? 0 : 1; ?>,
+      isToc: <?php echo $currentShowToc === 'off' ? 0 : 1; ?>,
     }
   </script>
   <?php if ($this->is('post')) : ?>
-    <script id="config_change">
+    <script id="config_change" data-pjax>
       var GLOBAL_CONFIG_SITE = {
         isPost: !0,
         isHome: !0,
         isHighlightShrink: !1,
-        isToc: <?php echo $this->fields->ShowToc === 'off' ? 0 : 1; ?>,
+        isToc: <?php echo $currentShowToc === 'off' ? 0 : 1; ?>,
       }
     </script>
   <?php else : ?>
-    <script id="config_change">
+    <script id="config_change" data-pjax>
       var GLOBAL_CONFIG_SITE = {
         isPost: !1,
         isHome: !0,
         isHighlightShrink: !1,
-        isToc: <?php echo $this->fields->ShowToc === 'off' ? 0 : 1; ?>,
+        isToc: <?php echo $currentShowToc === 'off' ? 0 : 1; ?>,
       }
     </script>
   <?php endif; ?>
@@ -434,7 +438,8 @@
 </head>
 
 <body>
-  <script src="<?php $this->options->themeUrl('/js/main.js?v1.8.1'); ?>"> </script>
+  <?php renderFileCachePermissionWarning(); ?>
+  <script src="<?php $this->options->themeUrl('/js/main.js?v1.8.3'); ?>"> </script>
   <script src="<?php $this->options->themeUrl('/js/utils.js?v1.7.3'); ?>"> </script>
   <script src="<?php $this->options->themeUrl('/js/tw_cn.js?v1.7.3'); ?>"> </script>
   <?php if (is_array($this->options->beautifyBlock) && !in_array('showNoAlertSearch', $this->options->beautifyBlock)) : ?>

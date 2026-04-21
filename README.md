@@ -14,6 +14,12 @@ Demo：[WeHao‘s Blog](https://blog.haoi.net/)
 
 使用文档：[使用文档](https://blog.haoi.net/archives/typecho-butterfly.html)
 
+## 开发环境
+Typecho1.3.0 PHP8.2 PostgresSQL NGINX
+
+使用和开发相同环境获得最佳体验
+
+
 ## 💻安装
 你最好从[Release](https://github.com/wehaox/Typecho-Butterfly/releases)  页面下载，code页下载代码可能更新遗漏或者更新提前导致页面出错  
 下载好后放进博客usr/theme内解压即可

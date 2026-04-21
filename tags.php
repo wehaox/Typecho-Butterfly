@@ -5,7 +5,8 @@
     *  
     * @package custom  
     */  
-$this->need('page_header.php'); ?>
+$GLOBALS['BUTTERFLY_DISABLE_TOC'] = true;
+$this->need('includes/page_header.php'); ?>
 <style>
 .tag-cloud-list a:first-child{
     font-size: 1.8em;
@@ -31,8 +32,8 @@ $this->need('page_header.php'); ?>
             rel="tag" class="tagslink" href="<?php $tags->permalink(); ?>"  title="<?php $tags->name(); ?>" style='display: inline-block; margin: 0 5px 5px 0;'><?php $tags->name(); ?></a>
             <?php endwhile; ?>
   </div>
-         <?php $this->need('comments.php'); ?>
+         <?php $this->need('includes/comments.php'); ?>
     </div>
-     <?php $this->need('sidebar.php'); ?>
+     <?php $this->need('includes/sidebar.php'); ?>
 </main>
 <?php $this -> need('footer.php'); ?>

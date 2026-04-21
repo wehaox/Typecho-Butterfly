@@ -66,6 +66,213 @@ document.addEventListener('DOMContentLoaded', function () {
    * 代碼
    * 只適用於Hexo默認的代碼渲染
    */
+  const highlightTokenSelector = [
+    '.comment',
+    '.quote',
+    '.keyword',
+    '.selector-tag',
+    '.string',
+    '.number',
+    '.title',
+    '.attr',
+    '.built_in',
+    '.meta',
+    '.params',
+    '.tag',
+    '.addition',
+    '.deletion',
+    '.literal',
+    '.variable',
+    '.function',
+    '.regexp',
+    '.link_url',
+    '.selector-id',
+    '.selector-class',
+    '.property',
+    '.type'
+  ].join(',')
+  let highlightJsPromise
+
+  const escapeHighlightHtml = str => str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+
+  const normalizeHighlightResultClasses = html => html.replace(/\bclass=(["'])(.*?)\1/g, (match, quote, className) => {
+    const normalizedClasses = [...new Set(className.split(/\s+/).map(item => {
+      if (!item || item === 'hljs') return ''
+      return item.startsWith('hljs-') ? item.slice(5) : item
+    }).filter(Boolean))]
+
+    return normalizedClasses.length ? `class=${quote}${normalizedClasses.join(' ')}${quote}` : ''
+  })
+
+  const closeHighlightTags = openTags => {
+    let html = ''
+    for (let i = openTags.length - 1; i >= 0; i--) {
+      html += `</${openTags[i].name}>`
+    }
+    return html
+  }
+
+  const reopenHighlightTags = openTags => openTags.map(item => item.tag).join('')
+
+  const isSelfClosingHighlightTag = token => /\/\s*>$/.test(token) || /^<\s*(?:area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\b/i.test(token)
+
+  const splitHighlightHtmlLines = html => {
+    let normalizedHtml = normalizeHighlightResultClasses(html)
+      .replace(/\r\n/g, '\n')
+      .replace(/\r/g, '\n')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/\n+$/, '')
+
+    if (!normalizedHtml) return ['']
+
+    const tokens = normalizedHtml.split(/(<[^>]+>)/g).filter(Boolean)
+    const lines = []
+    let currentLine = ''
+    const openTags = []
+    const pushCurrentLine = () => {
+      const lineHtml = currentLine + closeHighlightTags(openTags)
+      lines.push(lineHtml || ' ')
+      currentLine = reopenHighlightTags(openTags)
+    }
+
+    tokens.forEach(token => {
+      if (/^<br\s*\/?>$/i.test(token)) {
+        pushCurrentLine()
+        return
+      }
+
+      if (token[0] === '<') {
+        const closeTagMatch = token.match(/^<\s*\/\s*([a-z0-9:-]+)/i)
+        if (closeTagMatch) {
+          currentLine += token
+          const tagName = closeTagMatch[1].toLowerCase()
+          for (let i = openTags.length - 1; i >= 0; i--) {
+            if (openTags[i].name === tagName) {
+              openTags.splice(i, 1)
+              break
+            }
+          }
+          return
+        }
+
+        currentLine += token
+        const openTagMatch = token.match(/^<\s*([a-z0-9:-]+)/i)
+        if (openTagMatch && !isSelfClosingHighlightTag(token)) {
+          openTags.push({
+            name: openTagMatch[1].toLowerCase(),
+            tag: token
+          })
+        }
+        return
+      }
+
+      const segments = token.split('\n')
+      segments.forEach((segment, index) => {
+        currentLine += segment
+        if (index !== segments.length - 1) pushCurrentLine()
+      })
+    })
+
+    if (currentLine || !lines.length) {
+      lines.push(currentLine || ' ')
+    }
+
+    return lines
+  }
+
+  const buildHighlightLineHtml = lines => lines.map((line, index) => `<span class="line">${line || ' '}</span>${index !== lines.length - 1 ? '<br>' : ''}`).join('')
+
+  const buildHighlightGutterHtml = total => Array.from({ length: total }, (_, index) => `<span class="line">${index + 1}</span>${index !== total - 1 ? '<br>' : ''}`).join('')
+
+  const getFigureHighlightLanguage = item => {
+    const classList = (item.getAttribute('class') || '').split(/\s+/).filter(Boolean)
+    const language = classList.find(name => name !== 'highlight')
+    return language || 'plain'
+  }
+
+  const getFigureHighlightSourceCode = codePre => {
+    const lineNodes = []
+
+    for (let i = 0; i < codePre.children.length; i++) {
+      const child = codePre.children[i]
+      if (child.classList && child.classList.contains('line')) {
+        lineNodes.push(child)
+      }
+    }
+
+    if (lineNodes.length) {
+      return lineNodes.map(line => line.textContent.replace(/\u00a0/g, ' ')).join('\n')
+    }
+
+    if (typeof codePre.innerText === 'string' && codePre.innerText !== '') {
+      return codePre.innerText.replace(/\u00a0/g, ' ')
+    }
+
+    return codePre.textContent.replace(/\u00a0/g, ' ')
+  }
+
+  const renderFigureHighlight = item => {
+    const codePre = item.querySelector('td.code pre')
+    if (!codePre || codePre.querySelector(highlightTokenSelector)) {
+      item.dataset.highlightRendered = 'true'
+      return
+    }
+
+    const codeText = getFigureHighlightSourceCode(codePre)
+    const language = getFigureHighlightLanguage(item)
+    let highlightedHtml = escapeHighlightHtml(codeText || ' ')
+
+    if (window.hljs && codeText.trim()) {
+      try {
+        if (language !== 'plain' && window.hljs.getLanguage(language)) {
+          highlightedHtml = window.hljs.highlight(codeText, { language, ignoreIllegals: true }).value
+        } else if (language !== 'plain') {
+          highlightedHtml = window.hljs.highlightAuto(codeText).value
+        }
+      } catch (e) {
+        highlightedHtml = escapeHighlightHtml(codeText)
+      }
+    }
+
+    const lines = splitHighlightHtmlLines(highlightedHtml)
+    codePre.innerHTML = buildHighlightLineHtml(lines)
+
+    const gutterPre = item.querySelector('td.gutter pre')
+    if (gutterPre) gutterPre.innerHTML = buildHighlightGutterHtml(lines.length)
+
+    item.dataset.highlightRendered = 'true'
+  }
+
+  const ensureFigureHighlightTokens = figures => {
+    const targetFigures = [...figures].filter(item => item && item.dataset.highlightRendered !== 'true' && item.querySelector('td.code pre'))
+    if (!targetFigures.length) return Promise.resolve()
+
+    const renderAllFigures = () => {
+      targetFigures.forEach(renderFigureHighlight)
+    }
+
+    if (window.hljs) {
+      if (typeof window.hljs.configure === 'function') {
+        window.hljs.configure({ classPrefix: '' })
+      }
+      renderAllFigures()
+      return Promise.resolve()
+    }
+
+    if (!highlightJsPromise) {
+      highlightJsPromise = getScript('https://cdn.bootcdn.net/ajax/libs/highlight.js/11.11.1/highlight.min.js').then(() => {
+        if (window.hljs && typeof window.hljs.configure === 'function') {
+          window.hljs.configure({ classPrefix: '' })
+        }
+      })
+    }
+
+    return highlightJsPromise.then(renderAllFigures).catch(() => {})
+  }
+
   const addHighlightTool = function () {
     const highLight = GLOBAL_CONFIG.highlight
     if (!highLight) return
@@ -77,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const isShowTool = isHighlightCopy || isHighlightLang || isHighlightShrink !== undefined
     const $figureHighlight = highLight.plugin === 'highlighjs' ? document.querySelectorAll('figure.highlight') : document.querySelectorAll('pre[class*="language-"]')
 
-    if (!((isShowTool || highlightHeightLimit) && $figureHighlight.length)) return
+    if (!$figureHighlight.length) return
 
     const isPrismjs = highLight.plugin === 'prismjs'
 
@@ -175,34 +382,57 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    if (isHighlightLang) {
-      if (isPrismjs) {
-        $figureHighlight.forEach(function (item) {
-          const langName = item.getAttribute('data-language') ? item.getAttribute('data-language') : 'Code'
-          const highlightLangEle = `<div class="code-lang">${langName}</div>`
-          btf.wrap(item, 'figure', { class: 'highlight' })
-          createEle(highlightLangEle, item)
-        })
+    const mountHighlightTools = () => {
+      if (!((isShowTool || highlightHeightLimit) && $figureHighlight.length)) return
+
+      if (isHighlightLang) {
+        if (isPrismjs) {
+          $figureHighlight.forEach(function (item) {
+            if (item.dataset.highlightToolsReady === 'true') return
+            const langName = item.getAttribute('data-language') ? item.getAttribute('data-language') : 'Code'
+            const highlightLangEle = `<div class="code-lang">${langName}</div>`
+            btf.wrap(item, 'figure', { class: 'highlight' })
+            createEle(highlightLangEle, item)
+            item.dataset.highlightToolsReady = 'true'
+          })
+        } else {
+          $figureHighlight.forEach(function (item) {
+            if (item.dataset.highlightToolsReady === 'true') return
+            let langName = item.getAttribute('class').split(' ')[1]
+            if (langName === 'plain' || langName === undefined) langName = 'Code'
+            const highlightLangEle = `<div class="code-lang">${langName}</div>`
+            createEle(highlightLangEle, item, 'hl')
+            item.dataset.highlightToolsReady = 'true'
+          })
+        }
       } else {
-        $figureHighlight.forEach(function (item) {
-          let langName = item.getAttribute('class').split(' ')[1]
-          if (langName === 'plain' || langName === undefined) langName = 'Code'
-          const highlightLangEle = `<div class="code-lang">${langName}</div>`
-          createEle(highlightLangEle, item, 'hl')
-        })
-      }
-    } else {
-      if (isPrismjs) {
-        $figureHighlight.forEach(function (item) {
-          btf.wrap(item, 'figure', { class: 'highlight' })
-          createEle('', item)
-        })
-      } else {
-        $figureHighlight.forEach(function (item) {
-          createEle('', item, 'hl')
-        })
+        if (isPrismjs) {
+          $figureHighlight.forEach(function (item) {
+            if (item.dataset.highlightToolsReady === 'true') return
+            btf.wrap(item, 'figure', { class: 'highlight' })
+            createEle('', item)
+            item.dataset.highlightToolsReady = 'true'
+          })
+        } else {
+          $figureHighlight.forEach(function (item) {
+            if (item.dataset.highlightToolsReady === 'true') return
+            createEle('', item, 'hl')
+            item.dataset.highlightToolsReady = 'true'
+          })
+        }
       }
     }
+
+    if (isPrismjs) {
+      mountHighlightTools()
+      return
+    }
+
+    ensureFigureHighlightTokens($figureHighlight).then(() => {
+      mountHighlightTools()
+    }).catch(() => {
+      mountHighlightTools()
+    })
   }
 
   /**
@@ -374,6 +604,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (isToc) {
       const $cardTocLayout = document.getElementById('card-toc')
+      if (!$cardTocLayout) return
       $cardToc = $cardTocLayout.getElementsByClassName('toc-content')[0]
       $tocLink = $cardToc.querySelectorAll('.toc-link')
       $tocPercentage = $cardTocLayout.querySelector('.toc-percentage')
@@ -544,7 +775,9 @@ document.addEventListener('DOMContentLoaded', function () {
     },
 
     runMobileToc: () => {
-      if (window.getComputedStyle(document.getElementById('card-toc')).getPropertyValue('opacity') === '0') window.mobileToc.open()
+      const $cardToc = document.getElementById('card-toc')
+      if (!$cardToc || !window.mobileToc) return
+      if (window.getComputedStyle($cardToc).getPropertyValue('opacity') === '0') window.mobileToc.open()
       else window.mobileToc.close()
     },
     
@@ -569,14 +802,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }    
   }
 
-  document.getElementById('rightside').addEventListener('click', function (e) {
-    const $target = e.target.id ? e.target : e.target.parentNode
-    switch ($target.id) {
+  document.addEventListener('click', function (e) {
+    const $target = e.target.closest('#rightside button, #rightside a, #rightside i, #rightside span')
+    if (!$target) return
+
+    const $actionTarget = $target.id ? $target : $target.parentNode
+    if (!$actionTarget || !$actionTarget.id) return
+
+    switch ($actionTarget.id) {
       case 'go-up':
         rightSideFn.scrollToTop()
         break
       case 'rightside_config':
-        rightSideFn.showOrHideBtn($target)
+        rightSideFn.showOrHideBtn($actionTarget)
         break
       case 'mobile-toc-button':
         rightSideFn.runMobileToc()
@@ -595,7 +833,7 @@ document.addEventListener('DOMContentLoaded', function () {
         break
       case 'font-minus':
         rightSideFn.adjustFontSize()
-        break        
+        break
       default:
         break
     }

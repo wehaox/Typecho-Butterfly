@@ -906,12 +906,23 @@ function themeInit($archive)
 
     // 初始化数据库中必要列
     $db = Typecho_Db::get();
-    try {
-        if (!array_key_exists('views', $db->fetchRow($db->select()->from('table.contents')))) {
-            $db->query('ALTER TABLE ' . $db->getPrefix() . 'contents ADD COLUMN views INT DEFAULT 0;');
+    $viewsInitCache = getCache('views_column_checked', 86400);
+    if ($viewsInitCache === false) {
+        $viewsReady = false;
+        try {
+            $db->fetchRow($db->select('views')->from('table.contents')->limit(1));
+            $viewsReady = true;
+        } catch (Exception $e) {
+            try {
+                $db->query('ALTER TABLE ' . $db->getPrefix() . 'contents ADD COLUMN views INT DEFAULT 0;');
+                $db->fetchRow($db->select('views')->from('table.contents')->limit(1));
+                $viewsReady = true;
+            } catch (Exception $ignored) {
+            }
         }
-    } catch (Exception $e) {
-        throw new Exception('数据库初始化失败: ' . $e->getMessage());
+        if ($viewsReady) {
+            setCache('views_column_checked', 1);
+        }
     }
     //初始化完成
 

@@ -3,7 +3,7 @@
          <span id="blog-info">
             <a href="<?php $this->options->siteUrl(); ?>">
                 <?php if(!empty($this->options->SiteLogo)) : ?>
-                <img src="<?php $this->options->SiteLogo() ?>" width="95px" />
+                <img src="<?php $this->options->SiteLogo() ?>" width="95px" alt="<?php $this->options->title() ?>" title="<?php $this->options->title() ?>" />
                 <?php else :?>
                 <span class="site-name"><?php $this->options->title() ?></span>
                 <?php endif ?>

@@ -434,10 +434,10 @@ $("#ui-datepicker-div").after(`
     <div class="wmd-prompt-dialog" role="dialog">
     <div><p><b>说明</b></p></div>
     <hr>
-    <p>这是一款兼容typecho原ui的md编辑器</p>
-    <p>采用typecho同款弹窗生成器</p>
+    <p>这是一款兼容Typecho原UI的MD编辑器</p>
+    <p>采用Typecho同款弹窗生成器</p>
     <p>未来将更新更多内容....</p>
-    <p>如有bug或者建议欢迎去<a href="https://github.com/wehaox/Typecho-Butterfly/issues">GitHub</a>向我反馈或者加群:218796706</p>
+    <p>如有Bug欢迎去<a href="https://github.com/wehaox/Typecho-Butterfly/issues">GitHub</a>向我反馈</p>
     <p>有GitHub的同学帮忙点个star，谢谢了🌹</p>
     <button type="button" class="btn btn-s primary btn-ok">确定</button>
     <button type="button" class="btn btn-s btn-cancel">取消</button></form>

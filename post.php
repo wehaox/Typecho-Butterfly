@@ -1,5 +1,5 @@
-<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; $post_info = get_post_details($this);?>
-<?php $this->need('post_header.php'); ?>
+<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; $post_info = get_post_details($this); $showTimeWarning = getThemeFieldValue($this->cid, 'showTimeWarning', 'on'); $copyRightSetting = getThemeFieldValue($this->cid, 'CopyRight', 'on'); $showRewardSetting = getThemeFieldValue($this->cid, 'ShowReward', 'off');?>
+<?php $this->need('includes/post_header.php'); ?>
 <main class="layout" id="content-inner">
   <div id="post">
     <?php if (is_array($this->options->beautifyBlock) && !in_array('PostShowTopimg', $this->options->beautifyBlock)) : ?>
@@ -45,13 +45,13 @@
         </div>
       </div>
     <?php endif; ?>
-    <?php if ($this->fields->showTimeWarning !== 'off' && (time() - ($this->modified)) / 86400 >= $this->options->outoftime) : ?>
+    <?php if ($showTimeWarning !== 'off' && (time() - ($this->modified)) / 86400 >= $this->options->outoftime) : ?>
       <div class="post-outdate-notice">
         <div style="width: 94%;">这篇文章距离最后更新已过<?php echo floor((time() - ($this->modified)) / 86400); ?>
           天,如果文章内容或图片资源失效，请留言反馈，我会及时处理，谢谢！
         </div><a id="close-outdate"><i class="fas fa-times"></i></a>
       </div>
-      <script>
+      <script data-pjax>
         document.querySelector("#close-outdate").addEventListener("click", function() {
           document.querySelector(".post-outdate-notice").style.transition = "opacity 0.9s";
           document.querySelector(".post-outdate-notice").style.opacity = 0;
@@ -78,7 +78,7 @@
       <div class="post-copyright__notice">
         <span class="post-copyright-meta">版权声明: </span>
         <span class="post-copyright-info">
-          <?php if ($this->fields->CopyRight == 'off') : ?>
+          <?php if ($copyRightSetting == 'off') : ?>
             <b style="color:red">本文严禁转载</b>，引用或转载文章前请先联系博主！
           <?php else : ?>
             本博客所有文章除特别声明外，均采用
@@ -95,11 +95,11 @@
       <div class="post_share">
         <div class="social-share share-component" data-image="https://tva4.sinaimg.cn/large/007X0Rdygy1ghm2u8yvhdj30sg0g0gp1.jpg" data-sites="facebook,twitter,wechat,weibo,qq">
           <link rel="stylesheet" href="https://lib.baomitu.com/social-share.js/1.0.16/css/share.min.css" media="all" onload="this.media='all'">
-          <script src="https://lib.baomitu.com/social-share.js/1.0.16/js/social-share.min.js" defer=""></script>
+          <script data-pjax src="https://lib.baomitu.com/social-share.js/1.0.16/js/social-share.min.js" defer=""></script>
         </div>
       </div>
     </div>
-    <?php if ($this->fields->ShowReward === 'show' || $this->options->ShowGlobalReward === 'show') : ?>
+    <?php if ($showRewardSetting === 'show' || $this->options->ShowGlobalReward === 'show') : ?>
       <div class="post-reward">
         <div class="reward-button button--animated">
           <i class="fas fa-qrcode"></i>打赏
@@ -134,7 +134,7 @@
       <div class="ads-wrap">
         <ins class="adsbygoogle" style="display:block;height: 180px;" data-ad-layout="rectangle,horizonta" data-ad-format="fluid" data-ad-client="<?php $this->options->googleadsense(); ?>"></ins>
       </div>
-      <script>
+      <script data-pjax>
         (adsbygoogle = window.adsbygoogle || []).push({});
       </script>
 
@@ -143,71 +143,54 @@
       <?php
       $prevId = thePrevCid($this);
       $nextId = theNextCid($this);
-      if (!empty($prevId)) :
-        $this->widget('Widget_Archive@recommend' . $prevId, 'pageSize=1&type=post', 'cid=' . $prevId)->to($prev);
+      $prev = !empty($prevId) ? getPostBasicByCid($prevId) : null;
+      $next = !empty($nextId) ? getPostBasicByCid($nextId) : null;
+      if (!empty($prevId) && !empty($prev)) :
       ?>
         <div class="prev-post <?php echo empty($nextId) ? 'pull-full' : 'pull-left'; ?>">
-          <a href="<?php $prev->permalink(); ?>" title="<?php $prev->title(); ?>">
-            <img class="cover" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'" data-lazy-src="<?php echo get_ArticleThumbnail($prev); ?>" src="<?php echo GetLazyLoad() ?>" alt="<?php $prev->title(); ?>">
+          <a href="<?php echo $prev['permalink']; ?>" title="<?php echo htmlspecialchars($prev['title'], ENT_QUOTES, 'UTF-8'); ?>">
+            <img class="cover" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'" data-lazy-src="<?php echo get_ArticleThumbnail($prev); ?>" src="<?php echo GetLazyLoad() ?>" alt="<?php echo htmlspecialchars($prev['title'], ENT_QUOTES, 'UTF-8'); ?>">
             <div class="pagination-info">
               <div class="label">上一篇</div>
-              <div class="next_info"><?php $prev->title(); ?></div>
+              <div class="next_info"><?php echo htmlspecialchars($prev['title'], ENT_QUOTES, 'UTF-8'); ?></div>
             </div>
           </a>
         </div>
       <?php endif; ?>
-      <?php if (!empty($nextId)) :
-        $this->widget('Widget_Archive@recommend' . $nextId, 'pageSize=1&type=post', 'cid=' . $nextId)->to($next);
+      <?php if (!empty($nextId) && !empty($next)) :
       ?>
         <div class="next-post <?php echo empty($prevId) ? 'pull-full' : 'pull-right'; ?>">
-          <a href="<?php $next->permalink(); ?>" title="<?php $next->title(); ?>">
-            <img class="cover" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'" class="<?php echo empty($prevId) ? 'next-cover' : 'prev-cover'; ?>" data-lazy-src="<?php echo get_ArticleThumbnail($next); ?>" src="<?php echo GetLazyLoad() ?>" alt="<?php $next->title(); ?>">
+          <a href="<?php echo $next['permalink']; ?>" title="<?php echo htmlspecialchars($next['title'], ENT_QUOTES, 'UTF-8'); ?>">
+            <img class="cover" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/404.jpg'); ?>'" class="<?php echo empty($prevId) ? 'next-cover' : 'prev-cover'; ?>" data-lazy-src="<?php echo get_ArticleThumbnail($next); ?>" src="<?php echo GetLazyLoad() ?>" alt="<?php echo htmlspecialchars($next['title'], ENT_QUOTES, 'UTF-8'); ?>">
             <div class="pagination-info">
               <div class="label">下一篇</div>
-              <div class="next_info"><?php $next->title(); ?></div>
+              <div class="next_info"><?php echo htmlspecialchars($next['title'], ENT_QUOTES, 'UTF-8'); ?></div>
             </div>
           </a>
         </div>
       <?php endif; ?>
     </nav>
-    <?php $this->related($this->options->RelatedPostsNum)->to($relatedPosts);
-     if ($this->options->ShowRelatedPosts == 'on' && !empty($relatedPosts->next())) : ?>
+    <?php $relatedPosts = getRelatedPostsLite($this->cid, $this->options->RelatedPostsNum);
+     if ($this->options->ShowRelatedPosts == 'on' && !empty($relatedPosts)) : ?>
       <div class="relatedPosts">
         <div class="headline">
           <i class="fas fa-thumbs-up fa-fw"></i>
           <span>相关推荐</span>
         </div>
         <div class="relatedPosts-list">
-          <?php while ($relatedPosts->next()) : ?><div><a href="<?php $relatedPosts->permalink(); ?>" title="<?php $relatedPosts->title(); ?>">
-            <img class="cover" data-lazy-src="<?php echo get_ArticleThumbnail($relatedPosts); ?>" src="<?php echo GetLazyLoad() ?>" alt="cover">
+          <?php foreach ($relatedPosts as $relatedPost) : ?><div><a href="<?php echo $relatedPost['permalink']; ?>" title="<?php echo htmlspecialchars($relatedPost['title'], ENT_QUOTES, 'UTF-8'); ?>">
+            <img class="cover" data-lazy-src="<?php echo get_ArticleThumbnail($relatedPost); ?>" src="<?php echo GetLazyLoad() ?>" alt="<?php echo htmlspecialchars($relatedPost['title'], ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo htmlspecialchars($relatedPost['title'], ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="content is-center">
-                  <div class="date"><i class="far fa-calendar-alt fa-fw"></i> <?php $relatedPosts->date('Y-m-d'); ?></div>
-                  <div class="title"><?php $relatedPosts->title(); ?></div>
+                  <div class="date"><i class="far fa-calendar-alt fa-fw"></i> <?php echo date('Y-m-d', $relatedPost['created']); ?></div>
+                  <div class="title"><?php echo htmlspecialchars($relatedPost['title'], ENT_QUOTES, 'UTF-8'); ?></div>
                 </div>
-              </a></div><?php endwhile; ?>
+              </a></div><?php endforeach; ?>
         </div>
       </div>
     <?php endif ?>
-    <?php $this->need('comments.php'); ?>
+    <?php $this->need('includes/comments.php'); ?>
   </div>
-  <?php $this->need('post_sidebar.php'); ?>
-  <link rel="stylesheet" href="<?php $this->options->themeUrl('css/GrayMac.css'); ?>">
-  <script type="text/javascript" src="<?php $this->options->themeUrl('js/prism.js?v1.5.3'); ?>"></script>
-  <script type="text/javascript" src="<?php $this->options->themeUrl('js/clipboard.min.js'); ?>"></script>
-  <?php if (!empty($this->options->beautifyBlock) && in_array(
-    'showLineNumber',
-    $this->options->beautifyBlock
-  )) : ?>
-    <script type="text/javascript">
-      (function() {
-        var pres = document.querySelectorAll('pre');
-        var lineNumberClassName = 'line-numbers';
-        pres.forEach(function(item, index) {
-          item.className = item.className == '' ? lineNumberClassName : item.className + ' ' + lineNumberClassName;
-        });
-      })();
-    </script>
-  <?php endif; ?>
+  <?php $this->need('includes/sidebar.php'); ?>
 </main>
 <!-- end #main-->
 
