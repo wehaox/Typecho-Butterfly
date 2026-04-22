@@ -1,66 +1,646 @@
-.typecho-option-submit {
-    position: fixed;
-    left: 0px;
-    bottom: 0px;
-    background-color: rgba(255, 255, 255, .5);
-    backdrop-filter: blur(8px);
-    height: 80px;
+.typecho-page-main > [role="form"],
+.typecho-page-main > .col-mb-12 {
     width: 100%;
-    box-shadow: 0px -6px 11px -10px rgb(133 133 133 / 60%);
-    z-index: 9;
-    transition-duration: .5s;
-    margin: 0;
 }
-.typecho-option-submit:hover{
-    backdrop-filter: blur(.3px);
+
+.theme-config-shell {
+    margin: 16px 0 20px;
 }
-.typecho-option-submit li {
+
+.theme-config-shell.is-ready {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 15px;
+    align-items: flex-start;
+    gap: 20px;
 }
 
-.typecho-option-submit li button {
-    border-radius: 18px;
-    width: 94px;
-    height: 45px;
+.theme-config-sidebar {
+    width: 290px;
+    flex: 0 0 290px;
+    position: sticky;
+    top: 16px;
+    align-self: flex-start;
 }
 
-.mtoc a {
+.theme-config-sidebar-inner {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.theme-config-content {
+    display: none;
+    flex: 1;
+    min-width: 0;
+}
+
+.theme-config-shell.is-ready .theme-config-content {
     display: block;
-    float: left;
-    padding: 10px;
+}
+
+.theme-config-panel,
+.theme-setting-section,
+.typecho-option-submit {
+    background: #fff;
+    border: 1px solid #d9d9d6;
+    border-radius: 2px;
+    box-shadow: none;
+}
+
+.theme-config-sidebar-header {
+    padding: 16px;
+}
+
+.theme-config-sidebar-eyebrow {
+    margin-bottom: 8px;
+    color: #999;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.theme-config-sidebar-header h2 {
+    margin: 0 0 8px;
+    color: #444;
+    font-size: 22px;
+    line-height: 1.25;
+}
+
+.theme-config-sidebar-header p {
+    margin: 0;
+    color: #999;
+    line-height: 1.6;
+}
+
+.theme-config-nav-toggle {
+    display: none;
+    width: 100%;
+    margin-top: 14px;
+    padding: 10px 14px;
+    border: 1px solid #d9d9d6;
+    border-radius: 2px;
+    background: #f6f6f8;
+    color: #444;
+    font-weight: 600;
 }
 
 .set_toc {
-    position: sticky;
-    top: 3px;
-    border: 1px solid powderblue;
-    padding: 8px 0;
-    overflow: auto;
-    background-color: rgba(255, 255, 255, .5);
-    backdrop-filter: blur(8px);
-    box-shadow: 3px 7px 11px -10px rgb(133 133 133 / 60%);
-    border-radius: 4px;
-}
-.protected {
-    margin-top: 10px;
+    padding: 14px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-@media screen and (max-width: 575px){
-    .typecho-option-submit {
-        bottom: 36px;
-    }
+.theme-config-nav-title {
+    margin-bottom: 10px;
+    color: #666;
+    font-size: 13px;
+    font-weight: 700;
 }
-.SideClock li{
+
+.theme-config-search-panel {
+    padding: 14px;
+}
+
+.theme-config-search-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #666;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.theme-config-search-control {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.theme-config-search-input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    height: 36px;
+    padding: 8px 10px;
+    border: 1px solid #d9d9d6;
+    border-radius: 2px;
+    background: #fff;
+    color: #444;
+    box-sizing: border-box;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.theme-config-search-input:focus {
+    border-color: #467b96;
+    outline: 0;
+    box-shadow: 0 0 0 2px rgba(70, 123, 150, .12);
+}
+
+.theme-config-search-clear {
+    flex: 0 0 auto;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid #d9d9d6;
+    border-radius: 2px;
+    background: #fafafa;
+    color: #666;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.theme-config-search-clear:hover {
+    border-color: #467b96;
+    background: #f3f7f9;
+    color: #467b96;
+}
+
+.theme-config-search-status {
+    margin-top: 10px;
+    color: #999;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.mtoc {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.mtoc a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    color: #444;
+    line-height: 1.4;
+    text-decoration: none;
+    transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.mtoc a:hover,
+.mtoc a.theme-nav-active {
+    border-color: #d9d9d6;
+    background: #f7f7f7;
+    color: #467b96;
+}
+
+.mtoc a.theme-nav-active {
+    font-weight: 700;
+}
+
+.theme-config-shell.is-searching .mtoc a.is-search-hidden {
+    display: none;
+}
+
+.theme-config-shell.is-searching .mtoc a.is-search-match::after {
+    content: attr(data-search-count);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #467b96;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    box-sizing: border-box;
+}
+
+.theme-config-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px;
+    margin: 0;
+}
+
+.theme-config-actions.is-active {
+    border-color: #d9d9d6;
+    box-shadow: none;
+}
+
+.theme-config-actions input {
+    flex: 1 1 calc(50% - 5px);
+    min-width: 0;
+    height: 36px;
+    border: 1px solid #d9d9d6;
+    border-radius: 2px;
+    background: #fafafa;
+    color: #444;
+    font-weight: 600;
+    transition: background .2s ease;
+}
+
+.theme-config-actions input:hover {
+    background: #f0f0f0;
+}
+
+.theme-config-loading {
+    display: none;
+    padding: 40px 24px;
+    color: #999;
+    text-align: center;
+}
+
+.theme-config-shell:not(.is-ready) .theme-config-loading {
+    display: block;
+}
+
+.theme-setting-section {
+    display: none;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.theme-setting-section.is-active {
+    display: block;
+}
+
+.theme-config-shell.is-searching .theme-setting-section {
+    display: none;
+}
+
+.theme-config-shell.is-searching .theme-setting-section.is-search-match {
+    display: block;
+}
+
+.theme-setting-section:last-child {
+    margin-bottom: 0;
+}
+
+.theme-setting-section-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #d9d9d6;
+    background: #fafafa;
+}
+
+.theme-setting-section-header h3 {
+    margin: 0;
+    color: #444;
+    font-size: 18px;
+    line-height: 1.35;
+}
+
+.theme-setting-section-header p {
+    margin: 6px 0 0;
+    color: #999;
+    line-height: 1.6;
+}
+
+.theme-setting-section-body {
+    padding: 4px 20px 8px;
+}
+
+.theme-setting-section-body > .typecho-option {
+    margin: 0;
+    padding: 16px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.theme-config-form {
+    display: block;
+    width: 100%;
+}
+
+.theme-setting-section-body > .typecho-option:last-child {
+    border-bottom: 0;
+}
+
+.theme-setting-section-body > .typecho-option.is-search-hidden {
+    display: none;
+}
+
+mark.theme-config-keyword-highlight {
+    padding: 0 2px;
+    border-radius: 2px;
+    background: #fff1a8;
+    color: inherit;
+}
+
+.theme-setting-section-body label.typecho-label {
+    margin-bottom: 10px;
+    color: #444;
+    font-size: 14px;
+}
+
+.theme-setting-section-body .description {
+    margin-top: 10px;
+    color: #999;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.theme-setting-section-body input[type="text"],
+.theme-setting-section-body input[type="password"],
+.theme-setting-section-body textarea,
+.theme-setting-section-body select {
+    width: 100%;
+    max-width: 100%;
+    min-height: 36px;
+    padding: 8px 10px;
+    border: 1px solid #d9d9d6;
+    border-radius: 2px;
+    background: #fff;
+    color: #444;
+    box-sizing: border-box;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.theme-setting-section-body textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.theme-setting-section-body input[type="text"]:focus,
+.theme-setting-section-body input[type="password"]:focus,
+.theme-setting-section-body textarea:focus,
+.theme-setting-section-body select:focus {
+    border-color: #467b96;
+    outline: 0;
+    box-shadow: 0 0 0 2px rgba(70, 123, 150, .12);
+}
+
+.theme-setting-section-body input[type="checkbox"],
+.theme-setting-section-body input[type="radio"] {
+    margin: 0;
+    flex: 0 0 auto;
+    vertical-align: middle;
+}
+
+.theme-setting-section-body .typecho-option li {
+    line-height: 1.6;
+}
+
+.theme-setting-section-body .typecho-option > li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 8px;
+    column-gap: 14px;
+}
+
+.theme-setting-section-body .typecho-option > li > .typecho-label {
+    display: block;
+    flex: 0 0 100%;
+    margin-bottom: 0;
+}
+
+.theme-setting-section-body .typecho-option > li > .multiline {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    width: 100%;
+    vertical-align: top;
+    line-height: 1.4;
+}
+
+.theme-setting-section-body .typecho-option > li > .multiline label {
+    margin: 0;
+}
+
+.typecho-option-submit {
+    position: sticky;
+    bottom: 14px;
+    margin-top: 20px;
+    padding: 10px 14px;
+    z-index: 8;
+    background: rgba(255, 255, 255, .86);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.typecho-option-submit.is-hidden {
+    display: none;
+}
+
+.theme-config-submit-placeholder {
+    height: 0;
+}
+
+.typecho-option-submit li {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0;
+}
+
+.typecho-option-submit li button {
+    min-width: 108px;
+    height: 36px;
+    padding: 0 18px;
+    border: 1px solid #467b96;
+    border-radius: 2px;
+    background: #467b96;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: none;
+    cursor: pointer;
+    transition: background .2s ease, border-color .2s ease;
+}
+
+.typecho-option-submit li button:hover {
+    background: #3a677e;
+    border-color: #3a677e;
+}
+
+.theme-setting-section.is-active {
+    border-color: #d9d9d6;
+    box-shadow: none;
+}
+
+.SideClock li {
     list-style: none;
 }
-.SideClock{
+
+.SideClock {
     padding-left: 0px;
 }
-.SideClock p{
+
+.SideClock p {
     margin: 0.5em 0 0;
     color: #999;
     font-size: .92857em;
+}
+
+@media screen and (max-width: 1199px) {
+    .theme-config-shell.is-ready {
+        flex-direction: column;
+    }
+
+    .theme-config-sidebar,
+    .theme-config-content {
+        width: 100%;
+        flex: none;
+    }
+
+    .theme-config-sidebar {
+        position: static;
+        top: auto;
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    .set_toc {
+        position: static;
+        top: auto;
+    }
+
+    .theme-config-sidebar-inner {
+        position: static;
+    }
+
+    .typecho-option-submit {
+        position: static;
+    }
+}
+
+@media screen and (max-width: 1199px) {
+    .theme-config-shell {
+        gap: 18px;
+    }
+
+    .theme-config-sidebar-inner {
+        gap: 12px;
+    }
+
+    .theme-config-sidebar-header,
+    .set_toc,
+    .theme-config-actions,
+    .theme-setting-section-header,
+    .theme-setting-section-body {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .theme-config-nav-toggle {
+        display: block;
+        position: fixed;
+        right: 16px;
+        bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+        z-index: 1001;
+        width: auto;
+        min-width: 108px;
+        margin-top: 0;
+        padding: 9px 12px;
+        font-size: 13px;
+        line-height: 1.2;
+        border: 1px solid #467b96;
+        border-radius: 2px;
+        background: #467b96;
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+    }
+
+    .theme-config-shell.has-floating-submit .theme-config-nav-toggle {
+        bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .set_toc {
+        padding: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+    }
+
+    .theme-config-nav-title {
+        display: none;
+    }
+
+    .mtoc {
+        display: none;
+        position: fixed;
+        right: 16px;
+        left: auto;
+        width: min(300px, calc(100vw - 40px));
+        bottom: calc(78px + env(safe-area-inset-bottom, 0px));
+        z-index: 1000;
+        max-height: min(52vh, 440px);
+        margin-top: 0;
+        padding: 10px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(70, 123, 150, .52) rgba(255, 255, 255, .35);
+        border: 1px solid #d9d9d6;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, .82);
+        backdrop-filter: blur(12px) saturate(140%);
+        -webkit-backdrop-filter: blur(12px) saturate(140%);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+    }
+
+    .mtoc::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .mtoc::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, .35);
+        border-radius: 999px;
+    }
+
+    .mtoc::-webkit-scrollbar-thumb {
+        border: 2px solid transparent;
+        border-radius: 999px;
+        background: linear-gradient(180deg, rgba(70, 123, 150, .6), rgba(70, 123, 150, .4));
+        background-clip: padding-box;
+    }
+
+    .mtoc::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, rgba(70, 123, 150, .78), rgba(70, 123, 150, .58));
+        background-clip: padding-box;
+    }
+
+    .theme-config-shell.has-floating-submit .mtoc {
+        bottom: calc(148px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .mtoc.is-open {
+        display: flex;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, .16), 0 2px 8px rgba(0, 0, 0, .08);
+    }
+
+    .theme-config-actions input {
+        flex-basis: 100%;
+    }
+
+    .theme-setting-section-header h3 {
+        font-size: 18px;
+    }
+
+    .theme-setting-section-body > .typecho-option {
+        padding: 16px 0;
+    }
+
+    .typecho-option-submit {
+        position: static;
+        margin-bottom: 14px;
+    }
+
+    .typecho-option-submit.is-floating-mobile {
+        position: fixed;
+        right: 16px;
+        left: 16px;
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        margin: 0;
+        z-index: 999;
+        background: rgba(255, 255, 255, .9);
+    }
+
+    .typecho-option-submit li {
+        justify-content: stretch;
+    }
+
+    .typecho-option-submit li button {
+        width: 100%;
+    }
 }

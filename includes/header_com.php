@@ -99,9 +99,11 @@
       root: "/",
       algolia: void 0,
       localSearch: {
-        path: undefined,
+        path: <?php echo json_encode(rtrim($this->options->themeUrl, '/') . '/api/api.php?action=search'); ?>,
         languages: {
-          hits_empty: "回车查询：${query}"
+          hits_empty: "未找到与 “${query}” 相关内容",
+          query_too_short: "请输入至少 2 个字的关键词",
+          search_error: "搜索失败，请稍后重试"
         }
       },
       translate: {

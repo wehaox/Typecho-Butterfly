@@ -82,7 +82,7 @@
       <div id="local-search-input">
         <form class="local-search-box" method="post" action="<?php $this->options->siteUrl(); ?>" role="search" id="search">
           <label for="s" class="sr-only"><?php _e('搜索关键字'); ?></label>
-          <input type="text" name="s" placeholder="回车查询" required="required">
+          <input type="text" name="s" placeholder="输入至少 2 个字搜索" required="required">
       </div>
       </form>
       <hr>
@@ -249,6 +249,14 @@
   <script>
     let intervalNum = 0;
     let pjaxSelectors = ["title", "#config-diff", "#config_change", "#body-wrap", "#rightside-config-hide", "#rightside-config-show", ".js-pjax"];
+    const resetPjaxUiState = () => {
+      const bodyStyle = document.body.style;
+      bodyStyle.width = "";
+      bodyStyle.overflow = "";
+      bodyStyle.paddingRight = "";
+      const sidebarMenus = document.getElementById("sidebar-menus");
+      sidebarMenus && sidebarMenus.classList.remove("open");
+    };
     const executePjaxScripts = () => {
       const scripts = [...document.querySelectorAll("script[data-pjax]")];
       return scripts.reduce((promise, currentScript) => {
@@ -284,6 +292,7 @@
       scrollRestoration: !1
     });
     document.addEventListener("pjax:send", (function() {
+        resetPjaxUiState();
         if (window.removeEventListener("scroll", window.tocScrollFn), window.removeEventListener("scroll", scrollCollect), "object" == typeof preloader && preloader.initLoading(), window.aplayers)
           for (let e = 0; e < window.aplayers.length; e++) window.aplayers[e].options.fixed || window.aplayers[e].destroy();
         "object" == typeof typed && typed.destroy();
@@ -322,6 +331,7 @@
         })
       })),
       document.addEventListener("pjax:error", e => {
+        resetPjaxUiState();
         // 404 === e.request.status && pjax.loadUrl("/404");
         if (e.request.status === 404) {
           window.location = "/404";

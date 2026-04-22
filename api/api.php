@@ -33,6 +33,7 @@ function routeApiRequest($apiPath)
     $routes = [
         'getPosts' => 'getPosts',
         'getPost' => 'getPost',
+        'search' => 'searchPosts',
         'weibohot' => 'getWeiboHot'
     ];
 
@@ -83,6 +84,536 @@ function getPost($cid)
     } else {
         responseJson(['status' => 'error', 'message' => 'Invalid post ID']);
     }
+}
+
+function getSearchProtectionConfig()
+{
+    return array(
+        'min_keyword_length' => 2,
+        'max_keywords' => 3,
+        'max_limit' => 10,
+        'cache_ttl' => 180,
+        'rate_window' => 10,
+        'rate_limit' => 15,
+        'query_too_short_message' => '请输入至少 2 个字的关键词',
+        'rate_limit_message' => '搜索过于频繁，请稍后再试',
+        'service_unavailable_message' => '搜索服务暂时不可用，请稍后再试',
+    );
+}
+
+function logSearchProtectionError($message)
+{
+    if (is_string($message) && $message !== '') {
+        error_log('[butterfly-search] ' . $message);
+    }
+}
+
+function getSearchRequestRawQuery()
+{
+    $keywordKeys = array('keywords', 'keyword', 'q', 's');
+
+    foreach ($keywordKeys as $key) {
+        if (!isset($_GET[$key])) {
+            continue;
+        }
+
+        $rawKeywords = trim((string)$_GET[$key]);
+        if ($rawKeywords !== '') {
+            return $rawKeywords;
+        }
+    }
+
+    return '';
+}
+
+function getSearchRequestKeywords()
+{
+    $config = getSearchProtectionConfig();
+    $rawKeywords = getSearchRequestRawQuery();
+
+    if ($rawKeywords === '') {
+        return array();
+    }
+
+    $parts = preg_split('/[\s,，]+/u', preg_replace('/\s+/u', ' ', $rawKeywords));
+    $keywords = array();
+
+    foreach ($parts as $part) {
+        $keyword = trim((string)$part);
+        if ($keyword === '') {
+            continue;
+        }
+
+        if (function_exists('mb_substr')) {
+            $keyword = mb_substr($keyword, 0, 32, 'UTF-8');
+        } else {
+            $keyword = substr($keyword, 0, 32);
+        }
+
+        if (searchTextLength($keyword) < (int)$config['min_keyword_length']) {
+            continue;
+        }
+
+        $keywords[$keyword] = $keyword;
+        if (count($keywords) >= (int)$config['max_keywords']) {
+            break;
+        }
+    }
+
+    return array_values($keywords);
+}
+
+function hasInvalidSearchKeywords($rawQuery)
+{
+    $config = getSearchProtectionConfig();
+    $rawQuery = trim((string)$rawQuery);
+
+    if ($rawQuery === '') {
+        return false;
+    }
+
+    $parts = preg_split('/[\s,，]+/u', preg_replace('/\s+/u', ' ', $rawQuery));
+    foreach ($parts as $part) {
+        $keyword = trim((string)$part);
+        if ($keyword === '') {
+            continue;
+        }
+
+        if (searchTextLength($keyword) < (int)$config['min_keyword_length']) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function getSearchRequestLimit()
+{
+    $config = getSearchProtectionConfig();
+    $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 20;
+    if ($limit <= 0) {
+        $limit = 20;
+    }
+
+    return min($limit, (int)$config['max_limit']);
+}
+
+function getSearchStorageDirectory()
+{
+    static $directory = null;
+
+    if ($directory !== null) {
+        return $directory;
+    }
+
+    $candidates = array(
+        rtrim(__TYPECHO_ROOT_DIR__, '/\\') . '/usr/cache/butterfly-search-api',
+        rtrim(sys_get_temp_dir(), '/\\') . '/butterfly-search-api'
+    );
+
+    foreach ($candidates as $candidate) {
+        if (is_dir($candidate) || @mkdir($candidate, 0775, true)) {
+            $directory = $candidate;
+            return $directory;
+        }
+    }
+
+    $directory = false;
+    return $directory;
+}
+
+function requireSearchStorageDirectory()
+{
+    $directory = getSearchStorageDirectory();
+    if ($directory) {
+        return $directory;
+    }
+
+    logSearchProtectionError('search protection storage unavailable');
+    return false;
+}
+
+function readSearchStoragePayload($file)
+{
+    if (!is_string($file) || $file === '' || !is_file($file)) {
+        return null;
+    }
+
+    $raw = @file_get_contents($file);
+    if ($raw === false || $raw === '') {
+        return null;
+    }
+
+    $payload = json_decode($raw, true);
+    return is_array($payload) ? $payload : null;
+}
+
+function writeSearchStoragePayload($file, $payload)
+{
+    if (!is_string($file) || $file === '') {
+        return false;
+    }
+
+    $encoded = json_encode($payload);
+    if ($encoded === false) {
+        logSearchProtectionError('failed to encode search storage payload for ' . $file);
+        return false;
+    }
+
+    if (@file_put_contents($file, $encoded, LOCK_EX) === false) {
+        logSearchProtectionError('failed to write search storage payload to ' . $file);
+        return false;
+    }
+
+    return true;
+}
+
+function buildSearchCacheKey($keywords, $limit)
+{
+    return 'search:' . md5(json_encode(array(
+        'keywords' => array_values($keywords),
+        'limit' => (int)$limit,
+    )));
+}
+
+function getCachedSearchResponse($cacheKey)
+{
+    $directory = requireSearchStorageDirectory();
+    if (!$directory) {
+        return null;
+    }
+
+    $file = $directory . '/cache_' . md5($cacheKey) . '.json';
+    $payload = readSearchStoragePayload($file);
+    if (!is_array($payload) || !isset($payload['expires_at'])) {
+        return null;
+    }
+
+    if ((int)$payload['expires_at'] < time()) {
+        @unlink($file);
+        return null;
+    }
+
+    return isset($payload['data']) && is_array($payload['data']) ? $payload['data'] : null;
+}
+
+function cacheSearchResponse($cacheKey, $data, $ttl)
+{
+    $directory = requireSearchStorageDirectory();
+    if (!$directory) {
+        return false;
+    }
+
+    $file = $directory . '/cache_' . md5($cacheKey) . '.json';
+    return writeSearchStoragePayload($file, array(
+        'expires_at' => time() + max(1, (int)$ttl),
+        'data' => $data,
+    ));
+}
+
+function getSearchRequestClientIp()
+{
+    $cfIp = isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? trim((string)$_SERVER['HTTP_CF_CONNECTING_IP']) : '';
+    if ($cfIp !== '' && filter_var($cfIp, FILTER_VALIDATE_IP)) {
+        return $cfIp;
+    }
+
+    $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? trim((string)$_SERVER['REMOTE_ADDR']) : '';
+    if ($remoteAddr !== '' && filter_var($remoteAddr, FILTER_VALIDATE_IP)) {
+        return $remoteAddr;
+    }
+
+    return 'unknown';
+}
+
+function consumeSearchRateLimit(&$retryAfter, &$storageUnavailable)
+{
+    $config = getSearchProtectionConfig();
+    $directory = requireSearchStorageDirectory();
+    $retryAfter = 0;
+    $storageUnavailable = false;
+
+    if (!$directory) {
+        $storageUnavailable = true;
+        return false;
+    }
+
+    $window = max(1, (int)$config['rate_window']);
+    $limit = max(1, (int)$config['rate_limit']);
+    $now = time();
+    $file = $directory . '/rate_' . md5(getSearchRequestClientIp()) . '.json';
+    $handle = @fopen($file, 'c+');
+    if ($handle === false) {
+        logSearchProtectionError('failed to open rate limit file ' . $file);
+        $storageUnavailable = true;
+        return false;
+    }
+
+    $allowed = false;
+
+    if (!flock($handle, LOCK_EX)) {
+        fclose($handle);
+        logSearchProtectionError('failed to lock rate limit file ' . $file);
+        $storageUnavailable = true;
+        return false;
+    }
+
+    $raw = stream_get_contents($handle);
+    $payload = ($raw !== false && $raw !== '') ? json_decode($raw, true) : null;
+    $timestamps = isset($payload['timestamps']) && is_array($payload['timestamps']) ? $payload['timestamps'] : array();
+    $timestamps = array_values(array_filter($timestamps, function ($timestamp) use ($now, $window) {
+        return (int)$timestamp > ($now - $window);
+    }));
+
+    if (count($timestamps) >= $limit) {
+        $retryAfter = max(1, $window - ($now - (int)$timestamps[0]));
+    } else {
+        $timestamps[] = $now;
+        $allowed = true;
+    }
+
+    $encoded = json_encode(array(
+        'expires_at' => $now + $window,
+        'timestamps' => $timestamps,
+    ));
+
+    if ($encoded === false || ftruncate($handle, 0) === false || rewind($handle) === false || fwrite($handle, $encoded) === false) {
+        flock($handle, LOCK_UN);
+        fclose($handle);
+        logSearchProtectionError('failed to update rate limit file ' . $file);
+        $storageUnavailable = true;
+        return false;
+    }
+
+    fflush($handle);
+    flock($handle, LOCK_UN);
+    fclose($handle);
+
+    return $allowed;
+}
+
+function buildApiPostPermalink($post)
+{
+    if (!isset($post['type']) || empty($post['type'])) {
+        $post['type'] = 'post';
+    }
+
+    if (!empty($post['created'])) {
+        $post['year'] = date('Y', $post['created']);
+        $post['month'] = date('m', $post['created']);
+        $post['day'] = date('d', $post['created']);
+    }
+
+    try {
+        $path = Typecho_Router::url($post['type'], $post);
+        if (preg_match('/^https?:\/\//i', $path)) {
+            return $path;
+        }
+
+        return Typecho_Common::url($path, Helper::options()->siteUrl);
+    } catch (Exception $e) {
+        $slug = !empty($post['slug']) ? $post['slug'] : (isset($post['cid']) ? $post['cid'] : '');
+        return rtrim(Helper::options()->siteUrl, '/') . '/' . ltrim((string)$slug, '/');
+    }
+}
+
+function getSearchPlainText($text)
+{
+    $text = (string)$text;
+    $text = preg_replace('/\[hide\].*?\[\/hide\]/su', ' ', $text);
+    $text = preg_replace('/\[hide-inline(?:\s+[^\]]*)?\].*?\[\/hide-inline\]/su', ' ', $text);
+    $text = preg_replace('/\[hide-block(?:\s+[^\]]*)?\].*?\[\/hide-block\]/su', ' ', $text);
+    $text = preg_replace('/\[hide-toggle(?:\s+[^\]]*)?\].*?\[\/hide-toggle\]/su', ' ', $text);
+    $text = preg_replace('/```[\s\S]*?```/u', ' ', $text);
+    $text = preg_replace('/`([^`]*)`/u', '$1', $text);
+    $text = preg_replace('/!\[([^\]]*)\]\(([^)]*)\)/u', '$1', $text);
+    $text = preg_replace('/\[([^\]]+)\]\(([^)]*)\)/u', '$1', $text);
+    $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+    $text = strip_tags($text);
+    $text = preg_replace('/\s+/u', ' ', $text);
+    return trim($text);
+}
+
+function searchTextLength($text)
+{
+    return function_exists('mb_strlen') ? mb_strlen($text, 'UTF-8') : strlen($text);
+}
+
+function searchTextSlice($text, $start, $length)
+{
+    return function_exists('mb_substr') ? mb_substr($text, $start, $length, 'UTF-8') : substr($text, $start, $length);
+}
+
+function searchTextPosition($text, $keyword)
+{
+    if ($keyword === '') {
+        return false;
+    }
+
+    return function_exists('mb_stripos') ? mb_stripos($text, $keyword, 0, 'UTF-8') : stripos($text, $keyword);
+}
+
+function doesSearchTextMatch($title, $content, $keywords)
+{
+    foreach ($keywords as $keyword) {
+        $inTitle = searchTextPosition((string)$title, $keyword) !== false;
+        $inContent = searchTextPosition((string)$content, $keyword) !== false;
+
+        if (!$inTitle && !$inContent) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function buildSearchExcerpt($content, $keywords)
+{
+    $content = trim((string)$content);
+    if ($content === '') {
+        return '';
+    }
+
+    $contentLength = searchTextLength($content);
+    $excerptLength = 140;
+    $start = 0;
+    $firstPosition = false;
+
+    foreach ($keywords as $keyword) {
+        $position = searchTextPosition($content, $keyword);
+        if ($position !== false && ($firstPosition === false || $position < $firstPosition)) {
+            $firstPosition = $position;
+        }
+    }
+
+    if ($firstPosition !== false) {
+        $start = max(0, $firstPosition - 30);
+    }
+
+    $excerpt = searchTextSlice($content, $start, $excerptLength);
+    if ($excerpt === false) {
+        $excerpt = '';
+    }
+
+    if ($start > 0) {
+        $excerpt = '...' . ltrim($excerpt);
+    }
+
+    if ($start + searchTextLength($excerpt) < $contentLength) {
+        $excerpt = rtrim($excerpt, '.') . '...';
+    }
+
+    return trim($excerpt);
+}
+
+function searchPosts()
+{
+    $config = getSearchProtectionConfig();
+    $rawQuery = getSearchRequestRawQuery();
+
+    if (hasInvalidSearchKeywords($rawQuery)) {
+        responseJson(array(
+            'status' => 'error',
+            'message' => $config['query_too_short_message']
+        ), 400);
+    }
+
+    $keywords = getSearchRequestKeywords();
+    $query = implode(' ', $keywords);
+    $limit = getSearchRequestLimit();
+
+    if ($rawQuery === '') {
+        responseJson(array(
+            'status' => 'success',
+            'data' => array(
+                'query' => '',
+                'items' => array(),
+            )
+        ));
+    }
+
+    if (empty($keywords)) {
+        responseJson(array(
+            'status' => 'error',
+            'message' => $config['query_too_short_message']
+        ), 400);
+    }
+
+    $retryAfter = 0;
+    $storageUnavailable = false;
+    if (!consumeSearchRateLimit($retryAfter, $storageUnavailable)) {
+        if ($storageUnavailable) {
+            responseJson(array(
+                'status' => 'error',
+                'message' => $config['service_unavailable_message']
+            ), 503);
+        }
+
+        responseJson(array(
+            'status' => 'error',
+            'message' => $config['rate_limit_message']
+        ), 429, array(
+            'Retry-After: ' . (int)$retryAfter
+        ));
+    }
+
+    $cacheKey = buildSearchCacheKey($keywords, $limit);
+    $cachedResponse = getCachedSearchResponse($cacheKey);
+    if (is_array($cachedResponse)) {
+        responseJson($cachedResponse, 200, array(
+            'Cache-Control: public, max-age=' . (int)$config['cache_ttl'],
+            'X-Search-Cache: HIT'
+        ));
+    }
+
+    $db = Typecho_Db::get();
+    $select = $db->select('cid', 'title', 'slug', 'created', 'modified', 'type', 'text')
+        ->from('table.contents')
+        ->where('status = ?', 'publish')
+        ->where('type IN ?', array('post', 'page'))
+        ->where('created < ?', time())
+        ->where('(password IS NULL OR password = ?)', '');
+
+    foreach ($keywords as $keyword) {
+        $like = '%' . $keyword . '%';
+        $select->where('(title LIKE ? OR text LIKE ?)', $like, $like);
+    }
+
+    $rows = $db->fetchAll($select
+        ->order('modified', Typecho_Db::SORT_DESC)
+        ->limit($limit));
+
+    $items = array();
+
+    foreach ($rows as $row) {
+        $title = isset($row['title']) ? (string)$row['title'] : '';
+        $plainText = getSearchPlainText(isset($row['text']) ? $row['text'] : '');
+
+        if (!doesSearchTextMatch($title, $plainText, $keywords)) {
+            continue;
+        }
+
+        $items[] = array(
+            'title' => $title,
+            'content' => buildSearchExcerpt($plainText, $keywords),
+            'url' => buildApiPostPermalink($row),
+        );
+    }
+
+    $response = array(
+        'status' => 'success',
+        'data' => array(
+            'query' => $query,
+            'items' => $items,
+        )
+    );
+
+    cacheSearchResponse($cacheKey, $response, (int)$config['cache_ttl']);
+
+    responseJson($response, 200, array(
+        'Cache-Control: public, max-age=' . (int)$config['cache_ttl'],
+        'X-Search-Cache: MISS'
+    ));
 }
 
 function requestWeiboHotData()
@@ -216,14 +747,10 @@ function renderWeiboHotHtml($data)
 function getWeiboHot()
 {
     if (!isWeiboHotEnabled()) {
-        if (function_exists('http_response_code')) {
-            http_response_code(403);
-        }
-
         responseJson(array(
             'status' => 'error',
             'message' => '微博热搜功能未开启'
-        ));
+        ), 403);
     }
 
     $data = requestWeiboHotData();
@@ -235,9 +762,22 @@ function getWeiboHot()
     ));
 }
 
-function responseJson($data)
+function responseJson($data, $statusCode = 200, $extraHeaders = array())
 {
+    if (function_exists('http_response_code')) {
+        http_response_code((int)$statusCode);
+    }
+
     header('Content-Type: application/json; charset=UTF-8');
+
+    if (is_array($extraHeaders)) {
+        foreach ($extraHeaders as $headerLine) {
+            if (is_string($headerLine) && $headerLine !== '') {
+                header($headerLine);
+            }
+        }
+    }
+
     echo json_encode($data);
     exit;
 }

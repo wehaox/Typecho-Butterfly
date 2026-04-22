@@ -1861,67 +1861,97 @@ function RecapOutPut($login)
         data-sitekey=' . Helper::options()->turnstileSiteKey . '
         data-theme="auto"></div>
         <script data-pjax>
-        let turnstileWidgetId = null;
-        
-        function loadTurnstile() {
-            if (typeof turnstile === "undefined") {
-                let script = document.createElement("script");
+        (() => {
+            const state = window.__butterflyTurnstileState || (window.__butterflyTurnstileState = {
+                widgetId: null,
+                observer: null,
+                scriptLoading: false
+            });
+
+            window.initTurnstileWidget = function() {
+                const target = document.getElementById("cf-turnstile");
+                if (!target || typeof turnstile === "undefined" || typeof turnstile.render !== "function") {
+                    return;
+                }
+
+                const theme = document.documentElement.getAttribute("data-theme") || "auto";
+
+                if (state.widgetId !== null) {
+                    try {
+                        turnstile.remove(state.widgetId);
+                    } catch (error) {}
+                    state.widgetId = null;
+                }
+
+                target.innerHTML = "";
+                state.widgetId = turnstile.render("#cf-turnstile", {
+                    sitekey: "' . Helper::options()->turnstileSiteKey . '",
+                    theme: theme
+                });
+            };
+
+            window.loadTurnstile = function() {
+                if (!document.getElementById("cf-turnstile")) {
+                    return;
+                }
+
+                if (typeof turnstile !== "undefined") {
+                    window.initTurnstileWidget();
+                    return;
+                }
+
+                if (state.scriptLoading) {
+                    return;
+                }
+
+                const existingScript = document.querySelector("script[data-turnstile-api=\"true\"]");
+                if (existingScript) {
+                    state.scriptLoading = true;
+                    existingScript.addEventListener("load", function handleTurnstileLoad() {
+                        existingScript.removeEventListener("load", handleTurnstileLoad);
+                        state.scriptLoading = false;
+                        window.initTurnstileWidget();
+                    });
+                    return;
+                }
+
+                state.scriptLoading = true;
+                const script = document.createElement("script");
                 script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
                 script.async = true;
                 script.defer = true;
-                document.head.appendChild(script);
-                
+                script.dataset.turnstileApi = "true";
                 script.onload = function() {
-                    initTurnstile();
+                    state.scriptLoading = false;
+                    window.initTurnstileWidget();
                 };
-            } else {
-                initTurnstile();
-            }
-        }
-        
-        function initTurnstile() {
-            if (document.getElementById("cf-turnstile")) {
-                let theme = document.documentElement.getAttribute("data-theme") || "auto";
-                if (turnstile && typeof turnstile.render === "function") {
-                    if (turnstileWidgetId) {
-                        turnstile.remove(turnstileWidgetId);
-                    }
-                    turnstileWidgetId = turnstile.render("#cf-turnstile", {
-                        sitekey: "' . Helper::options()->turnstileSiteKey . '",
-                        theme: theme
-                    });
+                script.onerror = function() {
+                    state.scriptLoading = false;
+                };
+                document.head.appendChild(script);
+            };
+
+            window.setupThemeObserver = function() {
+                if (state.observer) {
+                    return;
                 }
-            }
-        }
-        
-        // 监视主题变化
-        function setupThemeObserver() {
-            if (window.__turnstileThemeObserver) {
-                return;
-            }
-            // 使用 MutationObserver 观察 data-theme 属性变化
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.type === "attributes" && mutation.attributeName === "data-theme") {
-                        // 主题已变更，更新 Turnstile
-                        if (typeof turnstile !== "undefined" && turnstileWidgetId) {
-                            initTurnstile();
+
+                state.observer = new MutationObserver((mutations) => {
+                    mutations.forEach((mutation) => {
+                        if (mutation.type === "attributes" && mutation.attributeName === "data-theme" && document.getElementById("cf-turnstile")) {
+                            window.initTurnstileWidget();
                         }
-                    }
+                    });
                 });
-            });
-            
-            // 开始观察文档根元素的 data-theme 属性
-            observer.observe(document.documentElement, { 
-                attributes: true,
-                attributeFilter: ["data-theme"]
-            });
-            window.__turnstileThemeObserver = observer;
-        }
-        
-        (() => {
-            loadTurnstile();
-            setupThemeObserver();
+
+                state.observer.observe(document.documentElement, {
+                    attributes: true,
+                    attributeFilter: ["data-theme"]
+                });
+            };
+
+            window.loadTurnstile();
+            window.setupThemeObserver();
         })();
         </script>
         ';

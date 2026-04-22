@@ -2,33 +2,77 @@
 <?php
 function themeConfig($form)
 {
+    $currentVersion = '未知';
+    $indexFile = dirname(__DIR__) . '/index.php';
+    if (is_file($indexFile) && is_readable($indexFile)) {
+        $indexContent = file_get_contents($indexFile);
+        if ($indexContent !== false && preg_match('/@version\s+([^\s]+)/', $indexContent, $matches)) {
+            $currentVersion = trim($matches[1]);
+        }
+    }
     ?>
-    <link rel="stylesheet" href="<?php Helper::options()->themeUrl('css/themedash.css?v1.8.1'); ?>">
-    <div class='set_toc'>
-        <div class='mtoc'>
-            <a href='#themeBackup'>主题备份与还原</a>
-            <a href='#cids'>文章置顶及公共部分</a>
-            <a href='#pjax'>pjax设置</a>
-            <a href='#friends'>友情链接设置</a>
-            <a href='#reward'>打赏功能</a>
-            <a href='#aside'>侧边栏显示设置</a>
-            <a href='#beautifyBlock'>美化选项</a>
-            <a href='#ShowLive2D'>Live2D设置</a>
-            <a href='#otherCustom'>其他自定义内容</a>
-            <a href='#CustomColor'>自定义颜色</a>
-            <a href='#cache'>缓存设置</a>
-            <a href='#NULL' id='point'>返回上次保存设置时的锚点</a>
+    <link rel="stylesheet" href="<?php Helper::options()->themeUrl('css/themedash.css?v1.9.7'); ?>">
+    <div class="theme-config-shell" id="themeConfigShell">
+        <aside class="theme-config-sidebar">
+            <div class="theme-config-sidebar-inner">
+                <div class="theme-config-panel theme-config-sidebar-header">
+                    <div class="theme-config-sidebar-eyebrow">Butterfly Theme</div>
+                    <h2>后台设置导航</h2>
+                    <p>当前版本：<?php echo htmlspecialchars($currentVersion, ENT_QUOTES, 'UTF-8'); ?><br>最新版本：<span id="themeRemoteVersion">获取中...</span></p>
+                    <button type="button" class="theme-config-nav-toggle" id="themeConfigNavToggle" aria-expanded="false" aria-controls="themeConfigNavList">展开功能导航</button>
+                </div>
+                <div class='set_toc theme-config-panel'>
+                    <div class="theme-config-nav-title">功能分组</div>
+                    <div class='mtoc' id='themeConfigNavList'>
+                        <a href='#cids'>文章置顶及公共部分</a>
+                        <a href='#pjax'>PJAX设置</a>
+                        <a href='#friends'>友情链接设置</a>
+                        <a href='#reward'>打赏功能</a>
+                        <a href='#aside'>侧边栏显示设置</a>
+                        <a href='#beautifyBlock'>美化选项</a>
+                        <a href='#ShowLive2D'>Live2D和界面交互</a>
+                        <a href='#otherCustom'>其他自定义内容</a>
+                        <a href='#CustomColor'>自定义颜色</a>
+                        <a href='#captchaVerify'>评论验证码</a>
+                        <a href='#cache'>缓存设置</a>
+                        <a href='#cids' id='point'>返回上次保存设置位置</a>
+                    </div>
+                </div>
+                <form class="protected theme-config-panel theme-config-actions" action="?butterflybf" method="post" id="themeBackup">
+                    <input type="submit" name="type" class="btn btn-s" value="备份主题数据" />
+                    <input type="submit" name="type"  class="btn btn-s" value="还原主题数据" />
+                    <input type="submit" name="type" class="btn btn-s" value="删除备份数据" />
+                    <input type="submit" name="type" class="btn btn-s" value="清除所有缓存" />
+                </form>
+            </div>
+        </aside>
+        <div class="theme-config-content" id="themeConfigContent">
+            <div class="theme-config-loading">页面加载后会自动整理设置项；如未整理成功，下方原始表单仍可直接使用。</div>
         </div>
     </div>
-    <form class="protected" action="?butterflybf" method="post" id="themeBackup">
-        <input type="submit" name="type" class="btn btn-s" value="备份主题数据" />
-        <input type="submit" name="type"  class="btn btn-s" value="还原主题数据" />
-        <input type="submit" name="type" class="btn btn-s" value="删除备份数据" />
-        <input type="submit" name="type" class="btn btn-s" value="清除所有缓存" />
-    </form>
-    <script src='https://lib.baomitu.com/jquery/1.10.2/jquery.min.js'></script>
-    <script src="<?php Helper::options()->themeUrl('js/themecustom.js?v1.5.3'); ?>"></script>
-    <script src='https://static.wehao.org/postdomai.js'></script>
+    <script>
+        (function () {
+            var remoteVersionNode = document.getElementById('themeRemoteVersion');
+            if (!remoteVersionNode) {
+                return;
+            }
+
+            fetch('https://ty.wehao.org', { credentials: 'omit' })
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error('request failed');
+                    }
+                    return response.json();
+                })
+                .then(function (data) {
+                    remoteVersionNode.textContent = data && data.ver ? data.ver : '获取失败';
+                })
+                .catch(function () {
+                    remoteVersionNode.textContent = '获取失败';
+                });
+        })();
+    </script>
+    <script src="<?php Helper::options()->themeUrl('js/themecustom.js?v1.6.10'); ?>"></script>
     <?php
     $sticky_cids = new Typecho_Widget_Helper_Form_Element_Text('sticky_cids', NULL, NULL, '置顶文章的 cid', '<div style="font-family:arial; background:#E8EFD1; padding:8px">按照排序输入, 请以半角逗号或空格分隔 cid</div>');
     $sticky_cids->setAttribute('id', 'cids');
@@ -432,9 +476,9 @@ function themeConfig($form)
             'showSnackbar' => _t('是否显示主题以及简繁切换弹窗'),
             'showLazyloadBlur' => _t('是否开启懒加载模糊效果'),
             'showButterflyClock' => _t('是否开启侧栏显示时钟(需要在下方填写和风和高德key)'),
-            'showNoAlertSearch' => _t('是否开启无弹窗搜索框'),
+            'showNoAlertSearch' => _t('是否开启无弹窗搜索框(开启后不会触发关键词请求)'),
         ),
-        array('ShowTopimg', 'PostShowTopimg', 'PageShowTopimg', 'showLineNumber', 'showSnackbar', 'showLazyloadBlur', 'showNoAlertSearch'),
+        array('ShowTopimg', 'PostShowTopimg', 'PageShowTopimg', 'showLineNumber', 'showSnackbar', 'showLazyloadBlur'),
         _t('美化选项')
     );
     $beautifyBlock->setAttribute('id', 'beautifyBlock');
@@ -534,6 +578,7 @@ function themeConfig($form)
         '自动生成导航栏独立页面链接',
         '介绍：如果你要自定义导航栏链接部分,你可以选择关闭此项'
     );
+    $EnableAutoHeaderLink->setAttribute('id', 'otherCustom');
     $form->addInput($EnableAutoHeaderLink->multiMode());
 
     // 自定义导航栏链接
@@ -544,7 +589,6 @@ function themeConfig($form)
         '自定义导航栏链接',
         '介绍：目前使用html写法 <b style="color:red">完全自定义链接记得关闭上方选项</b>'
     );
-    $CustomHeaderLink->setAttribute('id', 'otherCustom');
     $form->addInput($CustomHeaderLink);
 
     // 自定义认证用户
@@ -686,6 +730,7 @@ function themeConfig($form)
         '评论区谷歌验证码 <br> Site Key for reCAPTCHAv2:',
         '<a href="https://www.google.com/recaptcha/admin/create">点击获取密钥</a>'
     );
+    $siteKey->setAttribute('id', 'captchaVerify');
 
     $secretKey = new Typecho_Widget_Helper_Form_Element_Text('secretKey', NULL, null, _t('Serect Key for reCAPTCHAv2:'), _t('填写两处密钥评论区自动开启谷歌验证码'));
     $form->addInput($siteKey);

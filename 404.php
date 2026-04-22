@@ -36,7 +36,7 @@
       <div id="local-search-input">
         <form class="local-search-box" method="post" action="<?php $this->options->siteUrl(); ?>" role="search" id="search">
           <label for="s" class="sr-only"><?php _e('搜索关键字'); ?></label>
-          <input type="text"  name="s"  placeholder="回车查询" required="required"></div>
+          <input type="text"  name="s"  placeholder="输入至少 2 个字搜索" required="required"></div>
       </form>
       <hr>
       <div id="local-search-results"></div>
@@ -119,7 +119,42 @@ new Typed("#subtitle",{
 <script src="<?php $this->options->themeUrl('static/js/pjax.min.js'); ?>"></script>
 <?php endif; ?>
 <script>
-let pjaxSelectors = ["title", "#body-wrap", "#rightside-config-hide", "#rightside-config-show", ".js-pjax"];
+let pjaxSelectors = ["title", "#config-diff", "#config_change", "#body-wrap", "#rightside-config-hide", "#rightside-config-show", ".js-pjax"];
+const resetPjaxUiState = () => {
+    const bodyStyle = document.body.style;
+    bodyStyle.width = "";
+    bodyStyle.overflow = "";
+    bodyStyle.paddingRight = "";
+    const sidebarMenus = document.getElementById("sidebar-menus");
+    sidebarMenus && sidebarMenus.classList.remove("open");
+};
+const executePjaxScripts = () => {
+    const scripts = [...document.querySelectorAll("script[data-pjax]")];
+    return scripts.reduce((promise, currentScript) => {
+        return promise.then(() => new Promise(resolve => {
+            const parentNode = currentScript.parentNode;
+            if (!parentNode) {
+                resolve();
+                return;
+            }
+            const newScript = document.createElement("script");
+            const scriptContent = currentScript.text || currentScript.textContent || currentScript.innerHTML || "";
+            Array.from(currentScript.attributes).forEach(attribute => {
+                newScript.setAttribute(attribute.name, attribute.value);
+            });
+            if (newScript.src) {
+                newScript.async = false;
+                newScript.onload = () => resolve();
+                newScript.onerror = () => resolve();
+                parentNode.replaceChild(newScript, currentScript);
+                return;
+            }
+            newScript.appendChild(document.createTextNode(scriptContent));
+            parentNode.replaceChild(newScript, currentScript);
+            resolve();
+        }));
+    }, Promise.resolve());
+};
 var pjax = new Pjax({
     elements: 'a:not([target="_blank"])',
     selectors: pjaxSelectors,
@@ -127,6 +162,7 @@ var pjax = new Pjax({
     analytics: !1,
     scrollRestoration: !1});
 document.addEventListener("pjax:send", (function() {
+resetPjaxUiState();
 if (window.removeEventListener("scroll", window.tocScrollFn), window.removeEventListener("scroll", scrollCollect), "object" == typeof preloader && preloader.initLoading(), window.aplayers)
 for (let e = 0; e < window.aplayers.length; e++) window.aplayers[e].options.fixed || window.aplayers[e].destroy();"object" == typeof typed && typed.destroy();
 const e = document.body.classList;
@@ -136,18 +172,33 @@ NProgress.start();
 document.addEventListener("pjax:complete", (function() {
     <?php $this->options->PjaxCallBack() ?>
     NProgress.done();
-    window.refreshFn(), 
-    document.querySelectorAll("script[data-pjax]").forEach(e => {
-        const t = document.createElement("script"),
-        o = e.text || e.textContent || e.innerHTML || "";
-        Array.from(e.attributes).forEach(e => t.setAttribute(e.name, e.value)), t.appendChild(document.createTextNode(o)), e.parentNode.replaceChild(t, e)}),
-    GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update(), "function" == typeof chatBtnFn && chatBtnFn(), "function" == typeof panguInit && panguInit(), "function" == typeof gtag && gtag("config", "", 
-    {page_path: window.location.pathname}),
-    "object" == typeof _hmt && _hmt.push(["_trackPageview", window.location.pathname]), 
-    "function" == typeof loadMeting && document.getElementsByClassName("aplayer").length && loadMeting(),
-    "object" == typeof preloader && preloader.endLoading()
+    executePjaxScripts().then(() => {
+        <?php if (!empty($this->options->hcaptchaSecretKey) && !empty($this->options->hcaptchaAPIKey)) : ?>
+        if (typeof hcaptcha !== "undefined" && document.getElementById('h-captcha') && !document.querySelector('#h-captcha iframe')) {
+            hcaptcha.render('h-captcha', {
+                sitekey: '<?php $this->options->hcaptchaSecretKey() ?>'
+            });
+        }
+        <?php endif ?>
+        <?php if (!empty($this->options->turnstileSiteKey) && !empty($this->options->turnstileKey)) : ?>
+        if (typeof loadTurnstile === "function") {
+            loadTurnstile();
+        }
+        if (typeof setupThemeObserver === "function") {
+            setupThemeObserver();
+        }
+        <?php endif ?>
+        "function" == typeof window.refreshFn && window.refreshFn(),
+        "function" == typeof tocCheck && tocCheck(),
+        GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update(), "function" == typeof chatBtnFn && chatBtnFn(), "function" == typeof panguInit && panguInit(), "function" == typeof gtag && gtag("config", "", 
+        {page_path: window.location.pathname}),
+        "object" == typeof _hmt && _hmt.push(["_trackPageview", window.location.pathname]), 
+        "function" == typeof loadMeting && document.getElementsByClassName("aplayer").length && loadMeting(),
+        "object" == typeof preloader && preloader.endLoading()
+    })
 })),
 document.addEventListener("pjax:error", e => {
+    resetPjaxUiState();
     // 404 === e.request.status && pjax.loadUrl("/404");
     if(e.request.status === 404){
         window.location="/404";
