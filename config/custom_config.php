@@ -1,24 +1,247 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php
+require_once __DIR__ . '/theme_updater.php';
+
 function themeConfig($form)
 {
-    $currentVersion = '未知';
-    $indexFile = dirname(__DIR__) . '/index.php';
-    if (is_file($indexFile) && is_readable($indexFile)) {
-        $indexContent = file_get_contents($indexFile);
-        if ($indexContent !== false && preg_match('/@version\s+([^\s]+)/', $indexContent, $matches)) {
-            $currentVersion = trim($matches[1]);
+    $currentVersion = butterflyGetInstalledThemeVersion();
+    $currentUser = Typecho_Widget::widget('Widget_User');
+
+    $db = Typecho_Db::get();
+    $themeOptionName = 'theme:butterfly';
+    $themeBackupOptionName = 'theme:butterflybf';
+    $themeConfigRedirectUrl = rtrim(Helper::options()->siteUrl, '/') . '/admin/options-theme.php';
+    $themeConfigNotice = '';
+    $themeConfigNoticeRedirect = false;
+    $themeConfigNoticeDelay = 0;
+
+    $setThemeConfigNotice = function ($message, $redirect = false, $delay = 0) use (&$themeConfigNotice, &$themeConfigNoticeRedirect, &$themeConfigNoticeDelay) {
+        $themeConfigNotice = $message;
+        $themeConfigNoticeRedirect = $redirect;
+        $themeConfigNoticeDelay = $delay;
+    };
+
+    $decodeThemeConfigValue = static function ($value) {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        if (!is_string($value) || $value === '') {
+            return array();
+        }
+
+        $unserializedValue = @unserialize($value);
+        if ($unserializedValue !== false || $value === 'b:0;') {
+            return is_array($unserializedValue) ? $unserializedValue : array();
+        }
+
+        $jsonValue = json_decode($value, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($jsonValue)) {
+            return $jsonValue;
+        }
+
+        return array();
+    };
+
+    $currentThemeRow = $db->fetchRow($db->select()->from('table.options')->where('name = ?', $themeOptionName));
+    $currentThemeValue = isset($currentThemeRow['value']) ? $currentThemeRow['value'] : '';
+    $currentThemeSettings = $decodeThemeConfigValue($currentThemeValue);
+    $themeExportFileName = 'butterfly-theme-backup-' . date('Ymd-His') . '.json';
+    $themeExportJson = json_encode(array(
+        'meta' => array(
+            'theme' => 'butterfly',
+            'version' => $currentVersion,
+            'exported_at' => date('c'),
+            'format' => 'butterfly-theme-backup',
+            'format_version' => 1,
+        ),
+        'settings' => $currentThemeSettings,
+    ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+
+    if ($themeExportJson === false) {
+        $themeExportJson = '';
+    }
+
+    $action = '';
+    if (isset($_POST['type']) && trim((string) $_POST['type']) !== '') {
+        $action = trim((string) $_POST['type']);
+    } elseif (isset($_POST['import_action']) && trim((string) $_POST['import_action']) !== '') {
+        $action = trim((string) $_POST['import_action']);
+    }
+
+    $themeUpdateState = butterflyGetThemeUpdateState($currentVersion, in_array($action, array('检查主题更新', '在线更新主题'), true));
+
+    if ($action !== '') {
+        $writeActions = array(
+            '在线更新主题',
+            '导入主题备份(JSON)',
+            '备份主题数据',
+            '还原主题数据',
+            '删除备份数据',
+            '清除所有缓存',
+        );
+
+        if (in_array($action, $writeActions, true) && (!$currentUser->hasLogin() || !$currentUser->pass('administrator'))) {
+            $setThemeConfigNotice('只有管理员才可以执行该操作。');
+        } else {
+            if ($action === '检查主题更新') {
+                $setThemeConfigNotice($themeUpdateState['status_message']);
+            }
+
+            if ($action === '在线更新主题') {
+                $themeUpdateResult = butterflyRunThemeUpdate($currentVersion);
+                $setThemeConfigNotice(
+                    $themeUpdateResult['message'],
+                    !empty($themeUpdateResult['redirect']),
+                    !empty($themeUpdateResult['delay']) ? (int) $themeUpdateResult['delay'] : 0
+                );
+            }
+
+            if ($action === '导入主题备份(JSON)') {
+                $uploadErrorMessage = array(
+                    UPLOAD_ERR_INI_SIZE => '上传的主题备份文件超过服务器限制，无法导入。',
+                    UPLOAD_ERR_FORM_SIZE => '上传的主题备份文件超过表单限制，无法导入。',
+                    UPLOAD_ERR_PARTIAL => '主题备份文件上传不完整，请重新导入。',
+                    UPLOAD_ERR_NO_FILE => '未选择主题备份文件，无法导入。',
+                    UPLOAD_ERR_NO_TMP_DIR => '服务器缺少临时目录，无法导入主题备份。',
+                    UPLOAD_ERR_CANT_WRITE => '服务器无法写入上传文件，无法导入主题备份。',
+                    UPLOAD_ERR_EXTENSION => '主题备份文件上传被中止，无法导入。',
+                );
+                $maxBackupSize = 1024 * 1024;
+
+                if (!isset($_FILES['themeBackupJson']) || !isset($_FILES['themeBackupJson']['error'])) {
+                    $setThemeConfigNotice('未选择主题备份文件，无法导入。');
+                } elseif ((int) $_FILES['themeBackupJson']['error'] !== UPLOAD_ERR_OK) {
+                    $uploadErrorCode = (int) $_FILES['themeBackupJson']['error'];
+                    $setThemeConfigNotice(isset($uploadErrorMessage[$uploadErrorCode]) ? $uploadErrorMessage[$uploadErrorCode] : '主题备份文件上传失败，无法导入。');
+                } elseif (!empty($_FILES['themeBackupJson']['size']) && (int) $_FILES['themeBackupJson']['size'] > $maxBackupSize) {
+                    $setThemeConfigNotice('主题备份文件过大，无法导入。');
+                } elseif (empty($_FILES['themeBackupJson']['tmp_name']) || !is_uploaded_file($_FILES['themeBackupJson']['tmp_name'])) {
+                    $setThemeConfigNotice('未检测到有效的主题备份文件，无法导入。');
+                } else {
+                    $importJson = file_get_contents($_FILES['themeBackupJson']['tmp_name']);
+
+                    if ($importJson === false || trim($importJson) === '') {
+                        $setThemeConfigNotice('主题备份文件内容为空，无法导入。');
+                    } else {
+                        $importData = json_decode($importJson, true);
+
+                        if (json_last_error() !== JSON_ERROR_NONE || !is_array($importData)) {
+                            $setThemeConfigNotice('主题备份文件不是有效的 JSON，无法导入。');
+                        } else {
+                            if (
+                                !isset($importData['meta'], $importData['settings'])
+                                || !is_array($importData['meta'])
+                                || !is_array($importData['settings'])
+                                || ($importData['meta']['format'] ?? '') !== 'butterfly-theme-backup'
+                                || ($importData['meta']['theme'] ?? '') !== 'butterfly'
+                            ) {
+                                $setThemeConfigNotice('主题备份文件格式不匹配，无法导入。');
+                            } else {
+                                $restoredThemeSettings = $importData['settings'];
+                                $restoredThemeValue = serialize($restoredThemeSettings);
+
+                                try {
+                                    if ($currentThemeRow) {
+                                        $update = $db->update('table.options')->rows(array('value' => $restoredThemeValue))->where('name = ?', $themeOptionName);
+                                        $db->query($update);
+                                    } else {
+                                        $insert = $db->insert('table.options')->rows(array('name' => $themeOptionName, 'user' => '0', 'value' => $restoredThemeValue));
+                                        $db->query($insert);
+                                    }
+
+                                    $setThemeConfigNotice('主题备份导入成功，配置已还原，请等待自动刷新！如果等不到请点击', true, 2000);
+                                } catch (Exception $e) {
+                                    $setThemeConfigNotice('主题备份导入失败：写入配置时出错。');
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ($action === '备份主题数据') {
+                if ($db->fetchRow($db->select()->from('table.options')->where('name = ?', $themeBackupOptionName))) {
+                    $update = $db->update('table.options')->rows(array('value' => $currentThemeValue))->where('name = ?', $themeBackupOptionName);
+                    $db->query($update);
+                    $setThemeConfigNotice('备份已更新，请等待自动刷新！如果等不到请点击', true, 2500);
+                } else {
+                    if ($currentThemeValue) {
+                        $insert = $db->insert('table.options')->rows(array('name' => $themeBackupOptionName, 'user' => '0', 'value' => $currentThemeValue));
+                        $db->query($insert);
+                        $setThemeConfigNotice('备份完成，请等待自动刷新！如果等不到请点击', true, 2500);
+                    }
+                }
+            }
+
+            if ($action === '还原主题数据') {
+                if ($db->fetchRow($db->select()->from('table.options')->where('name = ?', $themeBackupOptionName))) {
+                    $backupThemeRow = $db->fetchRow($db->select()->from('table.options')->where('name = ?', $themeBackupOptionName));
+                    $backupThemeValue = $backupThemeRow['value'];
+                    $update = $db->update('table.options')->rows(array('value' => $backupThemeValue))->where('name = ?', $themeOptionName);
+                    $db->query($update);
+                    $setThemeConfigNotice('检测到主题备份数据，恢复完成，请等待自动刷新！如果等不到请点击', true, 2000);
+                } else {
+                    $setThemeConfigNotice('没有主题备份数据，恢复不了哦！');
+                }
+            }
+
+            if ($action === '删除备份数据') {
+                if ($db->fetchRow($db->select()->from('table.options')->where('name = ?', $themeBackupOptionName))) {
+                    $delete = $db->delete('table.options')->where('name = ?', $themeBackupOptionName);
+                    $db->query($delete);
+                    $setThemeConfigNotice('删除成功，请等待自动刷新，如果等不到请点击', true, 2500);
+                } else {
+                    $setThemeConfigNotice('不用删了！备份不存在！！！');
+                }
+            }
+
+            if ($action === '清除所有缓存') {
+                clearCache();
+                $setThemeConfigNotice('缓存已清除，请等待自动刷新！如果等不到请点击', true, 2500);
+            }
         }
     }
+
     ?>
     <link rel="stylesheet" href="<?php Helper::options()->themeUrl('css/themedash.css?v1.9.7'); ?>">
+    <?php if ($themeConfigNotice !== '') : ?>
+        <div class="tongzhi">
+            <?php echo htmlspecialchars($themeConfigNotice, ENT_QUOTES, 'UTF-8'); ?>
+            <?php if ($themeConfigNoticeRedirect) : ?>
+                <a href="<?php echo htmlspecialchars($themeConfigRedirectUrl, ENT_QUOTES, 'UTF-8'); ?>">这里</a>
+            <?php endif; ?>
+        </div>
+        <?php if ($themeConfigNoticeRedirect && $themeConfigNoticeDelay > 0) : ?>
+            <script>window.setTimeout(function () { location = '<?php echo addslashes($themeConfigRedirectUrl); ?>'; }, <?php echo (int) $themeConfigNoticeDelay; ?>);</script>
+        <?php endif; ?>
+    <?php endif; ?>
     <div class="theme-config-shell" id="themeConfigShell">
         <aside class="theme-config-sidebar">
             <div class="theme-config-sidebar-inner">
                 <div class="theme-config-panel theme-config-sidebar-header">
                     <div class="theme-config-sidebar-eyebrow">Butterfly Theme</div>
                     <h2>后台设置导航</h2>
-                    <p>当前版本：<?php echo htmlspecialchars($currentVersion, ENT_QUOTES, 'UTF-8'); ?><br>最新版本：<span id="themeRemoteVersion">获取中...</span></p>
+                    <p>当前版本：<?php echo htmlspecialchars($currentVersion, ENT_QUOTES, 'UTF-8'); ?></p>
+                    <?php /* 主题更新功能暂时隐藏
+                    <p>最新版本：<?php echo htmlspecialchars($themeUpdateState['latest_version_display'], ENT_QUOTES, 'UTF-8'); ?></p>
+                    <div class="theme-config-update-box" style="margin-top:12px;padding:12px;border-radius:12px;background:rgba(255,255,255,.72);border:1px solid rgba(0,0,0,.06);">
+                        <div style="font-size:13px;line-height:1.8;color:#444;word-break:break-word;">
+                            <?php echo htmlspecialchars($themeUpdateState['status_message'], ENT_QUOTES, 'UTF-8'); ?>
+                            <?php if (!$themeUpdateState['permission_ok'] && $themeUpdateState['has_update']) : ?>
+                                <br>请前往 Release 页面手动下载并覆盖主题目录。
+                            <?php endif; ?>
+                            <?php if ($themeUpdateState['download_name'] !== '') : ?>
+                                <br>更新包：<?php echo htmlspecialchars($themeUpdateState['download_name'], ENT_QUOTES, 'UTF-8'); ?>
+                            <?php endif; ?>
+                        </div>
+                        <form class="protected theme-config-update-actions" action="?butterflybf" method="post" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;">
+                            <input type="submit" name="type" class="btn btn-s" value="检查主题更新" />
+                            <input type="submit" name="type" class="btn btn-s" value="在线更新主题"<?php if (!$themeUpdateState['can_update']) : ?> disabled="disabled"<?php endif; ?> />
+                            <a class="btn btn-s" href="<?php echo htmlspecialchars($themeUpdateState['release_url'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">前往Release下载</a>
+                        </form>
+                    </div>
+                    */ ?>
                     <button type="button" class="theme-config-nav-toggle" id="themeConfigNavToggle" aria-expanded="false" aria-controls="themeConfigNavList">展开功能导航</button>
                 </div>
                 <div class='set_toc theme-config-panel'>
@@ -38,11 +261,17 @@ function themeConfig($form)
                         <a href='#cids' id='point'>返回上次保存设置位置</a>
                     </div>
                 </div>
-                <form class="protected theme-config-panel theme-config-actions" action="?butterflybf" method="post" id="themeBackup">
+                <form class="protected theme-config-panel theme-config-actions" action="?butterflybf" method="post" enctype="multipart/form-data" id="themeBackup">
                     <input type="submit" name="type" class="btn btn-s" value="备份主题数据" />
                     <input type="submit" name="type"  class="btn btn-s" value="还原主题数据" />
                     <input type="submit" name="type" class="btn btn-s" value="删除备份数据" />
                     <input type="submit" name="type" class="btn btn-s" value="清除所有缓存" />
+                    <input type="button" class="btn btn-s" id="themeExportBackupTrigger" value="导出主题备份" data-filename="<?php echo htmlspecialchars($themeExportFileName, ENT_QUOTES, 'UTF-8'); ?>"<?php if ($themeExportJson === '') : ?> disabled="disabled"<?php endif; ?> />
+                    <input type="file" name="themeBackupJson" id="themeBackupJson" accept=".json,application/json" style="display:none;" />
+                    <input type="hidden" name="import_action" id="themeImportBackupType" value="" />
+                    <input type="button" class="btn btn-s" id="themeImportBackupTrigger" value="导入主题备份" />
+                    <div>选择导出的json文件后可导入还原数据</div>
+                    <textarea id="themeBackupExportData" style="display:none;"><?php echo htmlspecialchars($themeExportJson, ENT_QUOTES, 'UTF-8'); ?></textarea>
                 </form>
             </div>
         </aside>
@@ -52,29 +281,70 @@ function themeConfig($form)
     </div>
     <script>
         (function () {
-            var remoteVersionNode = document.getElementById('themeRemoteVersion');
-            if (!remoteVersionNode) {
+            var exportTrigger = document.getElementById('themeExportBackupTrigger');
+            var exportData = document.getElementById('themeBackupExportData');
+
+            if (!exportTrigger || !exportData) {
                 return;
             }
 
-            fetch('https://ty.wehao.org', { credentials: 'omit' })
-                .then(function (response) {
-                    if (!response.ok) {
-                        throw new Error('request failed');
-                    }
-                    return response.json();
-                })
-                .then(function (data) {
-                    remoteVersionNode.textContent = data && data.ver ? data.ver : '获取失败';
-                })
-                .catch(function () {
-                    remoteVersionNode.textContent = '获取失败';
-                });
+            exportTrigger.addEventListener('click', function () {
+                var exportJson = exportData.value || '';
+                var filename = exportTrigger.getAttribute('data-filename') || 'butterfly-theme-backup.json';
+
+                if (!exportJson) {
+                    window.alert('主题备份生成失败，请刷新页面后重试。');
+                    return;
+                }
+
+                var blob = new Blob([exportJson], { type: 'application/json;charset=utf-8' });
+                var downloadUrl = window.URL.createObjectURL(blob);
+                var downloadLink = document.createElement('a');
+
+                downloadLink.href = downloadUrl;
+                downloadLink.download = filename;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                window.URL.revokeObjectURL(downloadUrl);
+            });
+        })();
+
+        (function () {
+            var importForm = document.getElementById('themeBackup');
+            var importTrigger = document.getElementById('themeImportBackupTrigger');
+            var importInput = document.getElementById('themeBackupJson');
+            var importType = document.getElementById('themeImportBackupType');
+
+            if (!importForm || !importTrigger || !importInput || !importType) {
+                return;
+            }
+
+            importTrigger.addEventListener('click', function () {
+                importInput.click();
+            });
+
+            importInput.addEventListener('change', function () {
+                if (!importInput.files || !importInput.files[0]) {
+                    return;
+                }
+
+                var selectedFile = importInput.files[0];
+                var confirmMessage = '确认导入主题备份文件“' + selectedFile.name + '”并立即还原当前主题设置吗？此操作会覆盖现有主题配置。';
+
+                if (window.confirm(confirmMessage)) {
+                    importType.value = '导入主题备份(JSON)';
+                    importForm.submit();
+                } else {
+                    importInput.value = '';
+                    importType.value = '';
+                }
+            });
         })();
     </script>
     <script src="<?php Helper::options()->themeUrl('js/themecustom.js?v1.6.10'); ?>"></script>
     <?php
-    $sticky_cids = new Typecho_Widget_Helper_Form_Element_Text('sticky_cids', NULL, NULL, '置顶文章的 cid', '<div style="font-family:arial; background:#E8EFD1; padding:8px">按照排序输入, 请以半角逗号或空格分隔 cid</div>');
+    $sticky_cids = new Typecho_Widget_Helper_Form_Element_Text('sticky_cids', NULL, NULL, '置顶文章的 cid', '<span style="color:#444;display:inline-block;font-family:arial;background:#E8EFD1;padding:8px;width:100%">按照排序输入, 请以半角逗号或空格分隔 cid</span>');
     $sticky_cids->setAttribute('id', 'cids');
     $form->addInput($sticky_cids);
 
@@ -788,74 +1058,6 @@ function themeConfig($form)
     );
     $form->addInput($CacheTime);
     
-    $db = Typecho_Db::get();
-    $sjdq = $db->fetchRow($db->select()->from('table.options')->where('name = ?', 'theme:butterfly'));
-    $ysj = $sjdq['value'];
-    if (isset($_POST['type'])) {
-        if ($_POST["type"] == "备份主题数据") {
-            if ($db->fetchRow($db->select()->from('table.options')->where('name = ?', 'theme:butterflybf'))) {
-                $update = $db->update('table.options')->rows(array('value' => $ysj))->where('name = ?', 'theme:butterflybf');
-                $updateRows = $db->query($update);
-                echo '<div class="tongzhi">备份已更新，请等待自动刷新！如果等不到请点击';
-                ?>
-                <a href="<?php Helper::options()->adminUrl('options-theme.php'); ?>">这里</a></div>
-                <script
-                    language="JavaScript">window.setTimeout("location=\'<?php Helper::options()->adminUrl('options-theme.php'); ?>\'", 2500);</script>
-                <?php
-            } else {
-                if ($ysj) {
-                    $insert = $db->insert('table.options')->rows(array('name' => 'theme:butterflybf', 'user' => '0', 'value' => $ysj));
-                    $insertId = $db->query($insert);
-                    echo '<div class="tongzhi">备份完成，请等待自动刷新！如果等不到请点击';
-                    ?>
-                    <a href="<?php Helper::options()->adminUrl('options-theme.php'); ?>">这里</a></div>
-                    <script
-                        language="JavaScript">window.setTimeout("location=\'<?php Helper::options()->adminUrl('options-theme.php'); ?>\'", 2500);</script>
-                    <?php
-                }
-            }
-        }
-        if ($_POST["type"] == "还原主题数据") {
-            if ($db->fetchRow($db->select()->from('table.options')->where('name = ?', 'theme:butterflybf'))) {
-                $sjdub = $db->fetchRow($db->select()->from('table.options')->where('name = ?', 'theme:butterflybf'));
-                $bsj = $sjdub['value'];
-                $update = $db->update('table.options')->rows(array('value' => $bsj))->where('name = ?', 'theme:butterfly');
-                $updateRows = $db->query($update);
-                echo '<div class="tongzhi">检测到主题备份数据，恢复完成，请等待自动刷新！如果等不到请点击';
-                ?>
-                <a href="<?php Helper::options()->adminUrl('options-theme.php'); ?>">这里</a></div>
-                <script
-                    language="JavaScript">window.setTimeout("location=\'<?php Helper::options()->adminUrl('options-theme.php'); ?>\'", 2000);</script>
-                <?php
-            } else {
-                echo '<div class="tongzhi">没有主题备份数据，恢复不了哦！</div>';
-            }
-        }
-        if ($_POST["type"] == "删除备份数据") {
-            if ($db->fetchRow($db->select()->from('table.options')->where('name = ?', 'theme:butterflybf'))) {
-                $delete = $db->delete('table.options')->where('name = ?', 'theme:butterflybf');
-                $deletedRows = $db->query($delete);
-                echo '<div class="tongzhi">删除成功，请等待自动刷新，如果等不到请点击';
-                ?>
-                <a href="<?php Helper::options()->adminUrl('options-theme.php'); ?>">这里</a></div>
-                <script
-                    language="JavaScript">window.setTimeout("location=\'<?php Helper::options()->adminUrl('options-theme.php'); ?>\'", 2500);</script>
-                <?php
-            } else {
-                echo '<div class="tongzhi">不用删了！备份不存在！！！</div>';
-            }
-        }
-        // 处理清除缓存请求
-        if ($_POST["type"] == "清除所有缓存") {
-            clearCache();
-            echo '<div class="tongzhi">缓存已清除，请等待自动刷新！如果等不到请点击';
-            ?>
-            <a href="<?php Helper::options()->adminUrl('options-theme.php'); ?>">这里</a></div>
-            <script language="JavaScript">window.setTimeout("location='<?php Helper::options()->adminUrl('options-theme.php'); ?>'", 2500);</script>
-            <?php
-        }
-        
-    }
     // 结束
 }
 

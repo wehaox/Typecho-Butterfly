@@ -991,6 +991,7 @@ function ParseCode($text)
     $text = Bf_Mark($text);
     $text = Font($text);
     $text = ArtPlayer($text);
+    $text = ParseGallery($text);
     $text = PostImage($text);
     $codeBlocks = convertProtectedCodeBlocksToButterflyHtml($codeBlocks);
     return restoreCodeBlocks($text, $codeBlocks);
@@ -1236,6 +1237,328 @@ function buildImageAltText($src, $alt = '', $title = '')
     }
 
     return $text !== '' ? $text : '文章配图';
+}
+
+function parseButterflyGalleryTagArgs($args)
+{
+    $result = array();
+    preg_match_all('/"([^"]*)"|\'([^\']*)\'|(\S+)/u', trim((string)$args), $matches, PREG_SET_ORDER);
+
+    foreach ($matches as $match) {
+        if (isset($match[1]) && $match[1] !== '') {
+            $result[] = $match[1];
+        } elseif (isset($match[2]) && $match[2] !== '') {
+            $result[] = $match[2];
+        } elseif (isset($match[3])) {
+            $result[] = trim($match[3]);
+        }
+    }
+
+    return $result;
+}
+
+function parseButterflyGalleryOptions($args)
+{
+    $parts = array_map('trim', explode(',', trim((string)$args)));
+
+    return array(
+        'lazyload' => isset($parts[0]) && $parts[0] !== '' ? $parts[0] : 'false',
+        'rowHeight' => isset($parts[1]) && $parts[1] !== '' ? $parts[1] : '220',
+        'limit' => isset($parts[2]) && $parts[2] !== '' ? $parts[2] : '10'
+    );
+}
+
+function normalizeButterflyGalleryText($text)
+{
+    $text = html_entity_decode((string)$text, ENT_QUOTES, 'UTF-8');
+    $text = trim(strip_tags($text));
+
+    return $text;
+}
+
+function normalizeButterflyGalleryUrl($url)
+{
+    return trim(html_entity_decode((string)$url, ENT_QUOTES, 'UTF-8'));
+}
+
+function sanitizeButterflyGalleryUrl($url, $allowDataImage = false)
+{
+    $url = normalizeButterflyGalleryUrl($url);
+    if ($url === '' || preg_match('/[\x00-\x20\x7f"\'<>]/u', $url)) {
+        return '';
+    }
+
+    if (strpos($url, '//') === 0 || strpos($url, '/') === 0 || strpos($url, './') === 0 || strpos($url, '../') === 0) {
+        return $url;
+    }
+
+    if (preg_match('/^[a-z][a-z0-9+.-]*:/i', $url)) {
+        $scheme = strtolower((string)parse_url($url, PHP_URL_SCHEME));
+        if (in_array($scheme, array('http', 'https'), true)) {
+            return $url;
+        }
+
+        if ($allowDataImage && $scheme === 'data' && preg_match('/^data:image\/(?:gif|png|jpe?g|webp);base64,[a-z0-9+\/]+=*$/i', $url)) {
+            return $url;
+        }
+
+        return '';
+    }
+
+    return $url;
+}
+
+function addButterflyGalleryImage(&$images, $src, $alt = '', $title = '')
+{
+    $src = sanitizeButterflyGalleryUrl($src, true);
+    if ($src === '') {
+        return;
+    }
+
+    $alt = normalizeButterflyGalleryText($alt);
+    $title = normalizeButterflyGalleryText($title);
+
+    if ($alt === '') {
+        $alt = buildImageAltText($src, '', $title);
+    }
+    if ($title === '') {
+        $title = $alt;
+    }
+
+    $images[] = array(
+        'url' => $src,
+        'alt' => $alt,
+        'title' => $title
+    );
+}
+
+function parseButterflyGalleryImages($content)
+{
+    $items = array();
+    $content = (string)$content;
+
+    if (preg_match_all('/<img\b[^>]*>/i', $content, $matches, PREG_OFFSET_CAPTURE)) {
+        foreach ($matches[0] as $match) {
+            $imgTag = $match[0];
+            $src = getImageAttributeValue($imgTag, 'data-lazy-src');
+            if ($src === '') {
+                $src = getImageAttributeValue($imgTag, 'src');
+            }
+
+            $items[] = array(
+                'offset' => $match[1],
+                'src' => $src,
+                'alt' => getImageAttributeValue($imgTag, 'alt'),
+                'title' => getImageAttributeValue($imgTag, 'title')
+            );
+        }
+    }
+
+    if (preg_match_all('/!\[([^\]]*)\]\(\s*([^\s\)]+)(?:\s+(?:"([^"]*)"|\'([^\']*)\'|\(([^\)]*)\)))?\s*\)/u', $content, $matches, PREG_OFFSET_CAPTURE)) {
+        foreach ($matches[0] as $index => $match) {
+            $title = '';
+            foreach (array(3, 4, 5) as $titleIndex) {
+                if (isset($matches[$titleIndex][$index][0]) && $matches[$titleIndex][$index][0] !== '') {
+                    $title = $matches[$titleIndex][$index][0];
+                    break;
+                }
+            }
+
+            $items[] = array(
+                'offset' => $match[1],
+                'src' => $matches[2][$index][0],
+                'alt' => isset($matches[1][$index][0]) ? $matches[1][$index][0] : '',
+                'title' => $title
+            );
+        }
+    }
+
+    usort($items, function ($a, $b) {
+        if ($a['offset'] == $b['offset']) {
+            return 0;
+        }
+
+        return $a['offset'] < $b['offset'] ? -1 : 1;
+    });
+
+    $images = array();
+    foreach ($items as $item) {
+        $src = normalizeButterflyGalleryUrl($item['src']);
+        if ($src === '') {
+            continue;
+        }
+
+        addButterflyGalleryImage($images, $src, $item['alt'], $item['title']);
+    }
+
+    return $images;
+}
+
+function isButterflyGalleryLazyload($value)
+{
+    $value = strtolower(trim((string)$value));
+
+    return in_array($value, array('true', 'show', 'on', '1', 'yes'), true);
+}
+
+function normalizeButterflyGalleryNumber($value, $default)
+{
+    $value = (int)trim((string)$value);
+
+    return $value > 0 ? $value : $default;
+}
+
+function renderButterflyGalleryHtml($images, $lazyload = 'false', $rowHeight = '220', $limit = '10')
+{
+    if (empty($images) || !is_array($images)) {
+        return '';
+    }
+
+    $isLazyload = isButterflyGalleryLazyload($lazyload);
+    $rowHeight = normalizeButterflyGalleryNumber($rowHeight, 220);
+    $limit = normalizeButterflyGalleryNumber($limit, 10);
+    $json = json_encode($images, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    if ($json === false) {
+        return '';
+    }
+
+    return '<div class="gallery butterfly-gallery" style="display:block"><div class="fj-gallery' . ($isLazyload ? ' lazyload' : '') . '" data-rowHeight="' . $rowHeight . '" data-limit="' . $limit . '"><div class="gallery-data">' . htmlspecialchars($json, ENT_NOQUOTES, 'UTF-8') . '</div></div>' . ($isLazyload ? '<button type="button">加载更多<i class="fas fa-angle-down"></i></button>' : '') . '</div>';
+}
+
+function ParseGallery($text)
+{
+    $text = preg_replace_callback('/(?:<p>\s*)?\{%\s*galleryGroup\s+([^%]*?)\s*%\}(?:\s*<\/p>)?/iu', function ($matches) {
+        $args = parseButterflyGalleryTagArgs($matches[1]);
+        $name = isset($args[0]) ? $args[0] : '';
+        $description = isset($args[1]) ? $args[1] : '';
+        $url = isset($args[2]) ? $args[2] : '';
+        $img = isset($args[3]) ? $args[3] : '';
+
+        if ($name === '' && $url === '' && $img === '') {
+            return $matches[0];
+        }
+
+        $url = sanitizeButterflyGalleryUrl($url, false);
+        $img = sanitizeButterflyGalleryUrl($img, true);
+
+        return '<figure class="gallery-group"><img class="gallery-group-img no-lightbox" src="' . htmlspecialchars($img, ENT_QUOTES, 'UTF-8') . '" alt="Group Image Gallery"><figcaption><div class="gallery-group-name">' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '</div><p>' . htmlspecialchars($description, ENT_QUOTES, 'UTF-8') . '</p><a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '"></a></figcaption></figure>';
+    }, $text);
+
+    $text = preg_replace_callback('/(?:<p>\s*)?\{%\s*gallery\b([^%]*?)\s*%\}(?:\s*<br\s*\/?>)?(?:\s*<\/p>)?([\s\S]*?)(?:<p>\s*)?\{%\s*endgallery\s*%\}(?:\s*<\/p>)?/iu', function ($matches) {
+        $options = parseButterflyGalleryOptions($matches[1]);
+        $images = parseButterflyGalleryImages($matches[2]);
+        $html = renderButterflyGalleryHtml($images, $options['lazyload'], $options['rowHeight'], $options['limit']);
+
+        return $html !== '' ? $html : $matches[0];
+    }, $text);
+
+    return $text;
+}
+
+function getButterflyPhotoGalleryCover($row)
+{
+    $cid = isset($row['cid']) ? (int)$row['cid'] : 0;
+    $thumb = getThemeFieldValue($cid, 'thumb', '');
+    $thumb = sanitizeButterflyGalleryUrl($thumb, true);
+    if ($thumb !== '') {
+        return $thumb;
+    }
+
+    if (!empty($row['text'])) {
+        $contentImages = parseButterflyGalleryImages($row['text']);
+        if (!empty($contentImages[0]['url'])) {
+            return $contentImages[0]['url'];
+        }
+    }
+
+    return get_ArticleThumbnail($row);
+}
+
+function getButterflyPhotoGalleryDescription($row)
+{
+    $cid = isset($row['cid']) ? (int)$row['cid'] : 0;
+    $description = getThemeFieldValue($cid, 'summaryContent', '');
+    if (trim((string)$description) === '') {
+        $description = getThemeFieldValue($cid, 'desc', '');
+    }
+
+    if (trim((string)$description) === '' && !empty($row['text'])) {
+        $description = preg_replace('/\{%\s*gallery[\s\S]*?\{%\s*endgallery\s*%\}/iu', '', $row['text']);
+        $description = preg_replace('/\{%\s*galleryGroup\s+[^%]*?%\}/iu', '', $description);
+    }
+
+    $description = normalizeButterflyGalleryText($description);
+    if (function_exists('mb_substr')) {
+        return mb_substr($description, 0, 80, 'UTF-8');
+    }
+
+    return substr($description, 0, 240);
+}
+
+function getButterflyPhotoGalleryPages($excludeCid = 0)
+{
+    $excludeCid = (int)$excludeCid;
+    $db = Typecho_Db::get();
+    $rows = $db->fetchAll($db->select('cid', 'title', 'slug', 'created', 'modified', 'type', 'status', 'authorId', 'text', 'template')
+        ->from('table.contents')
+        ->where('status = ?', 'publish')
+        ->where('type = ?', 'page')
+        ->where('created < ?', time())
+        ->where('password IS NULL')
+        ->order('table.contents.order', Typecho_Db::SORT_ASC));
+
+    $pages = array();
+    foreach ($rows as $row) {
+        $cid = isset($row['cid']) ? (int)$row['cid'] : 0;
+        if ($cid <= 0 || $cid === $excludeCid) {
+            continue;
+        }
+
+        $template = isset($row['template']) ? (string)$row['template'] : '';
+        $hasGalleryTag = !empty($row['text']) && preg_match('/\{%\s*gallery\b/i', $row['text']);
+        if ($template !== 'photos.php' && !$hasGalleryTag) {
+            continue;
+        }
+
+        $row['permalink'] = getPostPermalinkByRow($row);
+        $row['cover'] = getButterflyPhotoGalleryCover($row);
+        $row['description'] = getButterflyPhotoGalleryDescription($row);
+        $pages[] = $row;
+    }
+
+    return $pages;
+}
+
+function renderButterflyPhotoGalleryGroup($name, $description, $url, $img)
+{
+    $url = sanitizeButterflyGalleryUrl($url, false);
+    $img = sanitizeButterflyGalleryUrl($img, true);
+    if ($url === '' || $img === '') {
+        return '';
+    }
+
+    return '<figure class="gallery-group"><img class="gallery-group-img no-lightbox" src="' . htmlspecialchars($img, ENT_QUOTES, 'UTF-8') . '" alt="Group Image Gallery"><figcaption><div class="gallery-group-name">' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '</div><p>' . htmlspecialchars($description, ENT_QUOTES, 'UTF-8') . '</p><a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '"></a></figcaption></figure>';
+}
+
+function renderButterflyPhotoGalleryList($excludeCid = 0)
+{
+    $pages = getButterflyPhotoGalleryPages($excludeCid);
+    if (empty($pages)) {
+        return '<div class="gallery-group-main"><p class="is-center">暂无照片墙</p></div>';
+    }
+
+    $html = '<div class="gallery-group-main">';
+    foreach ($pages as $page) {
+        $html .= renderButterflyPhotoGalleryGroup(
+            isset($page['title']) ? $page['title'] : '',
+            isset($page['description']) ? $page['description'] : '',
+            isset($page['permalink']) ? $page['permalink'] : '',
+            isset($page['cover']) ? $page['cover'] : ''
+        );
+    }
+    $html .= '</div>';
+
+    return $html;
 }
 
 function PostImage($text)

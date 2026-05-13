@@ -30,6 +30,76 @@ textarea {
     margin-bottom: 10px;
     width: 25.7em;
 }
+
+/* Typecho 1.3.0 自定义字段布局兼容 */
+#custom-field {
+    clear: both;
+}
+#custom-field summary {
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px 0;
+}
+#custom-field .fields {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#custom-field .fields .field {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #e9e9e9;
+}
+#custom-field .fields .field:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+#custom-field .fields .field .field-name {
+    width: 180px;
+    min-width: 180px;
+    max-width: 180px;
+    flex-shrink: 0;
+    padding-right: 15px;
+    padding-top: 5px;
+    box-sizing: border-box;
+}
+#custom-field .fields .field .field-name .typecho-label {
+    font-weight: bold;
+    display: block;
+    word-break: break-word;
+}
+#custom-field .fields .field .field-value {
+    flex: 1;
+    min-width: 0;
+}
+#custom-field .fields .field .field-value > div {
+    width: 100%;
+}
+#custom-field .fields .field .field-value input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+}
+#custom-field .fields .field .field-value textarea {
+    width: 100%;
+    min-height: 80px;
+    box-sizing: border-box;
+}
+#custom-field .fields .field .field-value select {
+    min-width: 180px;
+}
+#custom-field .fields .field .field-value p.description {
+    margin: 8px 0 0 0;
+    color: #999;
+    font-size: 12px;
+    line-height: 1.6;
+}
+#custom-field .add {
+    margin-top: 15px;
+    padding-top: 10px;
+}
 .wmd-prompt-dialog{
     top: 36%;
 }

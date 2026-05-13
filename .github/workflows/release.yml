@@ -42,3 +42,4 @@ jobs:
           name: Release${{ env.VERSION }}
           files: dist/butterfly-${{ env.VERSION }}.zip
           generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-') }}

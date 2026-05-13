@@ -149,8 +149,8 @@
       },
       source: {
         justifiedGallery: {
-          js: "https://cdn.bootcdn.net/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.js",
-          css: "https://cdn.bootcdn.net/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.css"
+          js: "https://<?php $this->options->jsdelivrLink() ?>/npm/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js",
+          css: "https://<?php $this->options->jsdelivrLink() ?>/npm/flickr-justified-gallery@2.1.2/dist/fjGallery.min.css"
         }
       },
       isPhotoFigcaption: !1,

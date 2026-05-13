@@ -120,6 +120,12 @@ $("#wmd-button-row #wmd-fullscreen-button").before(`
 <li class="wmd-button custom" id="b-wmd-md-img" title="现代md插入图片">
   <svg t="1630832731295" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3768" width="60" height="60"><path d="M952.439467 325.973333a478.190933 478.190933 0 0 0-880.64 0A477.610667 477.610667 0 0 0 512 989.866667a478.3616 478.3616 0 0 0 440.439467-663.893334z m-142.062934 484.4032A422.024533 422.024533 0 0 1 176.622933 768l93.969067-80.8448L482.6624 885.76c0.443733 0.477867 0.887467 0.9728 1.3824 1.4336a27.0848 27.0848 0 0 0 37.444267-39.133867l-68.8128-64.529066L701.44 549.290667l176.401067 173.1584a422.0416 422.0416 0 0 1-67.464534 87.927466z m92.0576-138.0864L720.9472 492.4928l-18.551467-18.3808-19.012266 17.902933L413.115733 746.496l-123.272533-115.438933L272.110933 614.4l-18.397866 15.837867-107.963734 91.323733a424.5504 424.5504 0 0 1-22.4768-45.329067 422.024533 422.024533 0 0 1 777.540267-328.362666 423.253333 423.253333 0 0 1 1.621333 324.420266z m-525.653333-415.744A135.2192 135.2192 0 1 0 512 391.748267a135.202133 135.202133 0 0 0-135.2192-135.202134z m0 216.337067a81.117867 81.117867 0 1 1 81.134933-81.134933 81.117867 81.117867 0 0 1-81.134933 81.134933z" fill="#707070" p-id="3769"></path></svg>
 </li>
+<li class="wmd-button custom" id="b-wmd-gallery" title="插入照片墙">
+  <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="60" height="60"><path d="M128 192h768c35.3 0 64 28.7 64 64v512c0 35.3-28.7 64-64 64H128c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64z m0 64v512h768V256H128z" fill="#707070"></path><path d="M224 672l176-208 128 144 96-112 176 176H224zM672 384a80 80 0 1 0 0-160 80 80 0 0 0 0 160z" fill="#707070"></path></svg>
+</li>
+<li class="wmd-button custom" id="b-wmd-gallery-group" title="插入照片墙列表">
+  <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="60" height="60"><path d="M128 160h320v288H128V160z m64 64v160h192V224H192zM576 160h320v288H576V160z m64 64v160h192V224H640zM128 576h320v288H128V576z m64 64v160h192V640H192zM576 576h320v288H576V576z m64 64v160h192V640H640z" fill="#707070"></path></svg>
+</li>
 <li class="wmd-button custom" id="b-wmd-mark" title="文字高亮">
   <svg t="1630842990651" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2341" width="64" height="64"><path d="M1024 510.293333l-66.645333-69.333333-196.693334 167.893333-284.16-297.984 162.261334-200.576L571.562667 42.666667 181.418667 524.586667l59.008 61.909333L0 829.482667 355.157333 981.333333l131.157334-139.264 66.133333 69.333334L1024 510.293333zM413.098667 389.973333l271.018666 284.202667-111.445333 95.146667-251.904-265.344 92.330667-114.048z" p-id="2342" fill="#707070"></path></svg>
 </li>
@@ -174,6 +180,170 @@ $(".btn-ok").click(function(){
     let title = $('input[name="img-title"]').val();
     let link = $('input[name="img-link"]').val();
     insertAtCursor('!['+title+']('+link+')');
+});
+});
+// 行内代码
+$("#b-wmd-gallery").on("click",function() {
+    $("#ui-datepicker-div").after(`
+    <div class="wmd-prompt-dialog" style="top: 50%; transform: translateY(-50%); max-width: 500px;" role="dialog">
+    <div><p><b>插入照片墙</b></p><p>请填写图片信息并配置相册参数</p></div>
+  <form>
+    <p>点击加载更多：<select id="select-gallery-lazyload"><option selected="selected" value="true">开启</option><option value="false">关闭</option></select><br>
+    图片行高：<input type="text" name="gallery-row-height" value="220" style="width: 50px;"><br>
+    每次加载数量：<input type="text" name="gallery-limit" value="10" style="width: 50px;"></p>
+    
+    <div id="gallery-container" style="max-height: 40vh; overflow-y: auto; margin-bottom: 10px; padding-right: 5px;">
+        <div class="gallery-item" style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 4px;">
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" class="g-title" placeholder="图片描述" value="标题1" style="flex: 1; margin: 0;">
+                <input type="text" class="g-url" placeholder="图片地址" value="https://example.com/1.jpg" style="flex: 2; margin: 0;">
+                <button type="button" class="btn btn-s btn-g-del" style="color: red; flex-shrink: 0; margin: 0;">删除</button>
+            </div>
+        </div>
+        <div class="gallery-item" style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 4px;">
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" class="g-title" placeholder="图片描述" value="标题2" style="flex: 1; margin: 0;">
+                <input type="text" class="g-url" placeholder="图片地址" value="https://example.com/2.jpg" style="flex: 2; margin: 0;">
+                <button type="button" class="btn btn-s btn-g-del" style="color: red; flex-shrink: 0; margin: 0;">删除</button>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-s" id="btn-g-add" style="margin-bottom: 10px; width: 100%;">+ 添加图片</button>
+    
+    <div style="text-align: right; margin-top: 10px;">
+        <button type="button" class="btn btn-s primary btn-ok">确定</button>
+        <button type="button" class="btn btn-s btn-cancel">取消</button>
+    </div>
+  </form>
+</div>
+`);
+
+$('#btn-g-add').click(function() {
+    $('#gallery-container').append(`
+        <div class="gallery-item" style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 4px;">
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" class="g-title" placeholder="图片描述" value="" style="flex: 1; margin: 0;">
+                <input type="text" class="g-url" placeholder="图片地址" value="" style="flex: 2; margin: 0;">
+                <button type="button" class="btn btn-s btn-g-del" style="color: red; flex-shrink: 0; margin: 0;">删除</button>
+            </div>
+        </div>
+    `);
+    // 自动滚动到底部
+    let container = $('#gallery-container')[0];
+    container.scrollTop = container.scrollHeight;
+});
+
+$('#gallery-container').on('click', '.btn-g-del', function() {
+    if ($('.gallery-item').length > 1) {
+        $(this).closest('.gallery-item').remove();
+    } else {
+        alert("至少保留一行！");
+    }
+});
+
+$(".btn-ok").click(function(){
+    let lazyload = $('#select-gallery-lazyload option:selected').val();
+    let rowHeight = $('input[name="gallery-row-height"]').val() || '220';
+    let limit = $('input[name="gallery-limit"]').val() || '10';
+    let images = '';
+    
+    $('.gallery-item').each(function() {
+        let title = $(this).find('.g-title').val() || '图片';
+        let url = $(this).find('.g-url').val();
+        if (url) images += '![' + title + '](' + url + ')\n';
+    });
+    
+    if (!images) images = '![标题1](https://example.com/1.jpg)\n![标题2](https://example.com/2.jpg)\n';
+    insertAtCursor('\n{% gallery ' + lazyload + ',' + rowHeight + ',' + limit + ' %}\n' + images + '{% endgallery %}\n');
+});
+});
+$("#b-wmd-gallery-group").on("click",function() {
+    $("#ui-datepicker-div").after(`
+    <div class="wmd-prompt-dialog" style="top: 50%; transform: translateY(-50%); max-width: 500px;" role="dialog">
+    <div><p><b>插入照片墙列表</b></p><p>请填写相册信息：名称、描述、链接、封面图片</p></div>
+  <form>
+    <div id="gallery-group-container" style="max-height: 45vh; overflow-y: auto; margin-bottom: 10px; padding-right: 5px;">
+        <div class="gallery-group-item" style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 4px;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" class="gg-name" placeholder="相册名称" value="壁纸" style="flex: 1; margin: 0;">
+                    <input type="text" class="gg-desc" placeholder="相册描述" value="一些壁纸收藏" style="flex: 1; margin: 0;">
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" class="gg-link" placeholder="相册链接" value="/photos/wallpaper/" style="flex: 1; margin: 0;">
+                    <input type="text" class="gg-cover" placeholder="封面图片" value="https://example.com/cover.jpg" style="flex: 1; margin: 0;">
+                </div>
+                <div style="text-align: right;">
+                    <button type="button" class="btn btn-s btn-gg-del" style="color: red; margin: 0;">删除</button>
+                </div>
+            </div>
+        </div>
+        <div class="gallery-group-item" style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 4px;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" class="gg-name" placeholder="相册名称" value="生活" style="flex: 1; margin: 0;">
+                    <input type="text" class="gg-desc" placeholder="相册描述" value="日常照片" style="flex: 1; margin: 0;">
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" class="gg-link" placeholder="相册链接" value="/photos/life/" style="flex: 1; margin: 0;">
+                    <input type="text" class="gg-cover" placeholder="封面图片" value="https://example.com/life.jpg" style="flex: 1; margin: 0;">
+                </div>
+                <div style="text-align: right;">
+                    <button type="button" class="btn btn-s btn-gg-del" style="color: red; margin: 0;">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-s" id="btn-gg-add" style="margin-bottom: 10px; width: 100%;">+ 添加相册</button>
+    <div style="text-align: right; margin-top: 10px;">
+        <button type="button" class="btn btn-s primary btn-ok">确定</button>
+        <button type="button" class="btn btn-s btn-cancel">取消</button>
+    </div>
+  </form>
+</div>
+`);
+
+$('#btn-gg-add').click(function() {
+    $('#gallery-group-container').append(`
+        <div class="gallery-group-item" style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 4px;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" class="gg-name" placeholder="相册名称" value="" style="flex: 1; margin: 0;">
+                    <input type="text" class="gg-desc" placeholder="相册描述" value="" style="flex: 1; margin: 0;">
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" class="gg-link" placeholder="相册链接" value="" style="flex: 1; margin: 0;">
+                    <input type="text" class="gg-cover" placeholder="封面图片" value="" style="flex: 1; margin: 0;">
+                </div>
+                <div style="text-align: right;">
+                    <button type="button" class="btn btn-s btn-gg-del" style="color: red; margin: 0;">删除</button>
+                </div>
+            </div>
+        </div>
+    `);
+    // 自动滚动到底部
+    let container = $('#gallery-group-container')[0];
+    container.scrollTop = container.scrollHeight;
+});
+
+$('#gallery-group-container').on('click', '.btn-gg-del', function() {
+    if ($('.gallery-group-item').length > 1) {
+        $(this).closest('.gallery-group-item').remove();
+    } else {
+        alert("至少保留一行！");
+    }
+});
+
+$(".btn-ok").click(function(){
+    let groups = '';
+    $('.gallery-group-item').each(function() {
+        let name = $(this).find('.gg-name').val() || '相册名称';
+        let desc = $(this).find('.gg-desc').val() || '相册描述';
+        let link = $(this).find('.gg-link').val() || '/photos/';
+        let cover = $(this).find('.gg-cover').val() || 'https://example.com/cover.jpg';
+        groups += "{% galleryGroup '" + name + "' '" + desc + "' '" + link + "' '" + cover + "' %}\n";
+    });
+    insertAtCursor('\n<div class="gallery-group-main">\n' + groups + '</div>\n');
 });
 });
 // 行内代码
@@ -525,7 +695,7 @@ $(".btn-ok").click(function(){
 });
 
 // 需要调用dialog样式的容器
-$("#b-wmd-linecode,#b-wmd-code,#b-wmd-reply,#b-wmd-nhtml,#b-wmd-wcheakbox,#b-wmd-inline-tag,#b-wmd-radio,#b-wmd-md-link,#b-wmd-md-img,#b-wmd-mark,#b-wmd-btn,#b-wmd-note,#b-wmd-hide-block,#b-wmd-hide-inline,#b-wmd-hide-toggle,#b-wmd-note-ico,#b-wmd-md-explain,#b-wmd-title,#b-wmd-video,#b-wmd-cfont").click(function(){
+$("#b-wmd-linecode,#b-wmd-code,#b-wmd-reply,#b-wmd-nhtml,#b-wmd-wcheakbox,#b-wmd-inline-tag,#b-wmd-radio,#b-wmd-md-link,#b-wmd-md-img,#b-wmd-gallery,#b-wmd-gallery-group,#b-wmd-mark,#b-wmd-btn,#b-wmd-note,#b-wmd-hide-block,#b-wmd-hide-inline,#b-wmd-hide-toggle,#b-wmd-note-ico,#b-wmd-md-explain,#b-wmd-title,#b-wmd-video,#b-wmd-cfont").click(function(){
 var y = document.createElement("div");
 let height = document.body.scrollHeight;
 z = y.style;
