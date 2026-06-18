@@ -298,14 +298,20 @@
       if (void 0 === t) {
         if (o) activateLightMode();
         else if (a) activateDarkMode();
+        else if (c) {
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? activateDarkMode()
+                : activateLightMode();
+        }
         else if (n) {
-          const e = (new Date).getHours();
           <?php darkTimeFunc() ?> ? activateDarkMode() : activateLightMode()
         }
-        window.matchMedia("(prefers-color-scheme: dark)").addListener((e => {
-          void 0 === saveToLocal.get("theme") && (e.matches ? activateDarkMode() : activateLightMode())
-        }))
-      } else "light" === t ? activateLightMode() : activateDarkMode();
+        const media = window.matchMedia("(prefers-color-scheme: dark)");
+        media.addEventListener("change", e => {
+            if (void 0 === saveToLocal.get("theme")) {
+                e.matches ? activateDarkMode() : activateLightMode();
+            }
+        });
       const d = saveToLocal.get("aside-status");
       void 0 !== d && ("hide" === d ? document.documentElement.classList.add("hide-aside") : document.documentElement.classList.remove("hide-aside"));
       /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) && document.documentElement.classList.add("apple")
