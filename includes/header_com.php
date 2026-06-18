@@ -298,8 +298,12 @@
       if (void 0 === t) {
         if (o) activateLightMode();
         else if (a) activateDarkMode();
+        else if (c) {
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? activateDarkMode()
+                : activateLightMode();
+        }
         else if (n) {
-          const e = (new Date).getHours();
           <?php darkTimeFunc() ?> ? activateDarkMode() : activateLightMode()
         }
         window.matchMedia("(prefers-color-scheme: dark)").addListener((e => {
