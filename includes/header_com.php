@@ -290,22 +290,48 @@
       e.activateLightMode = () => {
         document.documentElement.setAttribute("data-theme", "light"), null !== document.querySelector('meta[name="theme-color"]') && document.querySelector('meta[name="theme-color"]').setAttribute("content", "#ffffff")
       };
-      const t = saveToLocal.get("theme"),
-        a = <?php $this->options->darkModeSelect() ?> === 4,
-        o = <?php $this->options->darkModeSelect() ?> === 1,
-        c = <?php $this->options->darkModeSelect() ?> === 2,
-        n = !a && !o && !c;
+      const t = saveToLocal.get("theme");
+      
+      // 1. 将 PHP 输出包裹在引号中并转为整数，防止后台配置为空时 JS 语法报错崩溃
+      const darkModeSetting = parseInt('<?php $this->options->darkModeSelect() ?>', 10);
+      
+      // 2. 统一判断模式
+      const isDarkMode = darkModeSetting === 4,
+            isLightMode = darkModeSetting === 1,
+            isSystemMode = darkModeSetting === 2,
+            isTimeMode = !isDarkMode && !isLightMode && !isSystemMode;
+      
       if (void 0 === t) {
-        if (o) activateLightMode();
-        else if (a) activateDarkMode();
-        else if (n) {
-          const e = (new Date).getHours();
-          <?php darkTimeFunc() ?> ? activateDarkMode() : activateLightMode()
+        if (isLightMode) {
+          activateLightMode();
+        } 
+        else if (isDarkMode) {
+          activateDarkMode();
+        } 
+        else if (isSystemMode) {
+          // 跟随系统模式
+          const media = window.matchMedia("(prefers-color-scheme: dark)");
+          media.matches ? activateDarkMode() : activateLightMode();
+      
+          // 【重要修复】只在“跟随系统”模式下，才注册系统主题切换监听器
+          media.addEventListener("change", e => {
+            if (void 0 === saveToLocal.get("theme")) {
+              e.matches ? activateDarkMode() : activateLightMode();
+            }
+          });
+        } 
+        else if (isTimeMode) {
+          // 时间段控制：改用 if 判断更具容错性
+          if (<?php darkTimeFunc() ?>) {
+            activateDarkMode();
+          } else {
+            activateLightMode();
+          }
         }
-        window.matchMedia("(prefers-color-scheme: dark)").addListener((e => {
-          void 0 === saveToLocal.get("theme") && (e.matches ? activateDarkMode() : activateLightMode())
-        }))
-      } else "light" === t ? activateLightMode() : activateDarkMode();
+      } else {
+        // 用户手动切换过，以本地缓存为准
+        "light" === t ? activateLightMode() : activateDarkMode();
+      }
       const d = saveToLocal.get("aside-status");
       void 0 !== d && ("hide" === d ? document.documentElement.classList.add("hide-aside") : document.documentElement.classList.remove("hide-aside"));
       /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) && document.documentElement.classList.add("apple")
