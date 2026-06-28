@@ -1,13 +1,21 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php
 if (isset($_POST['pwd'])){
-	if (trim($_POST['pwd']) == $this->options->ThemePassword){
-		setcookie("ThemePassword",trim($_POST['pwd']),time()+3600*24*3);
+	if (trim($_POST['pwd']) === $this->options->ThemePassword){
+		$hashedPwd = hash('sha256', trim($_POST['pwd']));
+		setcookie("ThemePassword", $hashedPwd, [
+			'expires' => time()+3600*24*3,
+			'path' => '/',
+			'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+			'httponly' => true,
+			'samesite' => 'Strict'
+		]);
 		exit ('{"status": "200","info":"密码正确,芝麻开门！"}'); 
 	}
 }
-if(isset($_COOKIE["ThemePassword"]) && $_COOKIE["ThemePassword"] !==$this->options->ThemePassword && $this->options->Defend === 'on' 
-    || empty($_COOKIE["ThemePassword"]) && $this->options->Defend === 'on' ){
+if($this->options->Defend === 'on' && (
+    empty($_COOKIE["ThemePassword"]) || $_COOKIE["ThemePassword"] !== hash('sha256', (string)$this->options->ThemePassword)
+)){
 ?>
 
 <html data-theme="light">
@@ -68,7 +76,7 @@ const passwordApp = {
                          message: res.data.info,
                          type: 'success',
                          });
-                     window.location = "<?php echo $_SERVER["REQUEST_URI"];?>"    
+                     window.location = "<?php echo htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, 'UTF-8');?>"    
                }else{
                      this.$notify({
                          title: '打咩',

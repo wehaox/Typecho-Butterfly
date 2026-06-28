@@ -490,7 +490,7 @@ function getCache($key, $expiration = 3600) {
             return false;
         }
         
-        $unserialized = @unserialize($data);
+        $unserialized = @unserialize($data, ['allowed_classes' => false]);
         if ($unserialized === false && $data !== 'b:0;') {
             // 缓存数据损坏，删除缓存文件
             @unlink($cache_file);
@@ -1663,12 +1663,12 @@ function getGravatar($email, $name, $comments_a, $s = 96, $d = 'mp', $r = 'g')
 function getAuthorAvatarUrl() {
     $options = Helper::options();
     $mode = $options->LogoAvatarMode;
-    
+
     // 如果选择 Gravatar 模式且填写了邮箱
     if ($mode == 'gravatar' && !empty($options->authorGravatarEmail)) {
         $email = $options->authorGravatarEmail;
         $hash = md5(strtolower(trim($email)));
-        
+
         // 匹配是否为 QQ 邮箱
         preg_match_all('/((\d)*)@qq.com/', $email, $vai);
         if (empty($vai['1']['0'])) {
@@ -1678,11 +1678,11 @@ function getAuthorAvatarUrl() {
             // QQ邮箱，按照你评论区的逻辑，直接强制使用 cravatar 或者是对应的QQ源
             $cdn = 'https://cravatar.cn/avatar/';
         }
-        
+
         // 返回拼接好的链接，s=200 设置图片大小更清晰
         return $cdn . $hash . '?s=200';
-    } 
-    
+    }
+
     // 默认或未填邮箱时，返回自定义URL
     return $options->logoUrl;
 }
@@ -2319,7 +2319,18 @@ function comments_filter($comment)
             $secretKey = Helper::options()->secretKey;
             function getCaptcha($recaptcha_response, $secretKey)
             {
-                $response = file_get_contents("https://recaptcha.net/recaptcha/api/siteverify?secret=" . $secretKey . "&response=" . $recaptcha_response);
+                $postData = http_build_query([
+                    'secret' => $secretKey,
+                    'response' => $recaptcha_response
+                ]);
+                $context = stream_context_create([
+                    'http' => [
+                        'method' => 'POST',
+                        'header' => 'Content-Type: application/x-www-form-urlencoded',
+                        'content' => $postData
+                    ]
+                ]);
+                $response = file_get_contents('https://recaptcha.net/recaptcha/api/siteverify', false, $context);
                 $response = json_decode($response);
                 return $response;
             }
@@ -2356,7 +2367,19 @@ function hcaptcha_filter($comment)
         } else {
             if (isset($_POST['h-captcha-response']) && !empty($_POST['h-captcha-response'])) {
                 $secret = Helper::options()->hcaptchaAPIKey;
-                $verifyResponse = file_get_contents('https://hcaptcha.com/siteverify?secret=' . $secret . '&response=' . $_POST['h-captcha-response'] . '&remoteip=' . $_SERVER['REMOTE_ADDR']);
+                $postData = http_build_query([
+                    'secret' => $secret,
+                    'response' => $_POST['h-captcha-response'],
+                    'remoteip' => $_SERVER['REMOTE_ADDR']
+                ]);
+                $context = stream_context_create([
+                    'http' => [
+                        'method' => 'POST',
+                        'header' => 'Content-Type: application/x-www-form-urlencoded',
+                        'content' => $postData
+                    ]
+                ]);
+                $verifyResponse = file_get_contents('https://hcaptcha.com/siteverify', false, $context);
                 $responseData = json_decode($verifyResponse);
                 if ($responseData->success === true || $responseData->success === 1) {
                     return $comments;

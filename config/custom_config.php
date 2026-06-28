@@ -30,7 +30,7 @@ function themeConfig($form)
             return array();
         }
 
-        $unserializedValue = @unserialize($value);
+        $unserializedValue = @unserialize($value, ['allowed_classes' => false]);
         if ($unserializedValue !== false || $value === 'b:0;') {
             return is_array($unserializedValue) ? $unserializedValue : array();
         }

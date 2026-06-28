@@ -118,6 +118,12 @@ function getSearchRequestRawQuery()
         }
 
         $rawKeywords = trim((string)$_GET[$key]);
+        // 限制关键词长度，防止 ReDoS 和资源耗尽
+        if (function_exists('mb_substr')) {
+            $rawKeywords = mb_substr($rawKeywords, 0, 200, 'UTF-8');
+        } else {
+            $rawKeywords = substr($rawKeywords, 0, 200);
+        }
         if ($rawKeywords !== '') {
             return $rawKeywords;
         }
@@ -191,6 +197,8 @@ function getSearchRequestLimit()
 {
     $config = getSearchProtectionConfig();
     $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 20;
+    // 限制范围在 1-100 之间
+    $limit = max(1, min(100, $limit));
     if ($limit <= 0) {
         $limit = 20;
     }
@@ -212,7 +220,7 @@ function getSearchStorageDirectory()
     );
 
     foreach ($candidates as $candidate) {
-        if (is_dir($candidate) || @mkdir($candidate, 0775, true)) {
+        if (is_dir($candidate) || @mkdir($candidate, 0755, true)) {
             $directory = $candidate;
             return $directory;
         }
@@ -410,7 +418,7 @@ function buildApiPostPermalink($post)
             return $path;
         }
 
-        return Typecho_Common::url($path, Helper::options()->siteUrl);
+        return Typecho_Common::url($path, Helper::options()->index);
     } catch (Exception $e) {
         $slug = !empty($post['slug']) ? $post['slug'] : (isset($post['cid']) ? $post['cid'] : '');
         return rtrim(Helper::options()->siteUrl, '/') . '/' . ltrim((string)$slug, '/');
@@ -784,6 +792,18 @@ function responseJson($data, $statusCode = 200, $extraHeaders = array())
 
 if (isset($_SERVER['SCRIPT_FILENAME']) && realpath($_SERVER['SCRIPT_FILENAME']) === __FILE__) {
     $action = isset($_GET['action']) ? trim((string)$_GET['action']) : '';
+
+    $allowedActions = array(
+        'getPosts',
+        'getPost',
+        'search',
+        'weibohot'
+    );
+
+    if ($action !== '' && !in_array($action, $allowedActions, true)) {
+        responseJson(array('error' => 'Invalid action'), 400);
+    }
+
     routeApiRequest($action);
 }
 

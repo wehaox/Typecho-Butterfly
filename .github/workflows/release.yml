@@ -34,12 +34,12 @@ jobs:
             --exclude "dist"
 
           cd dist/package
-          zip -r "../butterfly-${VERSION}.zip" butterfly
+          zip -r "../butterfly_${VERSION}.zip" butterfly
 
       - name: 创建 Release 并上传附件
         uses: softprops/action-gh-release@v2
         with:
           name: Release${{ env.VERSION }}
-          files: dist/butterfly-${{ env.VERSION }}.zip
+          files: dist/butterfly_${{ env.VERSION }}.zip
           generate_release_notes: true
           prerelease: ${{ contains(github.ref_name, '-') }}

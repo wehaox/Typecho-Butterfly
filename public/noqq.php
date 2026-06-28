@@ -1,7 +1,7 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php if ($this->options->NoQQ === 'on' && (strpos($_SERVER['HTTP_USER_AGENT'], 'QQ/') || strpos($_SERVER['HTTP_USER_AGENT'], 'qqtheme') !== false)) : ?>
 <?php
-    $siteurl = ($_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    $siteurl = Typecho_Common::url($_SERVER['REQUEST_URI'], Helper::options()->siteUrl);
 ?>
 <!DOCTYPE html>
 <html lang="en">
