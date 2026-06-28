@@ -1659,6 +1659,34 @@ function getGravatar($email, $name, $comments_a, $s = 96, $d = 'mp', $r = 'g')
     return $imga;
 }
 
+// 获取作者头像URL (融合自定义URL与Gravatar逻辑)
+function getAuthorAvatarUrl() {
+    $options = Helper::options();
+    $mode = $options->LogoAvatarMode;
+    
+    // 如果选择 Gravatar 模式且填写了邮箱
+    if ($mode == 'gravatar' && !empty($options->authorGravatarEmail)) {
+        $email = $options->authorGravatarEmail;
+        $hash = md5(strtolower(trim($email)));
+        
+        // 匹配是否为 QQ 邮箱
+        preg_match_all('/((\d)*)@qq.com/', $email, $vai);
+        if (empty($vai['1']['0'])) {
+            // 普通邮箱，调用后台选择的源
+            $cdn = $options->GravatarSelect;
+        } else {
+            // QQ邮箱，按照你评论区的逻辑，直接强制使用 cravatar 或者是对应的QQ源
+            $cdn = 'https://cravatar.cn/avatar/';
+        }
+        
+        // 返回拼接好的链接，s=200 设置图片大小更清晰
+        return $cdn . $hash . '?s=200';
+    } 
+    
+    // 默认或未填邮箱时，返回自定义URL
+    return $options->logoUrl;
+}
+
 // 获取浏览器信息
 function getBrowser($agent)
 {

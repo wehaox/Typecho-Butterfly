@@ -491,7 +491,7 @@
     <div id="menu-mask" style="display: none;"></div>
     <div id="sidebar-menus" class="">
       <div class="avatar-img is-center">
-        <img src="<?php $this->options->logoUrl() ?>" onerror="this.onerror=null;this.src='https://<?php $this->options->jsdelivrLink() ?>/npm/hexo-butterfly@1.0.0/themes/butterfly/source/img/friend_404.gif'" alt="avatar">
+        <img src="<?php echo getAuthorAvatarUrl(); ?>" onerror="this.onerror=null;this.src='https://<?php $this->options->jsdelivrLink() ?>/npm/hexo-butterfly@1.0.0/themes/butterfly/source/img/friend_404.gif'" alt="avatar">
       </div>
       <div class="site-data">
         <div class="card-info-data site-data is-center">

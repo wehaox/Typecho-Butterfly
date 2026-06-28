@@ -9,7 +9,7 @@ $showToc = ($isSingleSidebar && !$disableToc) ? getThemeFieldValue($this->cid, '
     <div class="card-widget card-info">
 	 <div class="card-info-avatar is-center">
 	     <div class="avatar-img">
-	         <img data-lazy-src="<?php $this->options->logoUrl() ?>" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/friend_404.gif'); ?>'" src="<?php echo GetLazyLoad() ?>" alt="avatar">
+             <img data-lazy-src="<?php echo getAuthorAvatarUrl(); ?>" onerror="this.onerror=null;this.src='<?php $this->options->themeUrl('img/friend_404.gif'); ?>'" src="<?php echo GetLazyLoad() ?>" alt="avatar">
 	      </div>
 		<div class="author-info__name">
 			<?php $this->author(); ?>

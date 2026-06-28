@@ -470,6 +470,26 @@ function themeConfig($form)
     $logoUrl = new Typecho_Widget_Helper_Form_Element_Text('logoUrl', NULL, _t('#null'), _t('作者头像'), _t('在这里填入图片地址，它会显示在右侧栏的作者头像'));
     $form->addInput($logoUrl);
 
+    $authorGravatarEmail = new Typecho_Widget_Helper_Form_Element_Text(
+            'authorGravatarEmail', 
+            NULL, 
+            NULL, 
+            _t('作者Gravatar邮箱'), 
+            _t('当头像模式选择为【使用Gravatar】时生效。填入你的Gravatar注册邮箱（如果是QQ邮箱会自动调用QQ头像）。')
+        );
+    $form->addInput($authorGravatarEmail);
+
+    $LogoAvatarMode = new Typecho_Widget_Helper_Form_Element_Radio(
+        'LogoAvatarMode',
+        [
+            'url' => '使用自定义头像URL',
+            'gravatar' => '使用Gravatar'
+        ],
+        'url',
+        _t('作者头像模式')
+    );
+    $form->addInput($LogoAvatarMode);
+
     $author_description = new Typecho_Widget_Helper_Form_Element_Text('author_description', NULL, _t('作者描述'), _t('作者描述'), _t('在这里填入站点描述，它会显示在右侧栏的作者信息'));
     $form->addInput($author_description);
 
